@@ -1,0 +1,15 @@
+{
+  "name": "directus-extension-vp-qr-generator",
+  "version": "1.0.2",
+  "type": "module",
+  "main": "dist/index.js",
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  },
+  "directus:extension": {
+    "type": "hook",
+    "path": "dist/index.js",
+    "host": "^11.0.0",
+    "source": ""
+  }
+}
