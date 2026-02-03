@@ -1,0 +1,86 @@
+/* --- ВсёПонятно: стили для карточки инструкции --- */
+#vp-inst-steps { list-style: none; padding-left: 0; }
+.vp-inst-step { margin-bottom: 16px; }
+.vp-inst-step-title { font-weight: 700; margin-bottom: 6px; }
+.vp-inst-step-body { opacity: 0.95; }
+
+.vp-inst-media { text-align: center; margin: 8px 0 12px; }
+.vp-inst-media img, .vp-inst-media video {
+  max-width: 100%;
+  border-radius: 12px;
+}
+.vp-inst-media-video { max-width: 100%; }
+
+.vp-inst-important {
+  background: #fffbe5;
+  border-left: 4px solid #ffc107;
+  padding: 8px 12px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+.vp-inst-important::before {
+  content: "⚠️ ";
+  font-weight: bold;
+}
+
+#vp-inst-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+#vp-inst-progress-text {
+  font-weight: 500;
+}
+.vp-inst-nav-button {
+  font-size: 1rem;
+  padding: 8px 16px;
+}
+.vp-card {
+    background-color: var(--vp-color, #f2f2f2);
+    border-radius: 1em;
+    padding: 1em;
+    margin: 1.5em 0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+.vp-card-inner {
+    display: flex;
+    flex-direction: column;
+}
+.vp-card-header {
+    display: flex;
+    align-items: center;
+}
+.vp-card-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1em;
+}
+.vp-card-info {
+    flex: 1;
+}
+.vp-card-name {
+    margin: 0;
+    font-size: 1.25em;
+}
+.vp-card-role {
+    color: #666;
+    margin-top: 0.25em;
+}
+.vp-card-links {
+    list-style: none;
+    padding: 0;
+    margin: 1em 0 0;
+}
+.vp-card-links li {
+    margin: 0.25em 0;
+}
+.vp-card-links a {
+    color: #0073aa;
+    text-decoration: none;
+}
+.vp-card-links a:hover {
+    text-decoration: underline;
+}
