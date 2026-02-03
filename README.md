@@ -19,7 +19,11 @@ Backend: Directus + PostgreSQL
 WordPress: xn--b1awacccnl0jqa.xn--p1ai  
 Directus: directus.xn--b1awacccnl0jqa.xn--p1ai
 
-## Запуск
-```bash
-cd /opt/vseponyatno/docker
-docker compose up -d
+## Документация
+См. каталог `docs/`:
+- architecture.md
+- data-model.md
+- api-contract.md
+- runtime-state.md
+- troubleshooting.md
+- decision-log.md

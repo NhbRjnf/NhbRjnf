@@ -14,13 +14,18 @@ docker/.env
 
 # --- DOCKER RUNTIME / VOLUMES ---
 docker/volumes/*
+docker/volumes/**
 !docker/volumes/directus_extensions/
 !docker/volumes/directus_extensions/directus-extension-vp-qr-generator/
 !docker/volumes/directus_extensions/directus-extension-vp-qr-generator/**
+# allow keeping structure with placeholders (optional)
+!docker/volumes/**/.gitkeep
 
 # --- WORDPRESS VOLUME ---
 docker/volumes/wordpress/*
 !docker/volumes/wordpress/
+# ignore twentytwentyfour heavy assets (fonts/images/vendor)
+docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/
 
 # Разрешаем вход в wp-content
 !docker/volumes/wordpress/wp-content/
@@ -73,3 +78,15 @@ logs/
 .DS_Store
 *.swp
 *.swo
+
+# --- DOCUMENTATION / CODEX ---
+# markdown docs должны попадать в git
+# (ничего не игнорируем специально)
+
+# --- SECURITY ---
+SECURITY.md
+
+# --- RUNTIME SNAPSHOTS ---
+runtime/
+*.health
+*.status
