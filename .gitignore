@@ -42,7 +42,7 @@ docker/volumes/wordpress/wp-config.php
 
 # --- DIRECTUS ---
 docker/volumes/directus_uploads/
-docker/volumes/directus_extensions/*
+# docker/volumes/directus_extensions/*
 
 # --- DATABASES ---
 docker/volumes/postgres/
