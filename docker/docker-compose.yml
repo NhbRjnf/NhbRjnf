@@ -1,0 +1,102 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: vse_postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TZ: "${TZ}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    networks:
+      - vseponyatno_net
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: vse_mariadb
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TZ: "${TZ}"
+      MARIADB_DATABASE: "${WP_DB_NAME}"
+      MARIADB_USER: "${WP_DB_USER}"
+      MARIADB_PASSWORD: "${WP_DB_PASSWORD}"
+      MARIADB_ROOT_PASSWORD: "${WP_DB_PASSWORD}"
+    volumes:
+      - ./volumes/mariadb:/var/lib/mysql
+    networks:
+      - vseponyatno_net
+
+  directus:
+    image: directus/directus:latest
+    container_name: vse_directus
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8055:8055"
+    environment:
+      TZ: "${TZ}"
+
+      # DB
+      DB_CLIENT: "pg"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_DATABASE: "${POSTGRES_DB}"
+      DB_USER: "${POSTGRES_USER}"
+      DB_PASSWORD: "${POSTGRES_PASSWORD}"
+
+      # URLs
+      PUBLIC_URL: "${PUBLIC_URL}"
+      DIRECTUS_PUBLIC_URL: "${DIRECTUS_PUBLIC_URL}"
+
+      # Security
+      KEY: "${DIRECTUS_KEY}"
+      SECRET: "${DIRECTUS_SECRET}"
+
+      # Admin bootstrap
+      ADMIN_EMAIL: "${DIRECTUS_ADMIN_EMAIL}"
+      ADMIN_PASSWORD: "${DIRECTUS_ADMIN_PASSWORD}"
+
+    depends_on:
+      - postgres
+    volumes:
+      - ./volumes/directus_uploads:/directus/uploads
+      - ./volumes/directus_extensions:/directus/extensions
+    networks:
+      - vseponyatno_net
+
+  wordpress:
+    image: wordpress:php8.2-apache
+    container_name: vse_wordpress
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8080:80"
+    environment:
+      TZ: "${TZ}"
+      WORDPRESS_DB_HOST: "${WP_DB_HOST}"
+      WORDPRESS_DB_NAME: "${WP_DB_NAME}"
+      WORDPRESS_DB_USER: "${WP_DB_USER}"
+      WORDPRESS_DB_PASSWORD: "${WP_DB_PASSWORD}"
+
+      # VP proxy -> Directus
+      DIRECTUS_BASE_URL: "${DIRECTUS_BASE_URL}"
+      DIRECTUS_PUBLIC_URL: "${DIRECTUS_PUBLIC_URL}"
+      DIRECTUS_API_TOKEN: "${DIRECTUS_API_TOKEN}"
+    depends_on:
+      - mariadb
+    volumes:
+      - ./volumes/wordpress:/var/www/html
+    networks:
+      - vseponyatno_net
+
+networks:
+  vseponyatno_net:
+    driver: bridge

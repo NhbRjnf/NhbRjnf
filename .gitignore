@@ -1,0 +1,58 @@
+# --- ARCHIVES / TEMP ---
+archive_*.zip
+*.zip
+
+# --- BACKUPS ---
+backup/
+backups/
+
+# --- SECRETS ---
+docker/.env
+**/.env
+*.pem
+*.key
+
+# --- DOCKER RUNTIME / VOLUMES ---
+docker/volumes/*
+!docker/volumes/directus_extensions/
+!docker/volumes/directus_extensions/directus-extension-vp-qr-generator/
+!docker/volumes/directus_extensions/directus-extension-vp-qr-generator/**
+
+# --- WORDPRESS VOLUME ---
+docker/volumes/wordpress/*
+!docker/volumes/wordpress/wp-content/
+!docker/volumes/wordpress/wp-content/mu-plugins/
+!docker/volumes/wordpress/wp-content/mu-plugins/**
+
+!docker/volumes/wordpress/wp-content/themes/
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-scan.php
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-instruction.php
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/**
+
+# PWA (если лежат в корне wordpress volume)
+!docker/volumes/wordpress/manifest.json
+!docker/volumes/wordpress/service-worker.js
+
+# --- WORDPRESS RUNTIME ---
+docker/volumes/wordpress/wp-content/uploads/
+docker/volumes/wordpress/wp-content/cache/
+docker/volumes/wordpress/wp-config.php
+
+# --- DIRECTUS ---
+docker/volumes/directus_uploads/
+docker/volumes/directus_extensions/*
+
+# --- DATABASES ---
+docker/volumes/postgres/
+docker/volumes/mariadb/
+
+# --- LOGS ---
+logs/
+*.log
+
+# --- EDITORS / OS ---
+.DS_Store
+*.swp
+*.swo
