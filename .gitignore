@@ -20,16 +20,33 @@ docker/volumes/*
 
 # --- WORDPRESS VOLUME ---
 docker/volumes/wordpress/*
+!docker/volumes/wordpress/
+
+# Разрешаем вход в wp-content
 !docker/volumes/wordpress/wp-content/
+docker/volumes/wordpress/wp-content/*
 !docker/volumes/wordpress/wp-content/mu-plugins/
 !docker/volumes/wordpress/wp-content/mu-plugins/**
 
+# Разрешаем вход в нужную тему
 !docker/volumes/wordpress/wp-content/themes/
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-scan.php
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-instruction.php
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/instruction.css
+
+# Разрешаем assets
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/**
+
+# PWA файлы (если лежат в корне wordpress volume)
+!docker/volumes/wordpress/manifest.json
+!docker/volumes/wordpress/service-worker.js
+
+# --- WORDPRESS RUNTIME ---
+docker/volumes/wordpress/wp-content/uploads/
+docker/volumes/wordpress/wp-content/cache/
+docker/volumes/wordpress/wp-config.php
 
 # PWA (если лежат в корне wordpress volume)
 !docker/volumes/wordpress/manifest.json
