@@ -27,6 +27,7 @@ docker/volumes/wordpress/*
 # ignore twentytwentyfour heavy assets (fonts/images/vendor)
 docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/
 
+
 # Разрешаем вход в wp-content
 !docker/volumes/wordpress/wp-content/
 docker/volumes/wordpress/wp-content/*
@@ -36,6 +37,9 @@ docker/volumes/wordpress/wp-content/*
 # Разрешаем вход в нужную тему
 !docker/volumes/wordpress/wp-content/themes/
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/
+# --- Allow custom theme overrides ---
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/header.php
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/footer.php
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-scan.php
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-instruction.php
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/instruction.css
