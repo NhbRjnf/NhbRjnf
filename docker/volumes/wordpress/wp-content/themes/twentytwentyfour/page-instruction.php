@@ -42,8 +42,6 @@ get_header();
   </div>
 </main>
 
-<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/instruction.css" />
-
 <script>
 (function () {
   const params = new URLSearchParams(location.search);
@@ -133,7 +131,7 @@ get_header();
             const span = document.createElement('span');
             span.textContent = beforeText.trim();
             body.appendChild(span);
-@@ -143,55 +183,55 @@ get_header();
+@@ -143,55 +181,55 @@ get_header();
       const allSteps = elSteps.querySelectorAll('li');
       allSteps.forEach((step, index) => {
         if (index !== 0) step.style.display = 'none';

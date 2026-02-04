@@ -247,7 +247,7 @@ function vp_instruction_callback(WP_REST_Request $req) {
 
 
   // 2) Забираем instruction_set БЕЗ relation field "steps" (обход Directus ACL на поле steps)
-  $instFields = rawurlencode('id,title,brand,model,level,language,notes,source_url,is_published');
+  $instFields = rawurlencode('id,title,brand,model,level,language,notes,description,source_url,is_published');
   $inst = vp_directus_get("/items/instruction_sets/{$instruction_id}?fields={$instFields}");
   if (is_wp_error($inst)) {
     $d = $inst->get_error_data();
