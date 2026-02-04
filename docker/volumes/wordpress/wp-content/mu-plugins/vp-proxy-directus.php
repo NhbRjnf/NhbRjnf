@@ -237,7 +237,7 @@ function vp_instruction_callback(WP_REST_Request $req) {
     'code' => ['_eq' => $code],
   ], JSON_UNESCAPED_UNICODE));
 
-  $fields = rawurlencode('code,title,instruction_id,product_id.*');
+  $fields = rawurlencode('code,title,type,payload,instruction_id,product_id.*');
 
   $qr = vp_directus_get("/items/qr_codes?limit=1&fields={$fields}&filter={$filter}");
   if (is_wp_error($qr)) {
@@ -307,10 +307,18 @@ function vp_instruction_callback(WP_REST_Request $req) {
   $instruction['steps'] = $steps;
 
 
-  return new WP_REST_Response([
+  $response = [
     'code' => $code,
     'product' => $row['product_id'] ?? null,
     'instruction' => $instruction,
-  ], 200);
-}
+  ];
 
+  if (array_key_exists('type', $row)) {
+    $response['type'] = $row['type'];
+  }
+  if (array_key_exists('payload', $row)) {
+    $response['payload'] = $row['payload'];
+  }
+
+  return new WP_REST_Response($response, 200);
+}
