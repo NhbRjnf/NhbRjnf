@@ -1,17 +1,6 @@
 # cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-04T09:59:53+00:00
+# time: 2026-02-04T10:55:25+00:00
 
-[11:22:26] GET /.well-known/ 404 5ms
-[11:22:26] GET /222.php 404 4ms
-[11:22:26] GET /abcd.php 404 4ms
-[11:22:26] GET /class-t.api.php 404 8ms
-[11:22:26] GET /classwithtostring.php 404 5ms
-[11:22:27] GET /file.php 404 6ms
-[11:22:27] GET /info.php 404 3ms
-[11:22:27] GET /wp-admin/css/colors/coffee/ 404 4ms
-[11:22:27] GET /wp-admin/js/widgets/ 404 3ms
-[11:22:28] GET /wp-content/languages/ 404 4ms
-[11:22:28] GET /wp-content/languages/plugins/ 404 3ms
 [11:22:28] GET /wp-content/themes/twentytwentyfour/ 404 5ms
 [11:22:28] GET /wp-content/upgrade/ 404 7ms
 [11:22:28] GET /wp-content/uploads/ 404 3ms
@@ -25,3 +14,14 @@
 [11:54:32] GET /1j05rbifw_miky2kd 404 8ms
 [11:54:35] GET / 302 1ms
 [11:54:35] GET /admin 200 1ms
+[11:59:54] GET /server/health 200 8ms
+[12:02:49] POST / 404 15ms
+[12:02:49] POST /_next 404 5ms
+[12:02:50] POST /api 404 5ms
+[12:02:50] POST /_next/server 404 5ms
+[12:02:51] POST /app 404 7ms
+[12:02:51] POST /api/route 404 4ms
+[12:09:28] GET /version 404 6ms
+[12:17:25] GET /.env 404 8ms
+[12:53:43] GET / 302 2ms
+[12:53:44] GET /admin 200 0ms
