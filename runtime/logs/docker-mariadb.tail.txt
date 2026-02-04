@@ -1,5 +1,5 @@
 # cmd: docker logs --tail 24 vse_mariadb
-# time: 2026-02-04T10:55:25+00:00
+# time: 2026-02-04T12:06:49+00:00
 
 2026-02-03 10:10:52 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
 2026-02-03 10:10:52 0 [Note] mariadbd: O_TMPFILE is not supported on /tmp (disabling future attempts)

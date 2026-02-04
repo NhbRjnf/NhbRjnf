@@ -1,16 +1,6 @@
 # cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-04T10:55:25+00:00
+# time: 2026-02-04T12:06:49+00:00
 
-[11:22:28] GET /wp-content/themes/twentytwentyfour/ 404 5ms
-[11:22:28] GET /wp-content/upgrade/ 404 7ms
-[11:22:28] GET /wp-content/uploads/ 404 3ms
-[11:22:29] GET /wp-good.php 404 5ms
-[11:22:29] GET /wp-includes/js/jquery/ 404 6ms
-[11:22:29] GET /wp-includes/js/jquery/ui/ 404 3ms
-[11:22:29] GET /wp-includes/js/tinymce/themes/ 404 4ms
-[11:22:29] GET /wp-includes/rest-api/ 404 4ms
-[11:44:21] GET /server/health 200 14ms
-[11:54:16] GET /robots.txt 200 3ms
 [11:54:32] GET /1j05rbifw_miky2kd 404 8ms
 [11:54:35] GET / 302 1ms
 [11:54:35] GET /admin 200 1ms
@@ -25,3 +15,13 @@
 [12:17:25] GET /.env 404 8ms
 [12:53:43] GET / 302 2ms
 [12:53:44] GET /admin 200 0ms
+[12:55:25] GET /server/health 200 16ms
+[12:58:00] GET /items/qr_codes?limit=20&fields=id%2Ccode%2Ctitle%2Ctype%2Cinstruction_url%2Cproduct_id.id%2Cproduct_id.title%2Cproduct_id.model%2Cproduct_id.sku%2Cproduct_id.instruction_url&filter=%7B%22_or%22%3A%5B%7B%22code%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%2C%7B%22title%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%2C%7B%22type%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%2C%7B%22product_id%22%3A%7B%22title%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%7D%2C%7B%22product_id%22%3A%7B%22model%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%7D%2C%7B%22product_id%22%3A%7B%22sku%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%7D%5D%7D&sort=-id 200 24ms
+[12:58:01] GET /items/qr_codes?limit=1&fields=%2A%2Cproduct_id.%2A%2Cqr_file.%2A%2Cqr_file_png.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 200 20ms
+[13:01:27] GET / 302 2ms
+[13:15:26] GET / 302 3ms
+[13:15:26] GET /admin 200 1ms
+[13:15:28] GET /favicon.ico 404 5ms
+[13:15:29] GET /admin/favicon.ico 200 14ms
+[13:26:53] GET / 302 2ms
+[13:26:53] GET /admin 200 2ms
