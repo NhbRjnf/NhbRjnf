@@ -173,7 +173,13 @@ get_header();
     if (!elTypeBadge) return;
     const raw = String(typeValue || '').trim().toLowerCase();
     const type = raw || 'product';
-    elTypeBadge.textContent = type;
+    const typeLabels = {
+      product: 'Товар',
+      service: 'Сервис',
+      location: 'Локация',
+      navigation: 'Навигация',
+    };
+    elTypeBadge.textContent = typeLabels[type] || type;
     elTypeBadge.className = `vp-inst-type vp-inst-type--${type}`;
   }
 

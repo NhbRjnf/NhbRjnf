@@ -1,27 +1,27 @@
 # cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-04T19:59:33+00:00
+# time: 2026-02-04T20:13:18+00:00
 
-[20:00:43] GET /public/index.php?s=/index/\think\app/invokefunction&function=call_user_func_array&vars[0]=md5&vars[1][]=Hello 404 3ms
-[20:00:44] GET /index.php?lang=../../../../../../../../usr/local/lib/php/pearcmd&+config-create+/&/%3C?echo(md5(%22hi%22));?%3E+/tmp/index1.php 404 4ms
-[20:00:45] GET /index.php?lang=../../../../../../../../tmp/index1 404 4ms
-[20:00:46] GET /containers/json 404 4ms
-[20:24:23] GET /_ignition/execute-solution 404 7ms
-[20:30:24] GET / 302 3ms
-[20:32:26] GET / 302 1ms
-[20:32:27] GET /admin 200 2ms
-[20:38:32] GET / 302 3ms
-[20:38:32] GET /admin 200 1ms
-[20:55:06] GET / 302 2ms
-[20:55:07] GET /admin 200 1ms
-[21:21:53] GET /items/qr_codes?limit=20&fields=id%2Ccode%2Ctitle%2Ctype%2Cinstruction_url%2Cproduct_id.id%2Cproduct_id.title%2Cproduct_id.model%2Cproduct_id.sku%2Cproduct_id.instruction_url&filter=%7B%22_or%22%3A%5B%7B%22code%22%3A%7B%22_icontains%22%3A%22Vp%22%7D%7D%2C%7B%22title%22%3A%7B%22_icontains%22%3A%22Vp%22%7D%7D%2C%7B%22type%22%3A%7B%22_icontains%22%3A%22Vp%22%7D%7D%2C%7B%22product_id%22%3A%7B%22title%22%3A%7B%22_icontains%22%3A%22Vp%22%7D%7D%7D%2C%7B%22product_id%22%3A%7B%22model%22%3A%7B%22_icontains%22%3A%22Vp%22%7D%7D%7D%2C%7B%22product_id%22%3A%7B%22sku%22%3A%7B%22_icontains%22%3A%22Vp%22%7D%7D%7D%5D%7D&sort=-id 200 23ms
-[21:21:55] GET /items/qr_codes?limit=1&fields=%2A%2Cproduct_id.%2A%2Cqr_file.%2A%2Cqr_file_png.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 200 23ms
-[21:21:58] GET /items/qr_codes?limit=1&fields=code%2Ctitle%2Ctype%2Cpayload%2Cinstruction_id%2Cproduct_id.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 403 9ms
-[21:22:04] GET /items/qr_codes?limit=1&fields=code%2Ctitle%2Ctype%2Cpayload%2Cinstruction_id%2Cproduct_id.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 403 7ms
-[21:22:58] GET /favicon.ico 404 4ms
-[21:23:07] GET /items/qr_codes?limit=20&fields=id%2Ccode%2Ctitle%2Ctype%2Cinstruction_url%2Cproduct_id.id%2Cproduct_id.title%2Cproduct_id.model%2Cproduct_id.sku%2Cproduct_id.instruction_url&filter=%7B%22_or%22%3A%5B%7B%22code%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%2C%7B%22title%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%2C%7B%22type%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%2C%7B%22product_id%22%3A%7B%22title%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%7D%2C%7B%22product_id%22%3A%7B%22model%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%7D%2C%7B%22product_id%22%3A%7B%22sku%22%3A%7B%22_icontains%22%3A%22vp%22%7D%7D%7D%5D%7D&sort=-id 200 11ms
-[21:23:08] GET /items/qr_codes?limit=1&fields=%2A%2Cproduct_id.%2A%2Cqr_file.%2A%2Cqr_file_png.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 200 42ms
-[21:23:13] GET /items/qr_codes?limit=1&fields=code%2Ctitle%2Ctype%2Cpayload%2Cinstruction_id%2Cproduct_id.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 403 8ms
-[21:23:57] GET /items/qr_codes?limit=1&fields=%2A%2Cproduct_id.%2A%2Cqr_file.%2A%2Cqr_file_png.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 200 24ms
-[21:24:06] GET /items/qr_codes?limit=1&fields=code%2Ctitle%2Ctype%2Cpayload%2Cinstruction_id%2Cproduct_id.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 403 12ms
-[21:26:37] GET /robots.txt 200 2ms
-[21:28:16] GET /server/health 200 6ms
+[22:13:00] GET /fx.php 404 5ms
+[22:13:01] GET /ioxi-o.php 404 5ms
+[22:13:01] GET /themes.php 404 4ms
+[22:13:02] GET /class-t.api.php 404 5ms
+[22:13:02] GET /sf.php 404 4ms
+[22:13:03] GET /rip.php 404 4ms
+[22:13:03] GET /classwithtostring.php 404 8ms
+[22:13:04] GET /autoload_classmap.php 404 3ms
+[22:13:04] GET /cgi-bin/ 404 4ms
+[22:13:05] GET /fonts/index.php 404 5ms
+[22:13:05] GET /wk/index.php 404 3ms
+[22:13:05] GET /index/function.php 404 4ms
+[22:13:06] GET /wp-xml.php 404 4ms
+[22:13:06] GET /wp-good.php 404 3ms
+[22:13:06] GET /wp-editor.php 404 3ms
+[22:13:06] GET /wp-admin/js/ 404 3ms
+[22:13:07] GET /wp-content/index.php 404 4ms
+[22:13:07] GET /wp-content/admin.php 404 3ms
+[22:13:07] GET /wp-content/themes/admin.php 404 3ms
+[22:13:07] GET /wp-content/themes/index.php 404 5ms
+[22:13:08] GET /wp-content/plugins/index.php 404 4ms
+[22:13:08] GET /wp-includes/theme-compat/ 404 4ms
+[22:13:08] GET /wp-includes/block-supports/ 404 5ms
+[22:13:08] GET /wp-includes/block-bindings/ 404 3ms
