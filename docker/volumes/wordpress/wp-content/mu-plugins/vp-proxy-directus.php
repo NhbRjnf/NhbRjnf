@@ -42,24 +42,8 @@ add_action('rest_api_init', function () {
     'callback' => 'vp_instruction_callback',
     'permission_callback' => '__return_true',
   ]);
-
-  
-  
 });
 
-function vp_directus_base_url() {
-  $u = getenv('DIRECTUS_BASE_URL');
-  if (!$u) $u = getenv('VP_DIRECTUS_URL');
-  if (!$u) $u = getenv('DIRECTUS_URL');
-  return $u ? rtrim($u, '/') : '';
-}
-
-function vp_directus_api_token() {
-  $t = getenv('DIRECTUS_API_TOKEN');
-  if (!$t) $t = getenv('VP_DIRECTUS_TOKEN');
-  if (!$t) $t = getenv('DIRECTUS_TOKEN');
-  return $t ?: '';
-}
 
 
 function vp_directus_get($pathWithQuery) {

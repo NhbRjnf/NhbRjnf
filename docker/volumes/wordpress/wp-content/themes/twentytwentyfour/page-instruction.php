@@ -59,7 +59,6 @@ get_header();
   const elSku = document.getElementById('vp-inst-sku');
   const elDescription = document.getElementById('vp-inst-description-text');
   const elInstruction = document.getElementById('vp-inst-instruction');
-  
 
   function showError(msg) {
     elLoading.style.display = 'none';
