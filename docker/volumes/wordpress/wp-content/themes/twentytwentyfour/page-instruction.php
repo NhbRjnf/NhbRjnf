@@ -6,7 +6,10 @@ get_header();
   <div id="vp-inst-header">
     <div class="vp-inst-hero">
       <div class="vp-inst-hero-text">
-        <div class="vp-inst-eyebrow" id="vp-inst-eyebrow">Инструкция</div>
+        <div class="vp-inst-hero-topline">
+          <div class="vp-inst-eyebrow" id="vp-inst-eyebrow">Инструкция</div>
+          <span class="vp-inst-type" id="vp-inst-type-badge">product</span>
+        </div>
         <h1>Инструкция</h1>
         <div id="vp-inst-sub"></div>
         <div class="vp-inst-chips" id="vp-inst-chips" aria-label="Параметры товара"></div>
@@ -92,6 +95,7 @@ get_header();
   const elSteps = document.getElementById('vp-inst-steps');
   const elSub = document.getElementById('vp-inst-sub');
   const elEyebrow = document.getElementById('vp-inst-eyebrow');
+  const elTypeBadge = document.getElementById('vp-inst-type-badge');
   const elChips = document.getElementById('vp-inst-chips');
   const elBrand = document.getElementById('vp-inst-brand');
   const elModel = document.getElementById('vp-inst-model');
@@ -148,14 +152,42 @@ get_header();
       .join('');
   }
 
+  function escapeHtml(value) {
+    return String(value || '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function renderMarkdownLinks(value) {
+    const safe = escapeHtml(value);
+    return safe.replace(
+      /\[([^\]]+)]\((https?:\/\/[^)\s]+|mailto:[^)\s]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
+  }
+
+  function setTypeBadge(typeValue) {
+    if (!elTypeBadge) return;
+    const raw = String(typeValue || '').trim().toLowerCase();
+    const type = raw || 'product';
+    elTypeBadge.textContent = type;
+    elTypeBadge.className = `vp-inst-type vp-inst-type--${type}`;
+  }
+
   function wireActions({ instructionUrl, shareText, copyText }) {
     const canShare = Boolean(navigator.share);
     const canCopy = Boolean(navigator.clipboard);
+    const canOpen = Boolean(instructionUrl);
 
     if (elShareBtn) elShareBtn.disabled = !canShare;
     if (elShareBtnSticky) elShareBtnSticky.disabled = !canShare;
     if (elCopyBtn) elCopyBtn.disabled = !canCopy;
     if (elCopyBtnSticky) elCopyBtnSticky.disabled = !canCopy;
+    if (elOpenBtn) elOpenBtn.disabled = !canOpen;
+    if (elOpenBtnSticky) elOpenBtnSticky.disabled = !canOpen;
 
     const openHandler = () => {
       if (!instructionUrl) return;
@@ -196,6 +228,7 @@ get_header();
 
       const product = j.product || {};
       const inst = j.instruction || {};
+      const scenarioType = inst.type || j.type || 'product';
       const steps = Array.isArray(inst.steps) ? inst.steps : [];
 
       const title = product.title || inst.title || `Инструкция (${code})`;
@@ -208,8 +241,9 @@ get_header();
       if (inst.level) subParts.push(`LEVEL ${inst.level}`);
       elSub.textContent = subParts.join(' • ');
       if (elEyebrow) {
-        elEyebrow.textContent = inst.type ? String(inst.type).toUpperCase() : 'Инструкция';
+        elEyebrow.textContent = 'Инструкция';
       }
+      setTypeBadge(scenarioType);
 
       elLoading.style.display = 'none';
       elError.style.display = 'none';
@@ -222,8 +256,9 @@ get_header();
       elBrand.textContent = product.brand || '—';
       elModel.textContent = product.model || '—';
       elSku.textContent = product.sku || '—';
-      elDescription.textContent =
-        inst.description || product.description || 'Описание пока не добавлено.';
+      elDescription.innerHTML = renderMarkdownLinks(
+        inst.description || product.description || 'Описание пока не добавлено.'
+      );
       renderChips(product, code);
 
       const instructionUrl = inst.url || inst.instruction_url || product.instruction_url || '';
@@ -247,7 +282,7 @@ get_header();
 
         const body = document.createElement('div');
         body.className = 'vp-inst-step-body';
-        body.textContent = s.body || '';
+        body.innerHTML = renderMarkdownLinks(s.body || '');
 
         if (s.body && s.body.includes('Важно:')) {
           const idx = s.body.indexOf('Важно:');
@@ -261,7 +296,7 @@ get_header();
           }
           const imp = document.createElement('div');
           imp.className = 'vp-inst-important';
-          imp.textContent = importantText.trim();
+          imp.innerHTML = renderMarkdownLinks(importantText.trim());
           body.appendChild(imp);
         }
 

@@ -1,13 +1,15 @@
 /* --- ВсёПонятно: стили для страницы инструкции --- */
 :root {
-  --vp-inst-bg: #f7f7fb;
-  --vp-inst-card: #ffffff;
-  --vp-inst-text: #13131a;
-  --vp-inst-muted: #6c6c7a;
-  --vp-inst-line: rgba(10, 12, 18, 0.08);
-  --vp-inst-accent: #5b7cff;
-  --vp-inst-accent-soft: rgba(91, 124, 255, 0.12);
-  --vp-inst-shadow: 0 16px 38px rgba(20, 20, 35, 0.12);
+  --vp-inst-bg: #0b0f14;
+  --vp-inst-card: #101823;
+  --vp-inst-card-soft: #0f1720;
+  --vp-inst-text: #eaf0ff;
+  --vp-inst-muted: #a7b0c7;
+  --vp-inst-line: rgba(255, 255, 255, 0.08);
+  --vp-inst-accent: #5ee1ff;
+  --vp-inst-accent-soft: rgba(94, 225, 255, 0.18);
+  --vp-inst-danger: #ff5a6a;
+  --vp-inst-shadow: 0 14px 50px rgba(0, 0, 0, 0.35);
 }
 
 #vp-instruction {
@@ -16,6 +18,10 @@
   max-width: 1100px;
   margin: 0 auto;
   padding: 20px 16px 96px;
+  background: radial-gradient(1200px 700px at 30% -10%, rgba(94, 225, 255, 0.12), transparent 55%),
+    radial-gradient(1000px 650px at 90% 0%, rgba(255, 90, 106, 0.1), transparent 50%),
+    var(--vp-inst-bg);
+  border-radius: 24px;
 }
 
 #vp-inst-header {
@@ -27,9 +33,16 @@
   gap: 24px;
   padding: 24px;
   border-radius: 20px;
-  background: linear-gradient(135deg, rgba(91, 124, 255, 0.12), rgba(255, 255, 255, 0.6));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
   border: 1px solid var(--vp-inst-line);
   box-shadow: var(--vp-inst-shadow);
+}
+
+.vp-inst-hero-topline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .vp-inst-hero-text h1 {
@@ -63,15 +76,16 @@
   padding: 10px 16px;
   border-radius: 14px;
   border: 1px solid var(--vp-inst-line);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  color: var(--vp-inst-text);
 }
 
 .vp-inst-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(91, 124, 255, 0.12);
-  border-color: rgba(91, 124, 255, 0.3);
+  box-shadow: 0 10px 24px rgba(94, 225, 255, 0.12);
+  border-color: rgba(94, 225, 255, 0.3);
 }
 
 .vp-inst-btn:disabled {
@@ -82,9 +96,9 @@
 }
 
 .vp-inst-btn--primary {
-  background: linear-gradient(135deg, rgba(91, 124, 255, 0.85), rgba(91, 124, 255, 0.6));
-  color: #fff;
-  border-color: rgba(91, 124, 255, 0.6);
+  background: linear-gradient(135deg, rgba(94, 225, 255, 0.3), rgba(94, 225, 255, 0.14));
+  color: var(--vp-inst-text);
+  border-color: rgba(94, 225, 255, 0.35);
 }
 
 .vp-inst-btn--ghost {
@@ -107,7 +121,7 @@
   padding: 6px 10px;
   border-radius: 999px;
   border: 1px solid var(--vp-inst-line);
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.2);
   font-size: 0.85rem;
   color: var(--vp-inst-muted);
 }
@@ -123,7 +137,7 @@
 }
 
 .vp-inst-skeleton {
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.06) 25%, rgba(0, 0, 0, 0.12) 45%, rgba(0, 0, 0, 0.06) 65%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 25%, rgba(255, 255, 255, 0.12) 45%, rgba(255, 255, 255, 0.06) 65%);
   border-radius: 16px;
   background-size: 200% 100%;
   animation: vp-inst-skeleton 1.4s ease-in-out infinite;
@@ -231,6 +245,12 @@
   opacity: 0.95;
 }
 
+.vp-inst-step-body a,
+#vp-inst-description-text a {
+  color: var(--vp-inst-accent);
+  text-decoration: underline;
+}
+
 .vp-inst-media {
   text-align: center;
   margin: 8px 0 12px;
@@ -247,8 +267,8 @@
 }
 
 .vp-inst-important {
-  background: #fffbe5;
-  border-left: 4px solid #ffc107;
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 4px solid var(--vp-inst-accent);
   padding: 8px 12px;
   margin-top: 8px;
   margin-bottom: 12px;
@@ -277,7 +297,8 @@
   padding: 8px 16px;
   border-radius: 12px;
   border: 1px solid var(--vp-inst-line);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--vp-inst-text);
 }
 
 .vp-inst-sticky {
@@ -288,7 +309,7 @@
   display: flex;
   gap: 8px;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(11, 15, 20, 0.92);
   border-top: 1px solid var(--vp-inst-line);
   transform: translateY(120%);
   transition: transform 0.2s ease;
@@ -304,6 +325,39 @@
   flex: 1 1 auto;
   padding: 10px 8px;
   font-size: 0.85rem;
+}
+
+.vp-inst-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid var(--vp-inst-line);
+  background: rgba(94, 225, 255, 0.12);
+  color: var(--vp-inst-text);
+  text-transform: uppercase;
+}
+
+.vp-inst-type--product {
+  border-color: rgba(94, 225, 255, 0.4);
+}
+
+.vp-inst-type--service {
+  background: rgba(91, 124, 255, 0.18);
+  border-color: rgba(91, 124, 255, 0.45);
+}
+
+.vp-inst-type--location {
+  background: rgba(255, 186, 73, 0.18);
+  border-color: rgba(255, 186, 73, 0.45);
+}
+
+.vp-inst-type--navigation {
+  background: rgba(255, 90, 106, 0.18);
+  border-color: rgba(255, 90, 106, 0.45);
 }
 
 @media (min-width: 900px) {

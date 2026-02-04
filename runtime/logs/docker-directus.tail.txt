@@ -1,7 +1,6 @@
 # cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-04T19:28:15+00:00
+# time: 2026-02-04T19:59:33+00:00
 
-[20:00:41] GET /index.php?s=/index/\think\app/invokefunction&function=call_user_func_array&vars[0]=md5&vars[1][]=Hello 404 4ms
 [20:00:43] GET /public/index.php?s=/index/\think\app/invokefunction&function=call_user_func_array&vars[0]=md5&vars[1][]=Hello 404 3ms
 [20:00:44] GET /index.php?lang=../../../../../../../../usr/local/lib/php/pearcmd&+config-create+/&/%3C?echo(md5(%22hi%22));?%3E+/tmp/index1.php 404 4ms
 [20:00:45] GET /index.php?lang=../../../../../../../../tmp/index1 404 4ms
@@ -25,3 +24,4 @@
 [21:23:57] GET /items/qr_codes?limit=1&fields=%2A%2Cproduct_id.%2A%2Cqr_file.%2A%2Cqr_file_png.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 200 24ms
 [21:24:06] GET /items/qr_codes?limit=1&fields=code%2Ctitle%2Ctype%2Cpayload%2Cinstruction_id%2Cproduct_id.%2A&filter=%7B%22code%22%3A%7B%22_eq%22%3A%22VP-PH-EP2231-START%22%7D%7D 403 12ms
 [21:26:37] GET /robots.txt 200 2ms
+[21:28:16] GET /server/health 200 6ms

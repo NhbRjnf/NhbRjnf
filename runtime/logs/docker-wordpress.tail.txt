@@ -1,11 +1,6 @@
 # cmd: docker logs --tail 24 vse_wordpress
-# time: 2026-02-04T19:28:15+00:00
+# time: 2026-02-04T19:59:33+00:00
 
-195.49.205.53 - - [04/Feb/2026:21:23:02 +0200] "GET /manifest.json HTTP/1.0" 200 688 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
-195.49.205.53 - - [04/Feb/2026:21:23:02 +0200] "GET /scan HTTP/1.0" 301 286 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
-195.49.205.53 - - [04/Feb/2026:21:23:02 +0200] "GET /wp-content/themes/twentytwentyfour/assets/vp-scan.css HTTP/1.0" 200 2108 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
-195.49.205.53 - - [04/Feb/2026:21:23:02 +0200] "GET /wp-content/themes/twentytwentyfour/assets/vp-scan.js HTTP/1.0" 200 5570 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
-195.49.205.53 - - [04/Feb/2026:21:23:02 +0200] "GET /scan/ HTTP/1.0" 200 8793 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:21:23:02 +0200] "GET /favicon.ico HTTP/1.0" 302 392 "https://xn--b1awacccnl0jqa.xn--p1ai/scan/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:21:23:02 +0200] "GET /wp-includes/images/w-logo-blue-white-bg.png HTTP/1.0" 200 4369 "https://xn--b1awacccnl0jqa.xn--p1ai/scan/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:21:23:02 +0200] "GET /favicon.ico HTTP/1.0" 302 392 "https://xn--b1awacccnl0jqa.xn--p1ai/scan/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
@@ -25,3 +20,8 @@
 195.49.205.53 - - [04/Feb/2026:21:23:57 +0200] "GET /wp-json/vp/v1/lookup?code=VP-PH-EP2231-START HTTP/1.0" 200 3248 "https://xn--b1awacccnl0jqa.xn--p1ai/scan/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:21:24:06 +0200] "GET /wp-json/vp/v1/instruction?code=VP-PH-EP2231-START HTTP/1.0" 403 932 "https://xn--b1awacccnl0jqa.xn--p1ai/instruction/?code=VP-PH-EP2231-START" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:21:24:07 +0200] "GET /service-worker.js HTTP/1.0" 200 953 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36"
+31.128.40.56 - - [04/Feb/2026:21:28:16 +0200] "GET /wp-json/ HTTP/1.0" 200 423296 "-" "curl/7.81.0"
+172.18.0.3 - - [04/Feb/2026:21:43:38 +0200] "POST /wp-cron.php?doing_wp_cron=1770234217.9046809673309326171875 HTTP/1.0" 200 285 "-" "WordPress/6.9.1; https://xn--b1awacccnl0jqa.xn--p1ai"
+40.77.167.184 - - [04/Feb/2026:21:43:37 +0200] "GET /robots.txt HTTP/1.0" 200 341 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm) Chrome/116.0.1938.76 Safari/537.36"
+40.77.167.184 - - [04/Feb/2026:21:44:01 +0200] "GET /robots.txt HTTP/1.0" 200 341 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm) Chrome/116.0.1938.76 Safari/537.36"
+207.46.13.128 - - [04/Feb/2026:21:44:01 +0200] "GET /sitemap.txt HTTP/1.0" 404 74258 "-" "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm) Chrome/116.0.1938.76 Safari/537.36"
