@@ -1,5 +1,7 @@
 <?php
-if ( ! defined('ABSPATH') ) exit;
+/**
+ * Basic theme header for VP pages.
+ */
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>

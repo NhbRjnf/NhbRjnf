@@ -1,5 +1,8 @@
 <?php
-if ( ! defined('ABSPATH') ) exit;
-wp_footer();
-?></body>
+/**
+ * Basic theme footer for VP pages.
+ */
+?>
+<?php wp_footer(); ?>
+</body>
 </html>
