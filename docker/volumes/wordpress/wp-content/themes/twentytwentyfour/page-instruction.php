@@ -42,8 +42,6 @@ get_header();
   </div>
 </main>
 
-<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/instruction.css" />
-
 <script>
 (function () {
   const params = new URLSearchParams(location.search);
