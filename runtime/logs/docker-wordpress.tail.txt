@@ -1,8 +1,6 @@
 # cmd: docker logs --tail 24 vse_wordpress
-# time: 2026-02-04T12:06:49+00:00
+# time: 2026-02-04T12:07:13+00:00
 
-176.208.74.10 - - [04/Feb/2026:12:57:53 +0200] "GET /wp-content/themes/twentytwentyfour/assets/vendor/html5-qrcode.min.js?ver=2.3.8 HTTP/1.0" 200 108749 "https://xn--b1awacccnl0jqa.xn--p1ai/scan/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
-176.208.74.10 - - [04/Feb/2026:12:57:53 +0200] "GET /wp-content/themes/twentytwentyfour/assets/fonts/inter/Inter-VariableFont_slnt,wght.woff2 HTTP/1.0" 304 214 "https://xn--b1awacccnl0jqa.xn--p1ai/scan/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
 176.208.74.10 - - [04/Feb/2026:12:57:53 +0200] "GET /service-worker.js HTTP/1.0" 200 953 "https://xn--b1awacccnl0jqa.xn--p1ai/scan/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
 176.208.74.10 - - [04/Feb/2026:12:57:53 +0200] "GET /wp-content/themes/twentytwentyfour/assets/vp-scan.css HTTP/1.0" 200 2108 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
 176.208.74.10 - - [04/Feb/2026:12:57:53 +0200] "GET /manifest.json HTTP/1.0" 200 688 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
@@ -25,3 +23,5 @@
 213.180.203.124 - - [04/Feb/2026:13:07:45 +0200] "GET /robots.txt HTTP/1.0" 200 341 "-" "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)"
 213.180.203.243 - - [04/Feb/2026:13:07:45 +0200] "GET /wp-content/uploads/2022/06/-%D0%BB%D0%BE%D0%B3%D0%BE-1-1-e1655829929749.png HTTP/1.0" 404 74258 "-" "Mozilla/5.0 (compatible; YandexFavicons/1.0; +http://yandex.com/bots)"
 3.224.234.70 - - [04/Feb/2026:13:27:54 +0200] "GET /wp-json/ HTTP/1.0" 200 423296 "-" "Mozilla/5.0 (compatible)"
+172.18.0.3 - - [04/Feb/2026:14:06:49 +0200] "POST /wp-cron.php?doing_wp_cron=1770206809.9503290653228759765625 HTTP/1.0" 200 285 "-" "WordPress/6.9.1; https://xn--b1awacccnl0jqa.xn--p1ai"
+31.128.40.56 - - [04/Feb/2026:14:06:49 +0200] "GET /wp-json/ HTTP/1.0" 200 423296 "-" "curl/7.81.0"

@@ -1,6 +1,3 @@
-176.208.74.10 - - [04/Feb/2026:10:58:04 +0000] "GET /wp-content/themes/twentytwentyfour/instruction.css HTTP/1.1" 200 974 "https://xn--b1awacccnl0jqa.xn--p1ai/instruction/?code=VP-PH-EP2231-START" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
-176.208.74.10 - - [04/Feb/2026:10:58:04 +0000] "GET /favicon.ico HTTP/1.1" 302 0 "https://xn--b1awacccnl0jqa.xn--p1ai/instruction/?code=VP-PH-EP2231-START" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
-176.208.74.10 - - [04/Feb/2026:10:58:05 +0000] "GET /service-worker.js HTTP/1.1" 200 647 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
 176.208.74.10 - - [04/Feb/2026:10:58:21 +0000] "GET /service-worker.js HTTP/1.1" 200 647 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
 176.208.74.10 - - [04/Feb/2026:10:58:31 +0000] "GET /scan/ HTTP/1.1" 200 8281 "https://xn--b1awacccnl0jqa.xn--p1ai/scan/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
 176.208.74.10 - - [04/Feb/2026:10:58:33 +0000] "GET /service-worker.js HTTP/1.1" 200 647 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
@@ -22,3 +19,6 @@
 167.94.146.62 - - [04/Feb/2026:12:02:30 +0000] "GET / HTTP/1.1" 404 134 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)"
 167.94.146.62 - - [04/Feb/2026:12:02:30 +0000] "PRI * HTTP/2.0" 400 166 "-" "-"
 167.94.146.62 - - [04/Feb/2026:12:02:34 +0000] "\x16\x03\x01\x01\x15\x01\x00\x01\x11\x03\x03\x99\x07\xCC\xD1\x14\x90\x19S\xEE\xAB\xAF\xB3\xBD\xEBV\xCF%+r\x16\xFCi\xE2\xBBY\x15.\xB9\x84" 400 166 "-" "-"
+31.128.40.56 - - [04/Feb/2026:12:06:49 +0000] "GET /server/health HTTP/1.1" 200 15 "-" "curl/7.81.0"
+172.18.0.3 - - [04/Feb/2026:12:06:50 +0000] "POST /wp-cron.php?doing_wp_cron=1770206809.9503290653228759765625 HTTP/1.1" 200 0 "-" "WordPress/6.9.1; https://xn--b1awacccnl0jqa.xn--p1ai"
+31.128.40.56 - - [04/Feb/2026:12:06:50 +0000] "GET /wp-json/ HTTP/1.1" 200 423259 "-" "curl/7.81.0"
