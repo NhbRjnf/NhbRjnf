@@ -2,7 +2,7 @@
 /* Template Name: VP Instruction */
 get_header();
 ?>
-<main id="vp-instruction" style="max-width: 900px; margin: 0 auto; padding: 16px;">
+<main id="vp-instruction" style="max-width: 1100px; margin: 0 auto; padding: 16px;">
   <div id="vp-inst-header" style="margin-bottom: 16px;">
     <h1 style="margin: 0 0 8px 0;">Инструкция</h1>
     <div id="vp-inst-sub" style="opacity: .75;"></div>
@@ -11,7 +11,35 @@ get_header();
   <div id="vp-inst-loading">Загрузка…</div>
   <div id="vp-inst-error" style="display:none; color: #b00020;"></div>
 
-  <ol id="vp-inst-steps" style="display:none;"></ol>
+  <div id="vp-inst-grid" class="vp-inst-grid" style="display:none;">
+    <section class="vp-inst-card" id="vp-inst-product">
+      <h2>Товар</h2>
+      <dl class="vp-inst-meta">
+        <div>
+          <dt>Бренд</dt>
+          <dd id="vp-inst-brand">—</dd>
+        </div>
+        <div>
+          <dt>Модель</dt>
+          <dd id="vp-inst-model">—</dd>
+        </div>
+        <div>
+          <dt>SKU</dt>
+          <dd id="vp-inst-sku">—</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="vp-inst-card" id="vp-inst-description">
+      <h2>Описание</h2>
+      <p id="vp-inst-description-text">Описание загружается…</p>
+    </section>
+
+    <section class="vp-inst-card vp-inst-card--full" id="vp-inst-instruction">
+      <h2>Инструкция</h2>
+      <ol id="vp-inst-steps" style="display:none;"></ol>
+    </section>
+  </div>
 </main>
 
 <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/instruction.css" />
@@ -23,12 +51,18 @@ get_header();
 
   const elLoading = document.getElementById('vp-inst-loading');
   const elError = document.getElementById('vp-inst-error');
+  const elGrid = document.getElementById('vp-inst-grid');
   const elSteps = document.getElementById('vp-inst-steps');
   const elSub = document.getElementById('vp-inst-sub');
+  const elBrand = document.getElementById('vp-inst-brand');
+  const elModel = document.getElementById('vp-inst-model');
+  const elSku = document.getElementById('vp-inst-sku');
+  const elDescription = document.getElementById('vp-inst-description-text');
+  const elInstruction = document.getElementById('vp-inst-instruction');
 
   function showError(msg) {
     elLoading.style.display = 'none';
-    elSteps.style.display = 'none';
+    elGrid.style.display = 'none';
     elError.style.display = 'block';
     elError.textContent = msg;
   }
@@ -62,8 +96,14 @@ get_header();
 
       elLoading.style.display = 'none';
       elError.style.display = 'none';
+      elGrid.style.display = 'grid';
       elSteps.style.display = 'block';
       elSteps.innerHTML = '';
+
+      elBrand.textContent = product.brand || '—';
+      elModel.textContent = product.model || '—';
+      elSku.textContent = product.sku || '—';
+      elDescription.textContent = inst.description || product.description || 'Описание пока не добавлено.';
 
       if (!steps.length) {
         const li = document.createElement('li');
@@ -93,53 +133,7 @@ get_header();
             const span = document.createElement('span');
             span.textContent = beforeText.trim();
             body.appendChild(span);
-          }
-          const importantDiv = document.createElement('div');
-          importantDiv.className = 'vp-inst-important';
-          importantDiv.textContent = importantText;
-          body.appendChild(importantDiv);
-        }
-
-        const mediaBlock = document.createElement('div');
-        mediaBlock.className = 'vp-inst-media';
-
-        if (s.model_url) {
-          const modelViewer = document.createElement('model-viewer');
-          modelViewer.src = s.model_url;
-          modelViewer.alt = s.title || '3D model';
-          modelViewer.setAttribute('camera-controls', 'true');
-          modelViewer.setAttribute('auto-rotate', 'true');
-          modelViewer.style.width = '100%';
-          modelViewer.style.height = '300px';
-          mediaBlock.appendChild(modelViewer);
-        } else if (s.video_url) {
-          const video = document.createElement('video');
-          video.src = s.video_url;
-          video.controls = true;
-          video.className = 'vp-inst-media-video';
-          mediaBlock.appendChild(video);
-        }
-
-        if (s.image_file_url) {
-          const img = document.createElement('img');
-          img.src = s.image_file_url;
-          img.alt = s.title || '';
-          img.className = 'vp-inst-media-img';
-          mediaBlock.appendChild(img);
-        }
-
-        if (mediaBlock.children.length > 0) {
-          li.appendChild(h);
-          li.appendChild(mediaBlock);
-        } else {
-          li.appendChild(h);
-        }
-        li.appendChild(body);
-        elSteps.appendChild(li);
-      }
-
-      const totalSteps = steps.length;
-      let currentStepIndex = 0;
+@@ -143,55 +183,55 @@ get_header();
       const allSteps = elSteps.querySelectorAll('li');
       allSteps.forEach((step, index) => {
         if (index !== 0) step.style.display = 'none';
@@ -165,11 +159,11 @@ get_header();
       progressText.id = 'vp-inst-progress-text';
       progressText.textContent = `Шаг 1 из ${totalSteps}`;
 
-      controls.appendChild(btnPrev);
-      controls.appendChild(progressText);
-      controls.appendChild(btnNext);
-      elSteps.parentNode.appendChild(controls);
-      controls.style.display = 'flex';
+      controls.appendChild(btnPrev);␊
+      controls.appendChild(progressText);␊
+      controls.appendChild(btnNext);␊
+      elInstruction.appendChild(controls);
+      controls.style.display = 'flex';␊
 
       btnNext.addEventListener('click', () => {
         if (currentStepIndex < totalSteps - 1) {
@@ -195,7 +189,3 @@ get_header();
         }
       });
     })
-    .catch(() => showError('Сеть/сервер недоступен'));
-})();
-</script>
-<?php get_footer(); ?>
