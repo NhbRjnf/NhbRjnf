@@ -1,0 +1,67 @@
+[22-Jan-2026 10:32:18 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 261
+[22-Jan-2026 10:41:50 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 261
+[22-Jan-2026 10:41:50 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 261
+[22-Jan-2026 10:47:48 UTC] PHP Fatal error:  Cannot redeclare vp_directus_token() (previously declared in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:24) in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 273
+[22-Jan-2026 10:47:48 UTC] PHP Fatal error:  Cannot redeclare vp_directus_token() (previously declared in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:24) in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 273
+[22-Jan-2026 10:55:00 UTC] PHP Fatal error:  Cannot redeclare vp_directus_token() (previously declared in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:24) in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 273
+[22-Jan-2026 10:59:36 UTC] PHP Deprecated:  Файл Тема без header.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон header.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 10:59:36 UTC] PHP Deprecated:  Файл Тема без footer.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон footer.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 11:01:40 UTC] PHP Deprecated:  Файл Тема без header.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон header.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 11:01:40 UTC] PHP Deprecated:  Файл Тема без footer.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон footer.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 11:31:22 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function vp_directus_token() in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:46
+Stack trace:
+#0 /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php(91): vp_directus_get('/items/qr_codes...')
+#1 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1292): vp_lookup_callback(Object(WP_REST_Request))
+#2 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/vp/v1/lookup', Array, NULL)
+#3 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#4 /var/www/html/wp-includes/rest-api.php(467): WP_REST_Server->serve_request('/vp/v1/lookup')
+#5 /var/www/html/wp-includes/class-wp-hook.php(341): rest_api_loaded(Object(WP))
+#6 /var/www/html/wp-includes/class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#7 /var/www/html/wp-includes/plugin.php(570): WP_Hook->do_action(Array)
+#8 /var/www/html/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#9 /var/www/html/wp-includes/class-wp.php(821): WP->parse_request('')
+#10 /var/www/html/wp-includes/functions.php(1343): WP->main('')
+#11 /var/www/html/wp-blog-header.php(16): wp()
+#12 /var/www/html/index.php(17): require('/var/www/html/w...')
+#13 {main}
+  thrown in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 46
+[22-Jan-2026 11:31:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function vp_directus_token() in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:46
+Stack trace:
+#0 /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php(221): vp_directus_get('/items/qr_codes...')
+#1 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1292): vp_instruction_callback(Object(WP_REST_Request))
+#2 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/vp/v1/instruct...', Array, NULL)
+#3 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#4 /var/www/html/wp-includes/rest-api.php(467): WP_REST_Server->serve_request('/vp/v1/instruct...')
+#5 /var/www/html/wp-includes/class-wp-hook.php(341): rest_api_loaded(Object(WP))
+#6 /var/www/html/wp-includes/class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#7 /var/www/html/wp-includes/plugin.php(570): WP_Hook->do_action(Array)
+#8 /var/www/html/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#9 /var/www/html/wp-includes/class-wp.php(821): WP->parse_request('')
+#10 /var/www/html/wp-includes/functions.php(1343): WP->main('')
+#11 /var/www/html/wp-blog-header.php(16): wp()
+#12 /var/www/html/index.php(17): require('/var/www/html/w...')
+#13 {main}
+  thrown in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 46
+[22-Jan-2026 11:55:20 UTC] PHP Deprecated:  Файл Тема без header.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон header.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 11:55:20 UTC] PHP Deprecated:  Файл Тема без footer.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон footer.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 12:31:38 UTC] Automatic updates starting...
+[22-Jan-2026 12:31:39 UTC] Automatic updates complete.
+[23-Jan-2026 00:51:38 UTC] Automatic updates starting...
+[23-Jan-2026 00:51:39 UTC] Automatic updates complete.
+[23-Jan-2026 03:20:55 UTC] PHP Deprecated:  Файл Тема без header.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон header.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[23-Jan-2026 03:20:55 UTC] PHP Deprecated:  Файл Тема без footer.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон footer.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[26-Jan-2026 07:02:02 UTC] Automatic updates starting...
+[26-Jan-2026 07:02:03 UTC] Automatic updates complete.
+[26-Jan-2026 12:46:58 UTC] Automatic updates starting...
+[26-Jan-2026 12:46:59 UTC] Automatic updates complete.
+[27-Jan-2026 00:36:42 UTC] Automatic updates starting...
+[27-Jan-2026 00:36:43 UTC] Automatic updates complete.
+[03-Feb-2026 08:45:28 UTC] Automatic updates starting...
+[03-Feb-2026 08:45:29 UTC] Automatic updates complete.
+[03-Feb-2026 08:45:33 UTC] PHP Notice:  _wp_delete_all_temp_backups(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[03-Feb-2026 13:06:13 UTC] Automatic updates starting...
+[03-Feb-2026 13:06:14 UTC] Automatic updates complete.
+[04-Feb-2026 03:11:13 UTC] Automatic updates starting...
+[04-Feb-2026 03:11:14 UTC] Automatic updates complete.
+[04-Feb-2026 03:11:14 UTC] PHP Notice:  maintenance_mode(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[04-Feb-2026 03:11:14 UTC] PHP Warning:  chmod(): Operation not permitted in /var/www/html/wp-admin/includes/class-wp-filesystem-direct.php on line 173

@@ -86,7 +86,13 @@ logs/
 # --- SECURITY ---
 SECURITY.md
 
-# --- RUNTIME SNAPSHOTS ---
-runtime/
-*.health
-*.status
+# --- RUNTIME LOG SNAPSHOTS (safe to commit) ---
+# по умолчанию runtime игнорим
+runtime/*
+# но разрешаем лог-снапшоты
+!runtime/logs/
+!runtime/logs/**
+# запрещаем реальные большие/сырые логи
+runtime/logs/*.raw
+runtime/logs/*.full
+runtime/logs/*.gz
