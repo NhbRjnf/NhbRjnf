@@ -1,5 +1,5 @@
 # cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose ps
-# time: 2026-02-04T20:13:18+00:00
+# time: 2026-02-04T20:25:52+00:00
 
 NAME            IMAGE                      COMMAND                  SERVICE     CREATED        STATUS        PORTS
 vse_directus    directus/directus:latest   "docker-entrypoint.s…"   directus    13 days ago    Up 27 hours   127.0.0.1:8055->8055/tcp

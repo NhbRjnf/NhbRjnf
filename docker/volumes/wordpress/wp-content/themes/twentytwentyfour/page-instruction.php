@@ -65,6 +65,38 @@ get_header();
       <p id="vp-inst-description-text">Описание загружается…</p>
     </section>
 
+    <section class="vp-inst-card vp-inst-card--full" id="vp-inst-navigation" style="display:none;">
+      <div class="vp-inst-card-head">
+        <span class="vp-inst-anchor"></span>
+        <h2>Навигация</h2>
+      </div>
+      <div class="vp-inst-nav-card">
+        <div class="vp-inst-nav-meta">
+          <div>
+            <div class="vp-inst-nav-label">Старт</div>
+            <div class="vp-inst-nav-value" id="vp-inst-nav-start">—</div>
+          </div>
+          <div>
+            <div class="vp-inst-nav-label">Финиш</div>
+            <div class="vp-inst-nav-value" id="vp-inst-nav-end">—</div>
+          </div>
+          <div>
+            <div class="vp-inst-nav-label">Ориентиры</div>
+            <div class="vp-inst-nav-value" id="vp-inst-nav-landmarks">—</div>
+          </div>
+        </div>
+        <div class="vp-inst-nav-media" id="vp-inst-nav-media"></div>
+        <div class="vp-inst-nav-actions" id="vp-inst-nav-actions"></div>
+        <div class="vp-inst-nav-steps" id="vp-inst-nav-steps"></div>
+        <div class="vp-inst-nav-fallback" id="vp-inst-nav-fallback" style="display:none;">
+          <div class="vp-inst-nav-fallback-text">Навигационные данные пока недоступны.</div>
+          <button class="vp-inst-btn vp-inst-btn--ghost" id="vp-inst-nav-report" type="button">
+            Сообщить о проблеме
+          </button>
+        </div>
+      </div>
+    </section>
+
     <section class="vp-inst-card vp-inst-card--full" id="vp-inst-instruction">
       <div class="vp-inst-card-head">
         <span class="vp-inst-anchor"></span>
@@ -101,6 +133,15 @@ get_header();
   const elModel = document.getElementById('vp-inst-model');
   const elSku = document.getElementById('vp-inst-sku');
   const elDescription = document.getElementById('vp-inst-description-text');
+  const elNavigation = document.getElementById('vp-inst-navigation');
+  const elNavStart = document.getElementById('vp-inst-nav-start');
+  const elNavEnd = document.getElementById('vp-inst-nav-end');
+  const elNavLandmarks = document.getElementById('vp-inst-nav-landmarks');
+  const elNavMedia = document.getElementById('vp-inst-nav-media');
+  const elNavActions = document.getElementById('vp-inst-nav-actions');
+  const elNavSteps = document.getElementById('vp-inst-nav-steps');
+  const elNavFallback = document.getElementById('vp-inst-nav-fallback');
+  const elNavReport = document.getElementById('vp-inst-nav-report');
   const elInstruction = document.getElementById('vp-inst-instruction');
   const elOpenBtn = document.getElementById('vp-inst-open-btn');
   const elShareBtn = document.getElementById('vp-inst-share-btn');
@@ -169,6 +210,141 @@ get_header();
     );
   }
 
+  function renderMediaCard(media) {
+    if (!media) return '';
+    if (media.type === 'image') {
+      return `<img src="${escapeHtml(media.url)}" alt="${escapeHtml(media.alt || 'map')}" />`;
+    }
+    if (media.type === 'video') {
+      return `<video src="${escapeHtml(media.url)}" controls></video>`;
+    }
+    return '';
+  }
+
+  function renderNavSteps(steps) {
+    if (!Array.isArray(steps) || !steps.length) return '';
+    return steps
+      .map((step, index) => {
+        const title = escapeHtml(step.title || `Шаг ${index + 1}`);
+        const body = renderMarkdownLinks(step.body || '');
+        const media = step.media
+          ? renderMediaCard(step.media)
+          : step.media_url
+            ? renderMediaCard({ type: step.media_type || 'image', url: step.media_url })
+            : '';
+        const floor = step.floor ? `<span class="vp-inst-nav-floor">Этаж ${escapeHtml(step.floor)}</span>` : '';
+        return `
+          <div class="vp-inst-nav-step">
+            <div class="vp-inst-nav-step-head">
+              <div class="vp-inst-nav-step-title">${title}</div>
+              ${floor}
+            </div>
+            ${media ? `<div class="vp-inst-nav-step-media">${media}</div>` : ''}
+            <div class="vp-inst-nav-step-body">${body}</div>
+          </div>
+        `;
+      })
+      .join('');
+  }
+
+  function renderNavActions(type, payload, codeValue) {
+    if (!elNavActions) return;
+    const buttons = [];
+    const mapUrl = payload?.map_url || payload?.mapUrl || payload?.route_url || payload?.routeUrl;
+
+    if (type === 'navigation') {
+      buttons.push({ label: 'Открыть маршрут', url: mapUrl });
+      buttons.push({ label: 'Поделиться маршрутом', action: 'share-route' });
+      buttons.push({ label: 'Скопировать точку', action: 'copy-point' });
+    }
+
+    if (type === 'location') {
+      buttons.push({ label: 'Показать на карте', url: mapUrl });
+      buttons.push({ label: 'Как пройти', action: 'how-to' });
+      buttons.push({ label: 'Часы работы', action: 'hours' });
+    }
+
+    if (!buttons.length) {
+      elNavActions.innerHTML = '';
+      return;
+    }
+
+    elNavActions.innerHTML = buttons
+      .map((btn, index) => {
+        if (btn.url) {
+          return `<a class="vp-inst-btn ${index === 0 ? 'vp-inst-btn--primary' : ''}" href="${escapeHtml(btn.url)}" target="_blank" rel="noopener noreferrer">${btn.label}</a>`;
+        }
+        return `<button class="vp-inst-btn ${index === 0 ? 'vp-inst-btn--primary' : ''}" type="button" data-action="${btn.action}">${btn.label}</button>`;
+      })
+      .join('');
+
+    elNavActions.querySelectorAll('button[data-action]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const action = btn.getAttribute('data-action');
+        if (action === 'share-route' && navigator.share) {
+          await navigator.share({
+            title: document.title,
+            text: `Маршрут для кода ${codeValue}`,
+            url: mapUrl || location.href,
+          });
+        }
+        if (action === 'copy-point' && navigator.clipboard) {
+          await navigator.clipboard.writeText(payload?.point || payload?.location || codeValue);
+        }
+        if (action === 'how-to') {
+          if (payload?.how_to) {
+            alert(payload.how_to);
+          }
+        }
+        if (action === 'hours') {
+          if (payload?.hours) {
+            alert(payload.hours);
+          }
+        }
+      });
+    });
+  }
+
+  function renderNavigationBlock(type, payload, codeValue) {
+    if (!elNavigation) return;
+    const isNav = type === 'navigation' || type === 'location';
+    elNavigation.style.display = isNav ? 'block' : 'none';
+    if (!isNav) return;
+
+    const start = payload?.start || payload?.from || '—';
+    const end = payload?.end || payload?.to || '—';
+    const landmarks = Array.isArray(payload?.landmarks) ? payload.landmarks.join(' • ') : payload?.landmarks || '—';
+    const media = payload?.map_image
+      ? { type: 'image', url: payload.map_image }
+      : payload?.map_video
+        ? { type: 'video', url: payload.map_video }
+        : null;
+
+    if (elNavStart) elNavStart.textContent = start;
+    if (elNavEnd) elNavEnd.textContent = end;
+    if (elNavLandmarks) elNavLandmarks.textContent = landmarks;
+    if (elNavMedia) {
+      elNavMedia.innerHTML = media ? renderMediaCard(media) : '';
+    }
+    if (elNavSteps) {
+      elNavSteps.innerHTML = renderNavSteps(payload?.steps || payload?.route_steps || []);
+    }
+
+    const hasPayload = Boolean(payload && (payload.start || payload.end || payload.steps || payload.route_steps));
+    if (elNavFallback) {
+      elNavFallback.style.display = hasPayload ? 'none' : 'block';
+    }
+    if (elNavReport) {
+      elNavReport.onclick = () => {
+        const subject = encodeURIComponent(`Проблема с навигацией (${codeValue})`);
+        const body = encodeURIComponent('Опишите, что не так с навигацией.');
+        window.location.href = `mailto:support@xn--b1awacccnl0jqa.xn--p1ai?subject=${subject}&body=${body}`;
+      };
+    }
+
+    renderNavActions(type, payload || {}, codeValue);
+  }
+
   function setTypeBadge(typeValue) {
     if (!elTypeBadge) return;
     const raw = String(typeValue || '').trim().toLowerCase();
@@ -234,6 +410,7 @@ get_header();
 
       const product = j.product || {};
       const inst = j.instruction || {};
+      const payload = inst.navigation_payload || inst.location_payload || inst.payload || j.payload || {};
       const scenarioType = inst.type || j.type || 'product';
       const steps = Array.isArray(inst.steps) ? inst.steps : [];
 
@@ -266,6 +443,7 @@ get_header();
         inst.description || product.description || 'Описание пока не добавлено.'
       );
       renderChips(product, code);
+      renderNavigationBlock(scenarioType, payload, code);
 
       const instructionUrl = inst.url || inst.instruction_url || product.instruction_url || '';
       const shareText = title ? `${title} (${code})` : `Инструкция (${code})`;

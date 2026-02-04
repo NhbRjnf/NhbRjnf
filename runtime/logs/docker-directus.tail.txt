@@ -1,8 +1,6 @@
 # cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-04T20:13:18+00:00
+# time: 2026-02-04T20:25:52+00:00
 
-[22:13:00] GET /fx.php 404 5ms
-[22:13:01] GET /ioxi-o.php 404 5ms
 [22:13:01] GET /themes.php 404 4ms
 [22:13:02] GET /class-t.api.php 404 5ms
 [22:13:02] GET /sf.php 404 4ms
@@ -25,3 +23,5 @@
 [22:13:08] GET /wp-includes/theme-compat/ 404 4ms
 [22:13:08] GET /wp-includes/block-supports/ 404 5ms
 [22:13:08] GET /wp-includes/block-bindings/ 404 3ms
+[22:13:18] GET /server/health 200 15ms
+[22:25:44] GET /robots.txt 200 4ms

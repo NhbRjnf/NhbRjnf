@@ -1,7 +1,6 @@
 # cmd: docker logs --tail 24 vse_wordpress
-# time: 2026-02-04T20:13:18+00:00
+# time: 2026-02-04T20:25:52+00:00
 
-195.49.205.53 - - [04/Feb/2026:22:01:41 +0200] "GET /favicon.ico HTTP/1.0" 302 392 "https://xn--b1awacccnl0jqa.xn--p1ai/instruction/?code=VP-PH-EP2231-START" "Mozilla/5.0 (Linux; arm_64; Android 12; GLA-LX1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.7444.110 YaBrowser/25.12.4.110.00 Mobile Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:22:01:41 +0200] "GET /wp-json/vp/v1/instruction?code=VP-PH-EP2231-START HTTP/1.0" 403 932 "https://xn--b1awacccnl0jqa.xn--p1ai/instruction/?code=VP-PH-EP2231-START" "Mozilla/5.0 (Linux; arm_64; Android 12; GLA-LX1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.7444.110 YaBrowser/25.12.4.110.00 Mobile Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:22:01:44 +0200] "GET /instruction/?code=VP-PH-EP2231-START HTTP/1.0" 200 10756 "-" "Mozilla/5.0 (Linux; arm_64; Android 12; GLA-LX1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.7444.110 YaBrowser/25.12.4.110.00 Mobile Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:22:01:44 +0200] "GET /wp-json/vp/v1/instruction?code=VP-PH-EP2231-START HTTP/1.0" 403 932 "https://xn--b1awacccnl0jqa.xn--p1ai/instruction/?code=VP-PH-EP2231-START" "Mozilla/5.0 (Linux; arm_64; Android 12; GLA-LX1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.7444.110 YaBrowser/25.12.4.110.00 Mobile Safari/537.36"
@@ -25,3 +24,4 @@
 195.49.205.53 - - [04/Feb/2026:22:03:46 +0200] "GET /instruction/?code=VP-PH-EP2231-START HTTP/1.0" 200 10756 "http://www.yandex.ru/clck/jsredir?from=yandex.ru%3Bsuggest%3Bbrowser&text=" "Mozilla/5.0 (Linux; arm_64; Android 12; GLA-LX1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.7444.110 YaBrowser/25.12.4.110.00 Mobile Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:22:03:46 +0200] "GET /favicon.ico HTTP/1.0" 302 392 "https://xn--b1awacccnl0jqa.xn--p1ai/instruction/?code=VP-PH-EP2231-START" "Mozilla/5.0 (Linux; arm_64; Android 12; GLA-LX1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.7444.110 YaBrowser/25.12.4.110.00 Mobile Safari/537.36"
 195.49.205.53 - - [04/Feb/2026:22:03:46 +0200] "GET /wp-json/vp/v1/instruction?code=VP-PH-EP2231-START HTTP/1.0" 403 932 "https://xn--b1awacccnl0jqa.xn--p1ai/instruction/?code=VP-PH-EP2231-START" "Mozilla/5.0 (Linux; arm_64; Android 12; GLA-LX1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.7444.110 YaBrowser/25.12.4.110.00 Mobile Safari/537.36"
+31.128.40.56 - - [04/Feb/2026:22:13:18 +0200] "GET /wp-json/ HTTP/1.0" 200 423296 "-" "curl/7.81.0"
