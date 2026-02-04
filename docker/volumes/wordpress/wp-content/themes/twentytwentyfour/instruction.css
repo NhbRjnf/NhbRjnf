@@ -1,7 +1,55 @@
-/* --- ВсёПонятно: стили для карточки инструкции --- */
-#vp-inst-steps { list-style: none; padding-left: 0; }
+/* --- ВсёПонятно: стили для страницы инструкции --- */
+#vp-instruction {
+  color: #1a1a1a;
+  line-height: 1.6;
+}
+#vp-inst-header h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+.vp-inst-grid {
+  display: grid;
+  gap: 20px;
+}
+.vp-inst-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+.vp-inst-card h2 {
+  margin: 0 0 12px 0;
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+.vp-inst-meta {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.vp-inst-meta div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.vp-inst-meta dt {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6a6a6a;
+}
+.vp-inst-meta dd {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+#vp-inst-description-text {
+  margin: 0;
+  font-size: 1rem;
+}
+#vp-inst-steps { list-style: none; padding-left: 0; margin: 0; }
 .vp-inst-step { margin-bottom: 16px; }
-.vp-inst-step-title { font-weight: 700; margin-bottom: 6px; }
+.vp-inst-step-title { font-weight: 700; margin-bottom: 6px; font-size: 1.05rem; }
 .vp-inst-step-body { opacity: 0.95; }
 
 .vp-inst-media { text-align: center; margin: 8px 0 12px; }
@@ -35,6 +83,24 @@
 .vp-inst-nav-button {
   font-size: 1rem;
   padding: 8px 16px;
+}
+
+@media (min-width: 900px) {
+  .vp-inst-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .vp-inst-card--full {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 599px) {
+  #vp-inst-header h1 {
+    font-size: 1.6rem;
+  }
+  .vp-inst-card {
+    padding: 16px;
+  }
 }
 .vp-card {
     background-color: var(--vp-color, #f2f2f2);
