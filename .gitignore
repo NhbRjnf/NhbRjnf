@@ -43,6 +43,7 @@ docker/volumes/wordpress/wp-content/*
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-scan.php
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-instruction.php
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/instruction.css
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/functions.php
 
 # Разрешаем assets
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/
