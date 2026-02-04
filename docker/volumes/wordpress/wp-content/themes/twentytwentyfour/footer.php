@@ -1,6 +1,6 @@
 <?php
 /**
- * Basic theme footer for VP pages.
+ * Basic theme fooooooooooter for VP pages.
  */
 ?>
 <?php wp_footer(); ?>
