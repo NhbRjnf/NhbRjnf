@@ -1,0 +1,163 @@
+# cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose config
+# time: 2026-02-04T08:20:33+00:00
+
+name: docker
+services:
+  directus:
+    container_name: vse_directus
+    depends_on:
+      postgres:
+        condition: service_started
+        required: true
+    environment:
+      ADMIN_EMAIL: crimease@yandex.ru
+      ADMIN_PASSWORD: '!!!LdfRjnf'
+      DB_CLIENT: pg
+      DB_DATABASE: vseponyatno
+      DB_HOST: postgres
+      DB_PASSWORD: '!!!LdfRjnf'
+      DB_PORT: "5432"
+      DB_USER: vse_user
+      DIRECTUS_ADMIN_EMAIL: crimease@yandex.ru
+      DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
+      DIRECTUS_API_TOKEN: 8HxoCi3Aq8d0NmD-IMlgE-h0i2egJ6si
+      DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      POSTGRES_DB: vseponyatno
+      POSTGRES_PASSWORD: '!!!LdfRjnf'
+      POSTGRES_USER: vse_user
+      PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      TZ: Europe/Riga
+      WP_DB_HOST: mariadb
+      WP_DB_NAME: wp_vseponyatno
+      WP_DB_PASSWORD: '!!!LdfRjnf'
+      WP_DB_USER: wp_user
+    image: directus/directus:latest
+    networks:
+      vseponyatno_net: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 8055
+        published: "8055"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/directus_uploads
+        target: /directus/uploads
+        bind: {}
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/directus_extensions
+        target: /directus/extensions
+        bind: {}
+  mariadb:
+    container_name: vse_mariadb
+    environment:
+      DIRECTUS_ADMIN_EMAIL: crimease@yandex.ru
+      DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
+      DIRECTUS_API_TOKEN: 8HxoCi3Aq8d0NmD-IMlgE-h0i2egJ6si
+      DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      MARIADB_DATABASE: wp_vseponyatno
+      MARIADB_PASSWORD: '!!!LdfRjnf'
+      MARIADB_ROOT_PASSWORD: '!!!LdfRjnf'
+      MARIADB_USER: wp_user
+      POSTGRES_DB: vseponyatno
+      POSTGRES_PASSWORD: '!!!LdfRjnf'
+      POSTGRES_USER: vse_user
+      PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      TZ: Europe/Riga
+      WP_DB_HOST: mariadb
+      WP_DB_NAME: wp_vseponyatno
+      WP_DB_PASSWORD: '!!!LdfRjnf'
+      WP_DB_USER: wp_user
+    image: mariadb:10.11
+    networks:
+      vseponyatno_net: null
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/mariadb
+        target: /var/lib/mysql
+        bind: {}
+  postgres:
+    container_name: vse_postgres
+    environment:
+      DIRECTUS_ADMIN_EMAIL: crimease@yandex.ru
+      DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
+      DIRECTUS_API_TOKEN: 8HxoCi3Aq8d0NmD-IMlgE-h0i2egJ6si
+      DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      POSTGRES_DB: vseponyatno
+      POSTGRES_PASSWORD: '!!!LdfRjnf'
+      POSTGRES_USER: vse_user
+      PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      TZ: Europe/Riga
+      WP_DB_HOST: mariadb
+      WP_DB_NAME: wp_vseponyatno
+      WP_DB_PASSWORD: '!!!LdfRjnf'
+      WP_DB_USER: wp_user
+    image: postgres:15
+    networks:
+      vseponyatno_net: null
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/postgres
+        target: /var/lib/postgresql/data
+        bind: {}
+  wordpress:
+    container_name: vse_wordpress
+    depends_on:
+      mariadb:
+        condition: service_started
+        required: true
+    environment:
+      DIRECTUS_ADMIN_EMAIL: crimease@yandex.ru
+      DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
+      DIRECTUS_API_TOKEN: 8HxoCi3Aq8d0NmD-IMlgE-h0i2egJ6si
+      DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      POSTGRES_DB: vseponyatno
+      POSTGRES_PASSWORD: '!!!LdfRjnf'
+      POSTGRES_USER: vse_user
+      PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      TZ: Europe/Riga
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_NAME: wp_vseponyatno
+      WORDPRESS_DB_PASSWORD: '!!!LdfRjnf'
+      WORDPRESS_DB_USER: wp_user
+      WP_DB_HOST: mariadb
+      WP_DB_NAME: wp_vseponyatno
+      WP_DB_PASSWORD: '!!!LdfRjnf'
+      WP_DB_USER: wp_user
+    image: wordpress:php8.2-apache
+    networks:
+      vseponyatno_net: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 80
+        published: "8080"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/wordpress
+        target: /var/www/html
+        bind: {}
+networks:
+  vseponyatno_net:
+    name: docker_vseponyatno_net
+    driver: bridge

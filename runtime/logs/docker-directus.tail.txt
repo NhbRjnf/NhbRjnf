@@ -1,0 +1,27 @@
+# cmd: docker logs --tail 24 vse_directus
+# time: 2026-02-04T08:20:34+00:00
+
+[10:19:22] GET /wp-content/admin.php 404 3ms
+[10:19:22] GET /wp-content/uploads/admin.php 404 5ms
+[10:19:22] GET /wp-includes/ 404 4ms
+[10:19:23] GET /wp-includes/css/ 404 3ms
+[10:19:23] GET /wp-includes/js/plupload/ 404 8ms
+[10:19:23] GET /.well-known/ 404 3ms
+[10:19:23] GET /222.php 404 5ms
+[10:19:24] GET /abcd.php 404 4ms
+[10:19:24] GET /class-t.api.php 404 4ms
+[10:19:24] GET /classwithtostring.php 404 6ms
+[10:19:24] GET /file.php 404 5ms
+[10:19:25] GET /info.php 404 3ms
+[10:19:25] GET /wp-admin/css/colors/coffee/ 404 4ms
+[10:19:25] GET /wp-admin/js/widgets/ 404 3ms
+[10:19:25] GET /wp-content/languages/ 404 3ms
+[10:19:26] GET /wp-content/languages/plugins/ 404 3ms
+[10:19:26] GET /wp-content/themes/twentytwentyfour/ 404 4ms
+[10:19:26] GET /wp-content/upgrade/ 404 5ms
+[10:19:26] GET /wp-content/uploads/ 404 8ms
+[10:19:27] GET /wp-good.php 404 4ms
+[10:19:27] GET /wp-includes/js/jquery/ 404 4ms
+[10:19:27] GET /wp-includes/js/jquery/ui/ 404 4ms
+[10:19:27] GET /wp-includes/js/tinymce/themes/ 404 7ms
+[10:19:28] GET /wp-includes/rest-api/ 404 2ms
