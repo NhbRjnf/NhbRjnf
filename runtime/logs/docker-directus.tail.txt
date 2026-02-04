@@ -1,11 +1,6 @@
 # cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-04T09:44:20+00:00
+# time: 2026-02-04T09:59:53+00:00
 
-[11:22:24] GET /wp-content/admin.php 404 4ms
-[11:22:25] GET /wp-content/uploads/admin.php 404 5ms
-[11:22:25] GET /wp-includes/ 404 3ms
-[11:22:25] GET /wp-includes/css/ 404 7ms
-[11:22:25] GET /wp-includes/js/plupload/ 404 4ms
 [11:22:26] GET /.well-known/ 404 5ms
 [11:22:26] GET /222.php 404 4ms
 [11:22:26] GET /abcd.php 404 4ms
@@ -25,3 +20,8 @@
 [11:22:29] GET /wp-includes/js/jquery/ui/ 404 3ms
 [11:22:29] GET /wp-includes/js/tinymce/themes/ 404 4ms
 [11:22:29] GET /wp-includes/rest-api/ 404 4ms
+[11:44:21] GET /server/health 200 14ms
+[11:54:16] GET /robots.txt 200 3ms
+[11:54:32] GET /1j05rbifw_miky2kd 404 8ms
+[11:54:35] GET / 302 1ms
+[11:54:35] GET /admin 200 1ms
