@@ -1,7 +1,27 @@
 # cmd: docker logs --tail 24 vse_wordpress
-# time: 2026-02-04T08:20:34+00:00
+# time: 2026-02-04T09:44:20+00:00
 
-AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.3. Set the 'ServerName' directive globally to suppress this message
-AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.18.0.3. Set the 'ServerName' directive globally to suppress this message
-[Wed Feb 04 10:20:34.057112 2026] [mpm_prefork:notice] [pid 1:tid 1] AH00163: Apache/2.4.66 (Debian) PHP/8.2.30 configured -- resuming normal operations
-[Wed Feb 04 10:20:34.057177 2026] [core:notice] [pid 1:tid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+172.18.0.3 - - [04/Feb/2026:10:20:35 +0200] "POST /wp-cron.php?doing_wp_cron=1770193235.0364289283752441406250 HTTP/1.0" 200 285 "-" "WordPress/6.9.1; https://xn--b1awacccnl0jqa.xn--p1ai"
+31.128.40.56 - - [04/Feb/2026:10:20:34 +0200] "GET /wp-json/ HTTP/1.0" 200 423296 "-" "curl/7.81.0"
+45.148.10.124 - - [04/Feb/2026:10:27:50 +0200] "GET /.env HTTP/1.0" 404 74258 "-" "Mozilla/5.0 (iPad; CPU OS 12_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/76.0.3809.81 Mobile/15E148 Safari/605.1"
+176.208.74.10 - - [04/Feb/2026:10:42:36 +0200] "GET /service-worker.js HTTP/1.0" 200 953 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
+172.18.0.3 - - [04/Feb/2026:10:44:26 +0200] "POST /wp-cron.php?doing_wp_cron=1770194666.2362520694732666015625 HTTP/1.0" 200 285 "-" "WordPress/6.9.1; https://xn--b1awacccnl0jqa.xn--p1ai"
+43.128.156.195 - - [04/Feb/2026:10:44:26 +0200] "GET / HTTP/1.0" 200 108293 "https://xn--b1awacccnl0jqa.xn--p1ai/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 CCleaner/130.0.0.0"
+23.23.253.54 - - [04/Feb/2026:10:51:15 +0200] "GET /instruction/ HTTP/1.0" 200 38947 "-" "Mozilla/5.0 (compatible)"
+23.23.253.54 - - [04/Feb/2026:10:51:15 +0200] "GET /instruction/ HTTP/1.0" 200 38947 "-" "Mozilla/5.0 (compatible)"
+23.23.253.54 - - [04/Feb/2026:10:51:15 +0200] "GET / HTTP/1.0" 200 108293 "-" "Mozilla/5.0 (compatible)"
+23.23.253.54 - - [04/Feb/2026:10:51:15 +0200] "GET /instruction/ HTTP/1.0" 200 38947 "-" "Mozilla/5.0 (compatible)"
+98.91.77.46 - - [04/Feb/2026:10:51:15 +0200] "GET /instruction/ HTTP/1.0" 200 38947 "-" "Mozilla/5.0 (compatible)"
+23.23.253.54 - - [04/Feb/2026:10:51:15 +0200] "GET / HTTP/1.0" 200 108293 "-" "Mozilla/5.0 (compatible)"
+3.224.234.70 - - [04/Feb/2026:10:51:15 +0200] "GET / HTTP/1.0" 200 108293 "-" "Mozilla/5.0 (compatible)"
+3.224.234.70 - - [04/Feb/2026:10:51:15 +0200] "GET / HTTP/1.0" 200 108293 "-" "Mozilla/5.0 (compatible)"
+98.91.77.46 - - [04/Feb/2026:10:51:15 +0200] "GET / HTTP/1.0" 200 108293 "-" "Mozilla/5.0 (compatible)"
+3.224.234.70 - - [04/Feb/2026:10:51:15 +0200] "GET /instruction/ HTTP/1.0" 200 38947 "-" "Mozilla/5.0 (compatible)"
+3.224.234.70 - - [04/Feb/2026:10:51:15 +0200] "GET / HTTP/1.0" 200 108293 "-" "Mozilla/5.0 (compatible)"
+3.224.234.70 - - [04/Feb/2026:10:51:21 +0200] "GET / HTTP/1.0" 200 108293 "-" "Mozilla/5.0 (compatible)"
+23.23.253.54 - - [04/Feb/2026:10:51:23 +0200] "GET /scan/ HTTP/1.0" 200 36965 "-" "Mozilla/5.0 (compatible)"
+23.23.253.54 - - [04/Feb/2026:10:51:23 +0200] "GET / HTTP/1.0" 200 108293 "-" "Mozilla/5.0 (compatible)"
+98.91.77.46 - - [04/Feb/2026:10:51:25 +0200] "GET /wp-json/ HTTP/1.0" 200 423296 "-" "Mozilla/5.0 (compatible)"
+98.91.77.46 - - [04/Feb/2026:10:51:30 +0200] "GET / HTTP/1.0" 200 108293 "-" "Mozilla/5.0 (compatible)"
+23.23.253.54 - - [04/Feb/2026:10:51:32 +0200] "GET /scan/ HTTP/1.0" 200 36965 "-" "Mozilla/5.0 (compatible)"
+176.208.74.10 - - [04/Feb/2026:11:02:07 +0200] "GET /service-worker.js HTTP/1.0" 200 953 "https://xn--b1awacccnl0jqa.xn--p1ai/service-worker.js" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
