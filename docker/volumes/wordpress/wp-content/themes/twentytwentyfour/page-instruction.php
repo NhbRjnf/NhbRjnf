@@ -150,6 +150,8 @@ get_header();
   const elOpenBtnSticky = document.getElementById('vp-inst-open-btn-sticky');
   const elShareBtnSticky = document.getElementById('vp-inst-share-btn-sticky');
   const elCopyBtnSticky = document.getElementById('vp-inst-copy-btn-sticky');
+  const elBackBtn = document.getElementById('vp-inst-back-btn');
+  const elBackBtnSticky = document.getElementById('vp-inst-back-btn-sticky');
 
   function showError(msg) {
     elLoading.style.display = 'none';
@@ -345,6 +347,20 @@ get_header();
     renderNavActions(type, payload || {}, codeValue);
   }
 
+  function getPrimaryCtaByType(type, instructionUrl, payload) {
+    const mapUrl = payload?.map_url || payload?.mapUrl || payload?.route_url || payload?.routeUrl;
+    if (type === 'navigation') {
+      return { label: 'Открыть маршрут', url: mapUrl || instructionUrl };
+    }
+    if (type === 'location') {
+      return { label: 'Показать на карте', url: mapUrl || instructionUrl };
+    }
+    if (type === 'service') {
+      return { label: 'Открыть сервис', url: instructionUrl };
+    }
+    return { label: 'Открыть инструкцию', url: instructionUrl };
+  }
+
   function setTypeBadge(typeValue) {
     if (!elTypeBadge) return;
     const raw = String(typeValue || '').trim().toLowerCase();
@@ -398,6 +414,22 @@ get_header();
     if (elCopyBtnSticky) elCopyBtnSticky.onclick = copyHandler;
   }
 
+  function setHeroCta(label, url) {
+    if (elOpenBtn) elOpenBtn.textContent = label;
+    if (elOpenBtnSticky) elOpenBtnSticky.textContent = label;
+    const canOpen = Boolean(url);
+    if (elOpenBtn) elOpenBtn.disabled = !canOpen;
+    if (elOpenBtnSticky) elOpenBtnSticky.disabled = !canOpen;
+    if (elOpenBtn) elOpenBtn.onclick = () => {
+      if (!url) return;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    };
+    if (elOpenBtnSticky) elOpenBtnSticky.onclick = () => {
+      if (!url) return;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    };
+  }
+
   setActionState(false);
 
   fetch(`/wp-json/vp/v1/instruction?code=${encodeURIComponent(code)}`)
@@ -446,14 +478,21 @@ get_header();
       renderNavigationBlock(scenarioType, payload, code);
 
       const instructionUrl = inst.url || inst.instruction_url || product.instruction_url || '';
+      const primaryCta = getPrimaryCtaByType(scenarioType, instructionUrl, payload);
+      setHeroCta(primaryCta.label, primaryCta.url);
       const shareText = title ? `${title} (${code})` : `Инструкция (${code})`;
       wireActions({ instructionUrl, shareText, copyText: code });
 
       if (!steps.length) {
         const li = document.createElement('li');
-        li.textContent = 'Шаги пока не добавлены.';
+        li.className = 'vp-inst-step';
+        const hint = document.createElement('div');
+        hint.className = 'vp-inst-step-body';
+        hint.innerHTML = instructionUrl
+          ? `Шаги пока не добавлены. <a href="${instructionUrl}" target="_blank" rel="noopener noreferrer">Открыть инструкцию</a>`
+          : 'Шаги пока не добавлены.';
+        li.appendChild(hint);
         elSteps.appendChild(li);
-        return;
       }
 
       for (const s of steps) {
@@ -535,18 +574,33 @@ get_header();
       progressText.id = 'vp-inst-progress-text';
       progressText.textContent = `Шаг 1 из ${totalSteps}`;
 
+      const progressDots = document.createElement('div');
+      progressDots.id = 'vp-inst-progress-dots';
+      progressDots.setAttribute('aria-hidden', 'true');
+      progressDots.innerHTML = Array.from({ length: totalSteps })
+        .map((_, idx) => `<span class="vp-inst-progress-dot ${idx === 0 ? 'is-active' : ''}"></span>`)
+        .join('');
+
       controls.appendChild(btnPrev);
       controls.appendChild(progressText);
+      controls.appendChild(progressDots);
       controls.appendChild(btnNext);
       elInstruction.appendChild(controls);
       controls.style.display = 'flex';
+
+      const updateProgress = () => {
+        progressText.textContent = `Шаг ${currentStepIndex + 1} из ${totalSteps}`;
+        progressDots.querySelectorAll('.vp-inst-progress-dot').forEach((dot, idx) => {
+          dot.classList.toggle('is-active', idx === currentStepIndex);
+        });
+      };
 
       btnNext.addEventListener('click', () => {
         if (currentStepIndex < totalSteps - 1) {
           allSteps[currentStepIndex].style.display = 'none';
           currentStepIndex++;
           allSteps[currentStepIndex].style.display = 'block';
-          progressText.textContent = `Шаг ${currentStepIndex + 1} из ${totalSteps}`;
+          updateProgress();
           btnPrev.disabled = false;
           if (currentStepIndex === totalSteps - 1) btnNext.disabled = true;
           allSteps[currentStepIndex].scrollIntoView({ behavior: 'smooth' });
@@ -558,7 +612,7 @@ get_header();
           allSteps[currentStepIndex].style.display = 'none';
           currentStepIndex--;
           allSteps[currentStepIndex].style.display = 'block';
-          progressText.textContent = `Шаг ${currentStepIndex + 1} из ${totalSteps}`;
+          updateProgress();
           btnNext.disabled = false;
           if (currentStepIndex === 0) btnPrev.disabled = true;
           allSteps[currentStepIndex].scrollIntoView({ behavior: 'smooth' });

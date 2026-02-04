@@ -241,6 +241,17 @@ add_action('wp_enqueue_scripts', function () {
       'mode'       => 'proxy',
     ]);
   }
+  
+  if (is_page('instruction')) {
+    $ver = '1.2.0';
+
+    wp_enqueue_style(
+      'vp-instruction',
+      get_stylesheet_directory_uri() . '/instruction.css',
+      [],
+      $ver
+    );
+  }
 });
 
 add_action('wp_head', function () {
