@@ -1,0 +1,8 @@
+# cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose ps
+# time: 2026-02-06T10:28:22+00:00
+
+NAME            IMAGE                      COMMAND                  SERVICE     CREATED         STATUS                  PORTS
+vse_directus    directus/directus:latest   "docker-entrypoint.s…"   directus    2 weeks ago     Up 2 days               127.0.0.1:8055->8055/tcp
+vse_mariadb     mariadb:10.11              "docker-entrypoint.s…"   mariadb     2 weeks ago     Up 3 days               3306/tcp
+vse_postgres    postgres:15                "docker-entrypoint.s…"   postgres    2 weeks ago     Up 3 days               5432/tcp
+vse_wordpress   wordpress:php8.2-apache    "docker-entrypoint.s…"   wordpress   2 seconds ago   Up Less than a second   127.0.0.1:8080->80/tcp
