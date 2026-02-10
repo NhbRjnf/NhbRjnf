@@ -1,0 +1,27 @@
+# cmd: docker logs --tail 24 vse_directus
+# time: 2026-02-10T08:56:52+00:00
+
+[10:46:21] GET /assets/runtime-dom.esm-bundler-DoRdk9oh.js 403 27ms
+[10:46:21] GET /assets/vue-i18n.CtBHPlhC.entry.js 403 24ms
+[10:46:21] GET /assets/pinia.DP3bnXS0.entry.js 403 31ms
+[10:46:21] GET /assets/index-lQIyXqp0.js 403 24ms
+[10:46:21] GET /assets/vue-router.C46Bd_-h.entry.js 403 25ms
+[10:46:21] GET /assets/index-BAB8_6Tr.css 403 16ms
+[10:46:22] GET /assets/runtime-core.esm-bundler-C5MyH5Ph.js 403 14ms
+[10:53:37] GET /items/directus_roles?limit=500 403 11ms
+[10:53:37] GET /items/directus_policies?limit=500 403 9ms
+[10:53:37] GET /items/directus_permissions?limit=2000 403 8ms
+[10:53:37] GET /flows?limit=500 200 14ms
+[10:53:37] GET /items/directus_presets?limit=2000 403 7ms
+[10:53:37] GET /items/directus_settings?limit=50 403 5ms
+[10:53:37] GET /server/health 200 7ms
+[10:53:38] GET /schema/snapshot 403 5ms
+[10:53:38] GET /collections 200 12ms
+[10:53:38] GET /fields 200 24ms
+[10:53:38] GET /relations 200 8ms
+[10:53:38] GET /roles 200 20ms
+[10:53:38] GET /permissions?limit=-1 200 18ms
+[10:53:38] GET /flows?limit=-1 200 6ms
+[10:53:38] GET /operations?limit=-1 200 9ms
+[10:53:38] GET /policies?limit=-1 200 19ms
+[10:53:38] GET /users/me 200 10ms
