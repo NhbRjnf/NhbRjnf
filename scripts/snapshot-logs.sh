@@ -142,6 +142,54 @@ if [ "$WITH_DIRECTUS" = "1" ]; then
   write_cmd_output "$LOG_DIR/docker-directus.tail.txt" docker logs --tail "$LINES" vse_directus
 fi
 
+# 4.5) Directus schema snapshot (Data Model)
+say "Collecting Directus schema snapshot..."
+DIRECTUS_SNAP_DIR="$ROOT/runtime/directus"
+mkdir -p "$DIRECTUS_SNAP_DIR"
+
+DIRECTUS_TS="$(ts)"
+DIRECTUS_TMP="/tmp/directus-schema-${DIRECTUS_TS}.yaml"
+DIRECTUS_OUT="$DIRECTUS_SNAP_DIR/schema.${DIRECTUS_TS}.yaml"
+
+# Снимаем snapshot внутри контейнера Directus (CLI использует env контейнера)
+# Команда schema snapshot/apply официально используется как подход для Data Model :contentReference[oaicite:1]{index=1}
+docker exec vse_directus sh -lc "npx --yes directus schema snapshot '$DIRECTUS_TMP'"
+
+# Копируем на хост в runtime/directus/
+docker cp "vse_directus:$DIRECTUS_TMP" "$DIRECTUS_OUT" || true
+docker exec vse_directus sh -lc "rm -f '$DIRECTUS_TMP'" || true
+
+sanitize_file "$DIRECTUS_OUT"
+
+# (Опционально) Попробовать экспортировать системные сущности через API токеном из окружения WP
+# Если токену запрещены system collections — будет 403, это нормально, просто зафиксируем.
+say "Collecting Directus config (best-effort via API)..."
+CFG_OUT="$DIRECTUS_SNAP_DIR/config.${DIRECTUS_TS}.txt"
+write_cmd_output "$CFG_OUT" bash -lc "
+  set -e
+  TOK=\$(docker exec vse_wordpress sh -lc 'printf \"%s\" \"\$DIRECTUS_API_TOKEN\"' || true)
+  BASE=\$(docker exec vse_wordpress sh -lc 'printf \"%s\" \"\$DIRECTUS_BASE_URL\"' || true)
+  if [ -z \"\$TOK\" ] || [ -z \"\$BASE\" ]; then
+    echo \"No DIRECTUS_API_TOKEN or DIRECTUS_BASE_URL in wordpress container env\"
+    exit 0
+  fi
+
+  echo \"BASE=\$BASE\"
+
+  for ep in \\
+    'items/directus_roles?limit=500' \\
+    'items/directus_policies?limit=500' \\
+    'items/directus_permissions?limit=2000' \\
+    'flows?limit=500' \\
+    'items/directus_presets?limit=2000' \\
+    'items/directus_settings?limit=50'
+  do
+    echo
+    echo \"==> GET /\$ep\"
+    curl -sS -i -H \"Authorization: Bearer \$TOK\" \"\$BASE/\$ep\" | head -n 80
+  done
+"
+
 # 5) WordPress debug.log in volume (if enabled)
 say "Collecting WordPress debug.log..."
 WP_DEBUG_SRC="$ROOT/docker/volumes/wordpress/wp-content/debug.log"
