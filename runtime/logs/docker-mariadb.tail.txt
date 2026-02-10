@@ -1,5 +1,5 @@
 # cmd: docker logs --tail 24 vse_mariadb
-# time: 2026-02-10T09:48:57+00:00
+# time: 2026-02-10T11:50:02+00:00
 
 2026-02-10  8:35:14 0 [Note] Starting MariaDB 10.11.15-MariaDB-ubu2204 source revision cb0d6dd835023a7162ace471cd047161f205dd58 server_uid zzDNBLCcWUvTB+Y6U5VXTRSYK4g= as process 1
 2026-02-10  8:35:14 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
@@ -20,7 +20,7 @@ create_uring failed: falling back to libaio
 2026-02-10  8:35:14 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
 2026-02-10  8:35:14 0 [Note] Plugin 'FEEDBACK' is disabled.
 2026-02-10  8:35:14 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
-2026-02-10  8:35:14 0 [Note] Server socket created on IP: '0.0.0.0', port: '3306'.
+2026-02-10  8:35:14 0 [Note] Server socket created on IP: '[REDACTED_IP]', port: '3306'.
 2026-02-10  8:35:14 0 [Note] Server socket created on IP: '::', port: '3306'.
 2026-02-10  8:35:14 0 [Note] InnoDB: Buffer pool(s) load completed at 260210  8:35:14
 2026-02-10  8:35:14 0 [Note] mariadbd: ready for connections.

@@ -1,9 +1,6 @@
 # cmd: docker logs --tail 24 vse_postgres
-# time: 2026-02-10T09:48:57+00:00
+# time: 2026-02-10T11:50:02+00:00
 
-2026-02-06 13:11:52.148 EET [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2026-02-06 13:11:52.152 EET [29] LOG:  database system was shut down at 2026-02-06 13:11:50 EET
-2026-02-06 13:11:52.161 EET [1] LOG:  database system is ready to accept connections
 2026-02-06 13:16:52.197 EET [27] LOG:  checkpoint starting: time
 2026-02-06 13:16:53.308 EET [27] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.003 s, total=1.112 s; sync files=13, longest=0.002 s, average=0.001 s; distance=39 kB, estimate=39 kB
 2026-02-06 13:21:52.409 EET [27] LOG:  checkpoint starting: time
@@ -25,3 +22,6 @@
 2026-02-10 10:53:37.035 EET [5856] LOG:  could not receive data from client: Connection reset by peer
 2026-02-10 10:57:07.439 EET [5862] LOG:  could not receive data from client: Connection reset by peer
 2026-02-10 10:57:07.439 EET [5863] LOG:  could not receive data from client: Connection reset by peer
+2026-02-10 11:49:12.204 EET [5919] LOG:  could not receive data from client: Connection reset by peer
+2026-02-10 12:43:06.829 EET [27] LOG:  checkpoint starting: time
+2026-02-10 12:43:14.572 EET [27] LOG:  checkpoint complete: wrote 78 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.735 s, sync=0.004 s, total=7.743 s; sync files=55, longest=0.001 s, average=0.001 s; distance=485 kB, estimate=485 kB
