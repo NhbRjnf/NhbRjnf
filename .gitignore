@@ -93,10 +93,12 @@ SECURITY.md
 
 # --- RUNTIME LOG SNAPSHOTS (safe to commit) ---
 # по умолчанию runtime игнорим
-runtime/*
+runtime/
 # но разрешаем лог-снапшоты
 !runtime/logs/
 !runtime/logs/**
+!runtime/directus/
+!runtime/directus/**
 # запрещаем реальные большие/сырые логи
 runtime/logs/*.raw
 runtime/logs/*.full
