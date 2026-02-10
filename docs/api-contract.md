@@ -1,42 +1,53 @@
 # API контракт WordPress ↔ Directus
 
-Все запросы из браузера идут ТОЛЬКО в WordPress.
-WordPress выступает proxy и обращается к Directus server-to-server.
+Все запросы из браузера идут только в WordPress.
+WordPress (mu-plugin proxy) ходит в Directus server-to-server с `DIRECTUS_API_TOKEN`.
 
-Токены Directus в браузер не попадают.
+## Основной endpoint
+
+### `GET /wp-json/vp/v1/instruction?code=<QR_CODE>`
+
+Назначение:
+- получить сценарий по QR-коду
+- нормализовать ответ Directus для универсальной страницы `/instruction`
+
+Ожидаемая логика:
+1. поиск записи в `qr_codes` по `code`
+2. проверка `is_active`
+3. загрузка нужных данных (`product` + `payload` по типу)
+4. возврат унифицированного JSON
+
+Типы сценариев:
+- `product`
+- `service`
+- `location`
+- `navigation`
+
+Базовые ошибки:
+- `404` — код не найден
+- `410` — код неактивен
+- `401/403` — ошибка доступа к Directus (часто ACL на поля)
+- `500` — внутренняя ошибка proxy/Directus
 
 ---
 
-## lookup
+## PWA `/scan`
 
-GET /wp-json/vp/v1/lookup?code=...
-
-Назначение:
-- найти QR-код по `code`
-- определить тип сценария
-- вернуть данные для /instruction
-
-Возвращает:
-- type (product | service | location | navigation)
-- данные продукта (если есть)
-- payload для универсальной страницы /instruction
-
-Ошибки:
-- 404 — код не найден
-- 410 — код неактивен
-- 500 — ошибка backend
+Экран `/scan`:
+- сканирует QR
+- допускает ручной ввод кода
+- вызывает `/wp-json/vp/v1/instruction?code=...`
+- переводит пользователя на `/instruction`
 
 ---
 
-## suggest
+## Критичный момент по ACL Directus
 
-GET /wp-json/vp/v1/suggest?term=...
+Даже при валидном токене можно получить 403, если:
+- роль не имеет доступа к конкретному полю
+- в `fields=` запрошено поле без разрешения (типичный пример: `payload`)
 
-Назначение:
-- автоподсказки при вводе кода
-- поиск по:
-  - qr_codes.code
-  - qr_codes.title
-  - product.title / model / sku
-
-Используется в PWA /scan.
+Поэтому при 403 сначала проверяются:
+1. `runtime/directus/permissions*.json|yaml`
+2. `runtime/logs/directus*`
+3. фактический набор `fields` в запросе proxy
