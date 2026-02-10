@@ -241,7 +241,11 @@ add_action('wp_enqueue_scripts', function () {
       'mode'       => 'proxy',
     ]);
   }
+<<<<<<< ours
   
+=======
+
+>>>>>>> theirs
   if (is_page('instruction')) {
     $ver = '1.2.0';
 
@@ -267,4 +271,3 @@ add_action('wp_footer', function () {
     echo "<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/service-worker.js');}</script>";
   }
 });
-

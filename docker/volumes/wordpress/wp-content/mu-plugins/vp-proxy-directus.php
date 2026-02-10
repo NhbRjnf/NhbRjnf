@@ -210,6 +210,59 @@ function vp_directus_asset_url($fileId) {
   return $base . '/assets/' . $fileId;
 }
 
+function vp_instruction_fallback_response($code, $row, $reason = 'instruction_access_limited') {
+  $product = is_array($row['product_id'] ?? null) ? $row['product_id'] : [];
+  $payload = [];
+  if (!empty($row['location_payload']) && is_array($row['location_payload'])) {
+    $payload = $row['location_payload'];
+  } elseif (!empty($row['service_payload']) && is_array($row['service_payload'])) {
+    $payload = $row['service_payload'];
+  }
+
+  $instructionUrl = '';
+  if (!empty($row['instruction_url'])) {
+    $instructionUrl = (string)$row['instruction_url'];
+  } elseif (!empty($product['instruction_url'])) {
+    $instructionUrl = (string)$product['instruction_url'];
+  }
+
+  $description = '';
+  if (!empty($payload['description']) && is_string($payload['description'])) {
+    $description = $payload['description'];
+  } elseif (!empty($product['description']) && is_string($product['description'])) {
+    $description = $product['description'];
+  }
+
+  $response = [
+    'code' => $code,
+    'product' => $product,
+    'instruction' => [
+      'title' => (string)($row['title'] ?? ($product['title'] ?? "Инструкция ({$code})")),
+      'description' => $description,
+      'instruction_url' => $instructionUrl,
+      'steps' => [],
+      'is_fallback' => true,
+    ],
+    'diagnostics' => [
+      'warning' => $reason,
+    ],
+  ];
+
+  if (array_key_exists('type', $row)) {
+    $response['type'] = $row['type'];
+  }
+
+  if (!empty($row['location_payload']) && is_array($row['location_payload'])) {
+    $response['payload'] = $row['location_payload'];
+  } elseif (!empty($row['service_payload']) && is_array($row['service_payload'])) {
+    $response['payload'] = $row['service_payload'];
+  } elseif (!empty($row['qr_payload_url']) && is_string($row['qr_payload_url'])) {
+    $response['payload'] = ['qr_payload_url' => $row['qr_payload_url']];
+  }
+
+  return new WP_REST_Response($response, 200);
+}
+
 function vp_instruction_callback(WP_REST_Request $req) {
   $code = trim((string)$req->get_param('code'));
   if ($code === '') {
@@ -221,7 +274,9 @@ function vp_instruction_callback(WP_REST_Request $req) {
     'code' => ['_eq' => $code],
   ], JSON_UNESCAPED_UNICODE));
 
-  $fields = rawurlencode('code,title,type,payload,instruction_id,product_id.*');
+  // Важно: используем только реально существующие и разрешённые поля qr_codes.
+  // Поле `payload` в текущей схеме отсутствует, из-за этого возможны ACL/403.
+  $fields = rawurlencode('code,title,type,instruction_url,location_title,service_payload,location_payload,qr_payload_url,instruction_id,product_id.*');
 
   $qr = vp_directus_get("/items/qr_codes?limit=1&fields={$fields}&filter={$filter}");
   if (is_wp_error($qr)) {
@@ -251,6 +306,11 @@ function vp_instruction_callback(WP_REST_Request $req) {
   $inst = vp_directus_get("/items/instruction_sets/{$instruction_id}?fields={$instFields}");
   if (is_wp_error($inst)) {
     $d = $inst->get_error_data();
+
+    if (($d['status'] ?? 0) === 401 || ($d['status'] ?? 0) === 403) {
+      return vp_instruction_fallback_response($code, $row, 'instruction_set_forbidden');
+    }
+
     return new WP_REST_Response([
       'error'  => $inst->get_error_code(),
       'status' => $d['status'] ?? 500,
@@ -272,11 +332,17 @@ function vp_instruction_callback(WP_REST_Request $req) {
   $stepsRes = vp_directus_get("/items/instruction_steps?limit=200&fields={$stepsFields}&filter={$stepsFilter}&sort=step_no");
   if (is_wp_error($stepsRes)) {
     $d = $stepsRes->get_error_data();
-    return new WP_REST_Response([
-      'error'  => $stepsRes->get_error_code(),
-      'status' => $d['status'] ?? 500,
-      'body'   => $d['body'] ?? null
-    ], $d['status'] ?? 500);
+
+    if (($d['status'] ?? 0) === 401 || ($d['status'] ?? 0) === 403) {
+      $stepsRes = ['data' => []];
+      $instruction['steps_access_limited'] = true;
+    } else {
+      return new WP_REST_Response([
+        'error'  => $stepsRes->get_error_code(),
+        'status' => $d['status'] ?? 500,
+        'body'   => $d['body'] ?? null
+      ], $d['status'] ?? 500);
+    }
   }
 
   $steps = $stepsRes['data'] ?? [];
@@ -291,17 +357,35 @@ function vp_instruction_callback(WP_REST_Request $req) {
   $instruction['steps'] = $steps;
 
 
+  // Нормализуем payload из реальных полей qr_codes.
+  $normalizedPayload = null;
+  if (!empty($row['location_payload']) && is_array($row['location_payload'])) {
+    $normalizedPayload = $row['location_payload'];
+  } elseif (!empty($row['service_payload']) && is_array($row['service_payload'])) {
+    $normalizedPayload = $row['service_payload'];
+  }
+
+  if (!is_array($normalizedPayload)) {
+    $normalizedPayload = [];
+  }
+
+  if (!empty($row['qr_payload_url']) && is_string($row['qr_payload_url']) && empty($normalizedPayload['qr_payload_url'])) {
+    $normalizedPayload['qr_payload_url'] = $row['qr_payload_url'];
+  }
+
+  if (!empty($row['location_title']) && is_string($row['location_title']) && empty($normalizedPayload['location_title'])) {
+    $normalizedPayload['location_title'] = $row['location_title'];
+  }
+
   $response = [
     'code' => $code,
     'product' => $row['product_id'] ?? null,
     'instruction' => $instruction,
+    'payload' => $normalizedPayload,
   ];
 
   if (array_key_exists('type', $row)) {
     $response['type'] = $row['type'];
-  }
-  if (array_key_exists('payload', $row)) {
-    $response['payload'] = $row['payload'];
   }
 
   return new WP_REST_Response($response, 200);

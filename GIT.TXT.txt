@@ -1,0 +1,101 @@
+гарантированный “чистый старт” WordPress
+cd /opt/vseponyatno/docker
+docker compose stop wordpress
+docker compose rm -f wordpress
+docker compose up -d wordpress
+
+
+
+Сбор логов для Codex (ОСНОВНОЙ СКРИПТ)
+6.1 Запуск скрипта
+cd /opt/vseponyatno
+./scripts/snapshot-logs.sh
+
+6.2 С обновлением WordPress (при необходимости)
+UPDATE_WORDPRESS=1 ./scripts/snapshot-logs.sh
+
+
+Как мы работаем дальше (очень важно)
+🔁 Когда ты что-то меняешь (локально / через Codex)
+git status        # посмотреть изменения
+git add .
+git commit -m "Что изменили"
+git push
+🔽 Когда нужно обновить сервер
+cd /opt/vseponyatno
+git pull
+docker compose up -d --build
+
+Nj!sSD!sM52x
+
+123!Nhbrjnf
+
+
+Чек-лист “безопасной работы”, чтобы не сломать прод
+
+Вот короткий, но реально рабочий протокол:
+
+Перед любыми правками
+
+Синхронизация с Git
+
+cd /opt/vseponyatno
+git pull --rebase
+git status
+
+Отдельная ветка под изменение
+
+git checkout -b fix/scan-qr-share
+
+Быстрый бэкап критичных файлов
+
+mkdir -p /opt/vseponyatno/_backup_quick
+cp -a \
+  wordpress/wp-content/themes/twentytwentyfour/functions.php \
+  wordpress/wp-content/themes/twentytwentyfour/page-scan.php \
+  wordpress/wp-content/themes/twentytwentyfour/page-instruction.php \
+  wordpress/wp-content/themes/twentytwentyfour/assets/vp-scan.js \
+  wordpress/wp-content/themes/twentytwentyfour/assets/vp-scan.css \
+  wordpress/wp-content/themes/twentytwentyfour/assets/instruction.css \
+  /opt/vseponyatno/_backup_quick/ 2>/dev/null || true
+В процессе правок
+
+Меняем маленькими шагами: 1 задача = 1 коммит.
+
+Не трогаем data/volumes, если задача про фронт. Никаких правок в docker/volumes/* руками.
+
+После каждого маленького патча
+
+Проверка на сервере
+
+/scan/?code=... открывается и показывает карточку
+
+/instruction/?id=... (или как у вас устроено) открывается
+
+wp-json/vp/v1/lookup?code=... отвечает 200
+
+Команды для быстрых smoke-тестов (без браузера):
+
+DOMAIN="https://xn--b1awacccnl0jqa.xn--p1ai"
+CODE="VP-PH-EP2231-START"  # подставь реальный
+
+
+curl -sS -i "$DOMAIN/scan/?code=$CODE" | head -n 20
+curl -sS -i "$DOMAIN/wp-json/vp/v1/lookup?code=$CODE" | head -n 40
+
+Коммит + пуш
+
+git add -A
+git commit -m "scan: QR click -> /scan?code= + WebShare button"
+git push -u origin fix/scan-qr-share
+Откат (если что-то пошло не так)
+
+Откат последнего коммита:
+
+git revert HEAD
+git push
+
+Или временно вернуться на main:
+
+git checkout main
+git pull --rebase
