@@ -9,3 +9,4 @@
 2026/02/10 06:56:37 [crit] 1014#1014: *25237 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: 85.142.100.138, server: 0.0.0.0:443
 2026/02/10 06:56:46 [crit] 1014#1014: *25252 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: 85.142.100.138, server: 0.0.0.0:443
 2026/02/10 08:33:49 [crit] 1014#1014: *25462 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: 164.92.68.144, server: 0.0.0.0:443
+2026/02/10 09:05:08 [crit] 1014#1014: *25583 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: 185.247.137.112, server: 0.0.0.0:443
