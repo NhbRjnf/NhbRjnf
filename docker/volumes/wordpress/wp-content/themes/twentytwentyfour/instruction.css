@@ -131,6 +131,18 @@
   font-weight: 600;
 }
 
+
+.vp-inst-warning {
+  margin: 14px auto 0;
+  max-width: 1100px;
+  border: 1px solid rgba(255, 196, 79, 0.45);
+  background: rgba(255, 196, 79, 0.12);
+  color: #ffe8a6;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
 .vp-inst-loading {
   display: grid;
   gap: 18px;
@@ -233,6 +245,8 @@
 
 .vp-inst-step {
   margin-bottom: 16px;
+  position: relative;
+  padding-left: 20px;
 }
 
 .vp-inst-step-title {
@@ -243,6 +257,32 @@
 
 .vp-inst-step-body {
   opacity: 0.95;
+}
+
+.vp-inst-step::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: -10px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.vp-inst-step::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--vp-inst-accent);
+  box-shadow: 0 0 0 4px var(--vp-inst-accent-soft);
+}
+
+.vp-inst-step:last-child::before {
+  bottom: 6px;
 }
 
 .vp-inst-step-body a,
@@ -402,6 +442,15 @@
 .vp-inst-progress-dot.is-active {
   background: var(--vp-inst-accent);
   box-shadow: 0 0 0 4px var(--vp-inst-accent-soft);
+}
+
+.vp-inst-next-step {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.vp-inst-step-report {
+  margin-top: 10px;
 }
 
 .vp-inst-nav-button {

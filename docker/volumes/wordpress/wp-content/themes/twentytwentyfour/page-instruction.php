@@ -34,6 +34,7 @@ get_header();
     </div>
   </div>
   <div id="vp-inst-error" style="display:none; color: #b00020;"></div>
+  <div id="vp-inst-warning" class="vp-inst-warning" style="display:none;"></div>
 
   <div id="vp-inst-grid" class="vp-inst-grid" style="display:none;">
     <section class="vp-inst-card" id="vp-inst-product">
@@ -102,7 +103,7 @@ get_header();
         <span class="vp-inst-anchor"></span>
         <h2>Инструкция</h2>
       </div>
-      <ol id="vp-inst-steps" style="display:none;"></ol>
+      <ol id="vp-inst-steps" class="vp-inst-steps" style="display:none;"></ol>
     </section>
   </div>
 
@@ -123,6 +124,7 @@ get_header();
 
   const elLoading = document.getElementById('vp-inst-loading');
   const elError = document.getElementById('vp-inst-error');
+  const elWarning = document.getElementById('vp-inst-warning');
   const elGrid = document.getElementById('vp-inst-grid');
   const elSteps = document.getElementById('vp-inst-steps');
   const elSub = document.getElementById('vp-inst-sub');
@@ -158,6 +160,12 @@ get_header();
     elGrid.style.display = 'none';
     elError.style.display = 'block';
     elError.textContent = msg;
+  }
+
+  function showWarning(msg) {
+    if (!elWarning || !msg) return;
+    elWarning.style.display = 'block';
+    elWarning.textContent = msg;
   }
 
   if (!code) {
@@ -442,6 +450,7 @@ get_header();
 
       const product = j.product || {};
       const inst = j.instruction || {};
+      const diagnostics = j.diagnostics || {};
       const payload = inst.navigation_payload || inst.location_payload || inst.payload || j.payload || {};
       const scenarioType = inst.type || j.type || 'product';
       const steps = Array.isArray(inst.steps) ? inst.steps : [];
@@ -468,6 +477,12 @@ get_header();
       setStickyVisibility(true);
       setActionState(true);
 
+      if (diagnostics.warning === 'instruction_set_forbidden' || inst.is_fallback) {
+        showWarning('Ограничен доступ к шагам в Directus. Показана карточка в режиме fallback.');
+      } else if (inst.steps_access_limited) {
+        showWarning('Доступ к шагам ограничен. Открываем карточку без пошаговой инструкции.');
+      }
+
       elBrand.textContent = product.brand || '—';
       elModel.textContent = product.model || '—';
       elSku.textContent = product.sku || '—';
@@ -491,7 +506,17 @@ get_header();
         hint.innerHTML = instructionUrl
           ? `Шаги пока не добавлены. <a href="${instructionUrl}" target="_blank" rel="noopener noreferrer">Открыть инструкцию</a>`
           : 'Шаги пока не добавлены.';
+        const report = document.createElement('button');
+        report.type = 'button';
+        report.className = 'vp-inst-btn vp-inst-btn--ghost vp-inst-step-report';
+        report.textContent = 'Сообщить о проблеме';
+        report.onclick = () => {
+          const subject = encodeURIComponent(`Проблема с инструкцией (${code})`);
+          const body = encodeURIComponent('Опишите, что не так с инструкцией.');
+          window.location.href = `mailto:support@xn--b1awacccnl0jqa.xn--p1ai?subject=${subject}&body=${body}`;
+        };
         li.appendChild(hint);
+        li.appendChild(report);
         elSteps.appendChild(li);
       }
 
@@ -588,12 +613,34 @@ get_header();
       elInstruction.appendChild(controls);
       controls.style.display = 'flex';
 
+      const nextStepBtn = document.createElement('button');
+      nextStepBtn.type = 'button';
+      nextStepBtn.id = 'vp-inst-next-step';
+      nextStepBtn.className = 'vp-inst-btn vp-inst-btn--primary vp-inst-next-step';
+      nextStepBtn.textContent = 'Следующий шаг';
+      elInstruction.appendChild(nextStepBtn);
+
       const updateProgress = () => {
         progressText.textContent = `Шаг ${currentStepIndex + 1} из ${totalSteps}`;
         progressDots.querySelectorAll('.vp-inst-progress-dot').forEach((dot, idx) => {
           dot.classList.toggle('is-active', idx === currentStepIndex);
         });
+        if (nextStepBtn) {
+          nextStepBtn.disabled = currentStepIndex >= totalSteps - 1;
+        }
       };
+
+      nextStepBtn.addEventListener('click', () => {
+        if (currentStepIndex < totalSteps - 1) {
+          allSteps[currentStepIndex].style.display = 'none';
+          currentStepIndex++;
+          allSteps[currentStepIndex].style.display = 'block';
+          updateProgress();
+          btnPrev.disabled = false;
+          if (currentStepIndex === totalSteps - 1) btnNext.disabled = true;
+          allSteps[currentStepIndex].scrollIntoView({ behavior: 'smooth' });
+        }
+      });
 
       btnNext.addEventListener('click', () => {
         if (currentStepIndex < totalSteps - 1) {

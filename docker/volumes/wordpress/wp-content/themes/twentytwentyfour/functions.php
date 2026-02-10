@@ -241,11 +241,7 @@ add_action('wp_enqueue_scripts', function () {
       'mode'       => 'proxy',
     ]);
   }
-<<<<<<< ours
-  
-=======
 
->>>>>>> theirs
   if (is_page('instruction')) {
     $ver = '1.2.0';
 
