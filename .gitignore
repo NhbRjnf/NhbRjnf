@@ -44,6 +44,9 @@ docker/volumes/wordpress/wp-content/*
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-instruction.php
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/instruction.css
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/functions.php
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.php
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.css
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.js
 
 # Разрешаем assets
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/

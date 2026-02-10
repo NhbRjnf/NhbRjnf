@@ -243,6 +243,35 @@ const elResQrLink = document.getElementById("vpResQrLink");
     );
   }
 
+  function normalizeType(raw) {
+    const v = String(raw || '').trim().toLowerCase();
+    return v;
+  }
+
+  function buildDestinationByType(item, code) {
+    const type = normalizeType(item?.type || item?.kind);
+    const instructionTypes = ['instruction', 'product', 'service', 'manual'];
+    const navTypes = ['3d', '3d/navigation', 'navigation', 'nav', 'location'];
+
+    if (instructionTypes.includes(type)) {
+      return {
+        kind: 'instruction',
+        url: `/instruction?code=${encodeURIComponent(code)}`,
+        buttonText: 'Открыть инструкцию',
+      };
+    }
+
+    if (navTypes.includes(type)) {
+      return {
+        kind: 'navigation',
+        url: `/3d?code=${encodeURIComponent(code)}`,
+        buttonText: 'Открыть 3D/навигацию',
+      };
+    }
+
+    return null;
+  }
+
   function openInstruction(url) {
     const u = String(url || "").trim();
     if (!u) {
@@ -292,7 +321,8 @@ try {
     if (item?.product_id?.model) subParts.push(item.product_id.model);
     if (item?.product_id?.sku) subParts.push(`SKU: ${item.product_id.sku}`);
 
-    const url = extractInstructionUrl(item);
+    const destination = buildDestinationByType(item, code);
+    const url = destination?.url || extractInstructionUrl(item);
     const descr =
       item?.product_id?.description || item?.description || item?.notes || "";
 
@@ -302,7 +332,7 @@ try {
     if (elResSub) elResSub.textContent = subParts.filter(Boolean).join(" • ");
 
     if (elResBadge) {
-      elResBadge.textContent = item?.kind ? String(item.kind) : "Найдено";
+      elResBadge.textContent = item?.type || item?.kind ? String(item?.type || item?.kind) : "Найдено";
     }
 
     if (elResBody) {
@@ -312,6 +342,7 @@ try {
     // Кнопки (не накапливаем обработчики)
     if (elOpenBtn) {
       elOpenBtn.hidden = !url;
+      elOpenBtn.textContent = destination?.buttonText || 'Открыть';
       elOpenBtn.onclick = () => openInstruction(url);
     }
     if (elCopyBtn) {
@@ -354,9 +385,16 @@ try {
       pushHistory(code);
       showResult({ code, item });
 
-      setStatus("Готово ✅", "ok");
-      haptic(35);
-      toast("Найдено");
+      const destination = buildDestinationByType(item, code);
+      if (destination?.url) {
+        setStatus(`Открываем: ${destination.kind === 'navigation' ? '3D/навигация' : 'инструкция'}…`, "ok");
+        toast("Переходим по QR");
+        setTimeout(() => window.location.assign(destination.url), 120);
+        return;
+      }
+
+      setStatus("Тип QR не поддерживается на этом экране", "warn");
+      toast("Нет подходящего сценария для этого кода");
     } catch (e) {
       console.error(e);
       setStatus("Ошибка запроса", "err");

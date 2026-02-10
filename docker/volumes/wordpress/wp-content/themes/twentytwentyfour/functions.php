@@ -252,6 +252,29 @@ add_action('wp_enqueue_scripts', function () {
       $ver
     );
   }
+
+  if (is_page('3d')) {
+    $ver = '1.0.0';
+
+    wp_enqueue_style(
+      'vp-3d',
+      get_stylesheet_directory_uri() . '/page-3d.css',
+      [],
+      $ver
+    );
+
+    wp_enqueue_script(
+      'vp-3d',
+      get_stylesheet_directory_uri() . '/page-3d.js',
+      [],
+      $ver,
+      true
+    );
+
+    wp_localize_script('vp-3d', 'VP_3D', [
+      'lookupUrl' => home_url('/wp-json/vp/v1/lookup'),
+    ]);
+  }
 });
 
 add_action('wp_head', function () {
