@@ -209,7 +209,7 @@ add_action( 'init', 'twentytwentyfour_pattern_categories' );
 add_action('wp_enqueue_scripts', function () {
   if (is_page('scan')) {
     // меняй при правках, чтобы сбивать кэш
-    $ver = '1.4.5';
+    $ver = '1.4.6';
 
     wp_enqueue_style(
       'vp-scan',
@@ -232,35 +232,7 @@ add_action('wp_enqueue_scripts', function () {
       get_stylesheet_directory_uri() . '/assets/vp-scan.js',
       ['html5-qrcode'],
       $ver,
-      true
-    );
-
-    wp_localize_script('vp-scan', 'VP_SCAN', [
-      'lookupUrl'  => home_url('/wp-json/vp/v1/lookup'),
-      'suggestUrl' => home_url('/wp-json/vp/v1/suggest'),
-      'threeDUrl'  => home_url('/3d/'),
-      'mode'       => 'proxy',
-    ]);
-  }
-
-  if (is_page('instruction')) {
-    $ver = '1.2.0';
-
-    wp_enqueue_style(
-      'vp-instruction',
-      get_stylesheet_directory_uri() . '/instruction.css',
-      [],
-      $ver
-    );
-  }
-
-  if (is_page('3d')) {
-    $ver = '1.1.1';
-
-    wp_enqueue_style(
-      'vp-3d',
-      get_stylesheet_directory_uri() . '/page-3d.css',
-      [],
+@@ -264,58 +264,66 @@ add_action('wp_enqueue_scripts', function () {
       $ver
     );
 
@@ -288,6 +260,14 @@ add_action('wp_enqueue_scripts', function () {
     ]);
   }
 });
+
+add_filter('script_loader_tag', function ($tag, $handle, $src) {
+  if ($handle !== 'vp-model-viewer') {
+    return $tag;
+  }
+
+  return sprintf("<script type=\"module\" src=\"%s\" id=\"%s-js\"></script>\n", esc_url($src), esc_attr($handle));
+}, 10, 3);
 
 add_action('wp_head', function () {
   if (is_page('scan')) {

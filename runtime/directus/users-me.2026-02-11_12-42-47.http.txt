@@ -1,21 +1,9 @@
-# cmd: bash -lc 
-    TOK=$(docker exec vse_wordpress sh -lc 'printf "%s" "$DIRECTUS_API_TOKEN"' || true)
-    BASE=$(docker exec vse_wordpress sh -lc 'printf "%s" "${DIRECTUS_PUBLIC_URL:-${DIRECTUS_BASE_URL:-}}"' || true)
-    if [ -z "$TOK" ] || [ -z "$BASE" ]; then
-      echo "No DIRECTUS_API_TOKEN or DIRECTUS_PUBLIC_URL/DIRECTUS_BASE_URL in wordpress container env"
-      exit 0
-    fi
-    echo "BASE=$BASE"
-    echo "WHOAMI:"
-    curl -sS -i -H "Authorization: Bearer $TOK" "$BASE/users/me" | head -n 120
-  
-# time: 2026-02-11T12:09:21+00:00
+# time: 2026-02-11T12:42:47+00:00
+# url: https://directus.xn--b1awacccnl0jqa.xn--p1ai/users/me
 
-BASE=https://directus.xn--b1awacccnl0jqa.xn--p1ai
-WHOAMI:
 HTTP/1.1 200 OK
 Server: nginx/1.18.0 (Ubuntu)
-Date: Wed, 11 Feb 2026 12:09:21 GMT
+Date: Wed, 11 Feb 2026 12:42:47 GMT
 Content-Type: application/json; charset=utf-8
 Content-Length: 739
 Connection: keep-alive

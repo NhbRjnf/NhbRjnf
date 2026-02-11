@@ -25,6 +25,9 @@
   const params = new URLSearchParams(window.location.search);
   const code = String(params.get('code') || '').trim().toUpperCase();
   let currentScene = null;
+  const MODEL_VIEWER_BOOT_TIMEOUT_MS = 15000;
+  const MODEL_LOAD_TIMEOUT_MS = 15000;
+  let viewerBootPromise = null;
 
   const friendlyErrors = {
     code_required: 'В URL нет параметра code. Вернитесь на сканер и отсканируйте QR заново.',
@@ -50,24 +53,7 @@
       elError.textContent = text;
     }
   }
-
-  function clearError() {
-    if (elError) {
-      elError.hidden = true;
-      elError.textContent = '';
-    }
-  }
-
-  function normalizeType(raw) {
-    return String(raw || '').trim().toLowerCase();
-  }
-
-  function isNavigationType(rawType) {
-    return ['3d', '3d/navigation', 'navigation', 'nav', 'location'].includes(normalizeType(rawType));
-  }
-
-  function renderMeta(rows) {
-    if (!elMeta) return;
+@@ -71,151 +74,212 @@
     elMeta.innerHTML = rows
       .filter((row) => row && row.value)
       .map((row) => `<div class="vp-3d-meta-item"><span class="vp-3d-meta-label">${row.label}</span><span class="vp-3d-meta-value">${row.value}</span></div>`)
@@ -98,36 +84,89 @@
     return friendlyErrors[codeValue] || 'Не удалось получить доступ к 3D-сцене.';
   }
 
-  function attachViewer(src, poster) {
+  function waitForModelViewer(timeoutMs = MODEL_VIEWER_BOOT_TIMEOUT_MS) {
+    if (customElements.get('model-viewer')) return Promise.resolve();
+    if (viewerBootPromise) return viewerBootPromise;
+
+    setStatus('Инициализируем 3D viewer…');
+    if (elPlaceholder) {
+      elPlaceholder.hidden = false;
+      elPlaceholder.textContent = 'Инициализация viewer…';
+    }
+
+    viewerBootPromise = Promise.race([
+      customElements.whenDefined('model-viewer'),
+      new Promise((_, reject) => {
+        window.setTimeout(() => reject(new Error('viewer_not_registered')), timeoutMs);
+      }),
+    ]).catch((err) => {
+      console.error('model-viewer bootstrap failed', err);
+      throw err;
+    });
+
+    return viewerBootPromise;
+  }
+
+  async function attachViewer(src, poster) {
     if (!elViewer || !src) return;
+
+    await waitForModelViewer();
+
     if (poster) {
       elViewer.setAttribute('poster', poster);
     }
 
-    elViewer.addEventListener('load', () => {
-      if (elPlaceholder) elPlaceholder.hidden = true;
-      setStatus('Сцена загружена.');
-    }, { once: true });
-
-    elViewer.addEventListener('error', () => {
-      showError('Файл сцены не удалось загрузить.');
-    }, { once: true });
-
-    elViewer.setAttribute('src', src);
     if (elPlaceholder) {
       elPlaceholder.hidden = false;
       elPlaceholder.textContent = 'Загружаем 3D модель…';
     }
+
+    setStatus('Загружаем 3D сцену…');
+
+    let isResolved = false;
+    const cleanup = () => {
+      isResolved = true;
+      elViewer.removeEventListener('load', onLoad);
+      elViewer.removeEventListener('error', onError);
+      window.clearTimeout(loadTimeout);
+    };
+
+    const onLoad = () => {
+      cleanup();
+      if (elPlaceholder) elPlaceholder.hidden = true;
+      setStatus('Сцена загружена.');
+    };
+
+    const onError = (event) => {
+      cleanup();
+      console.error('model-viewer load error', {
+        type: event?.type,
+        code,
+        scene: currentScene?.id || null,
+      });
+      showError('Файл сцены не удалось загрузить.');
+    };
+
+    const loadTimeout = window.setTimeout(() => {
+      if (isResolved) return;
+      cleanup();
+      showError('Не удалось дождаться загрузки 3D модели. Проверьте подключение viewer/vendor.');
+    }, MODEL_LOAD_TIMEOUT_MS);
+
+    elViewer.addEventListener('load', onLoad, { once: true });
+    elViewer.addEventListener('error', onError, { once: true });
+
+    elViewer.removeAttribute('src');
+    elViewer.setAttribute('src', src);
   }
 
-  function loadPublicScene() {
+  async function loadPublicScene() {
     const modelUrl = String(currentScene?.model_url || '').trim();
     if (!modelUrl) throw new Error('scene_model_missing');
 
-    attachViewer(modelUrl, currentScene?.poster_url || '');
+    await attachViewer(modelUrl, currentScene?.poster_url || '');
     if (elViewCard) elViewCard.hidden = false;
     if (elAuthCard) elAuthCard.hidden = true;
-    setStatus('Загружаем 3D сцену…');
   }
 
   async function loadProtectedScene(password) {
@@ -137,11 +176,11 @@
     if (!token) throw new Error('token_invalid');
 
     const modelUrl = `${FILE_URL}?code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
-    attachViewer(modelUrl, currentScene?.poster_url || '');
-    if (elViewCard) elViewCard.hidden = false;
-    if (elAuthCard) elAuthCard.hidden = true;
-    setStatus('Пароль принят. Загружаем модель…');
-  }
+    await attachViewer(modelUrl, currentScene?.poster_url || '');
+    if (elViewCard) elViewCard.hidden = false;␊
+    if (elAuthCard) elAuthCard.hidden = true;␊
+    setStatus('Пароль принят.');
+  }␊
 
   async function init() {
     if (!code) {
@@ -191,10 +230,14 @@
         if (elHint) elHint.textContent = currentScene.password_hint ? `Подсказка: ${currentScene.password_hint}` : 'Введите пароль для доступа к сцене.';
         setStatus('Сцена защищена паролем.');
       } else {
-        loadPublicScene();
+        await loadPublicScene();
       }
     } catch (err) {
       console.error(err);
+      if (err?.message === 'viewer_not_registered') {
+        showError('3D viewer не загрузился. Проверьте локальный vendor model-viewer.');
+        return;
+      }
       showError(resolveError(err));
     }
   }
@@ -212,6 +255,10 @@
       try {
         await loadProtectedScene(password);
       } catch (err) {
+        if (err?.message === 'viewer_not_registered') {
+          showError('3D viewer не загрузился. Проверьте локальный vendor model-viewer.');
+          return;
+        }
         showError(resolveError(err));
       }
     });
