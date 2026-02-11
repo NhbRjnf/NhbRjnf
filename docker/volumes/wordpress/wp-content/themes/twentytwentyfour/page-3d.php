@@ -82,5 +82,7 @@ get_header();
       ></model-viewer>
     </div>
   </section>
+  <script type="module" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/vendor/model-viewer.min.js' ); ?>"></script>
+
 </main>
 <?php get_footer(); ?>

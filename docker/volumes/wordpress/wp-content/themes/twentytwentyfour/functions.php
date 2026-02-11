@@ -182,13 +182,13 @@ add_action('wp_enqueue_scripts', function () {
     );
 
     // model-viewer (локальный vendor). ВАЖНО: это ESM и должен грузиться как type="module"
-    wp_enqueue_script(
-      'vp-model-viewer',
-      get_stylesheet_directory_uri() . '/assets/vendor/model-viewer.min.js',
-      [],
-      '3.5.0',
-      true
-    );
+    //wp_enqueue_script(
+    //  'vp-model-viewer',
+    //  get_stylesheet_directory_uri() . '/assets/vendor/model-viewer.min.js',
+    //  [],
+    //  '3.5.0',
+    //  true
+    //);
 
     wp_enqueue_script(
       'vp-3d',
@@ -209,17 +209,17 @@ add_action('wp_enqueue_scripts', function () {
   }
 });
 
-add_filter('script_loader_tag', function ($tag, $handle, $src) {
-  if ($handle !== 'vp-model-viewer') {
-    return $tag;
-  }
-
-  return sprintf(
-    "<script type=\"module\" src=\"%s\" id=\"%s-js\"></script>\n",
-    esc_url($src),
-    esc_attr($handle)
-  );
-}, 10, 3);
+//add_filter('script_loader_tag', function ($tag, $handle, $src) {
+//  if ($handle !== 'vp-model-viewer') {
+//    return $tag;
+//  }
+//
+//  return sprintf(
+//    "<script type=\"module\" src=\"%s\" id=\"%s-js\"></script>\n",
+//    esc_url($src),
+//    esc_attr($handle)
+//  );
+//}, 10, 3);
 
 add_action('wp_head', function () {
   if (is_page('scan')) {
