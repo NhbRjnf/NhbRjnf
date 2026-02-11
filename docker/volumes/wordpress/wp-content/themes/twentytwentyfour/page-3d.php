@@ -9,7 +9,7 @@ get_header();
       <h1 class="vp-3d-title">3D и навигация</h1>
       <p class="vp-3d-sub">Безопасный просмотр 3D-сцены через WordPress proxy.</p>
     </div>
-    <a class="vp-3d-btn vp-3d-btn--ghost" href="/scan">Назад на сканер</a>
+    <a class="vp-3d-btn vp-3d-btn--ghost" href="<?php echo esc_url(home_url('/scan/')); ?>">Назад на сканер</a>
   </header>
 
   <section class="vp-3d-card" id="vp3d-status-card" aria-live="polite">

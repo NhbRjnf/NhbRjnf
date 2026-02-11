@@ -236,7 +236,7 @@ function vp_3d_make_token($code, $sceneId) {
   return $token;
 }
 
-function vp_3d_consume_token($token, $code, $sceneId) {
+function vp_3d_consume_token($token, $code, $sceneId, $consume = true) {
   $token = trim((string)$token);
   if ($token === '') {
     return new WP_Error('token_required', 'Token is required', ['status' => 401]);
@@ -248,10 +248,12 @@ function vp_3d_consume_token($token, $code, $sceneId) {
     return new WP_Error('token_invalid', 'Token is invalid or expired', ['status' => 401]);
   }
 
-  delete_transient($key);
-
   if ((string)($payload['code'] ?? '') !== (string)$code || (string)($payload['scene_id'] ?? '') !== (string)$sceneId) {
     return new WP_Error('token_mismatch', 'Token does not match requested resource', ['status' => 403]);
+  }
+  
+  if ($consume) {
+    delete_transient($key);
   }
 
   return true;
@@ -355,7 +357,8 @@ function vp_3d_file_callback(WP_REST_Request $req) {
 
   $requiresPassword = !empty($scene['requires_password']);
   if ($requiresPassword) {
-    $tokenValidation = vp_3d_consume_token($token, $code, $scene['id']);
+    $shouldConsumeToken = strtoupper((string)$req->get_method()) !== 'HEAD';
+    $tokenValidation = vp_3d_consume_token($token, $code, $scene['id'], $shouldConsumeToken);
     if (is_wp_error($tokenValidation)) {
       return new WP_REST_Response(['error' => $tokenValidation->get_error_code()], (int)($tokenValidation->get_error_data()['status'] ?? 401));
     }

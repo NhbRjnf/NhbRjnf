@@ -27,13 +27,16 @@
   let currentScene = null;
 
   const friendlyErrors = {
-    scene_not_found: 'Код не найден.',
+    code_required: 'В URL нет параметра code. Вернитесь на сканер и отсканируйте QR заново.',
+    scene_not_found: 'QR-код не найден в базе.',
     scene_not_linked: 'Для этого QR не привязана 3D-сцена.',
     scene_disabled: 'Сцена временно отключена.',
     scene_expired: 'Срок действия сцены истёк.',
+    scene_model_missing: 'Для этой сцены не загружен 3D-файл.',
+    lookup_empty: 'По этому QR нет данных для 3D-сцены.',
     invalid_password: 'Неверный пароль. Проверьте и попробуйте ещё раз.',
-    token_invalid: 'Ссылка доступа устарела. Получите новый доступ через пароль.',
-    token_required: 'Требуется токен доступа.',
+    token_invalid: 'Токен доступа недействителен или устарел. Введите пароль снова.',
+    token_required: 'Требуется токен доступа. Введите пароль для получения ссылки.',
   };
 
   function setStatus(text) {
@@ -96,7 +99,7 @@
   }
 
   function attachViewer(src, poster) {
-    if (!elViewer) return;
+    if (!elViewer || !src) return;
     if (poster) {
       elViewer.setAttribute('poster', poster);
     }
@@ -118,9 +121,12 @@
   }
 
   function loadPublicScene() {
-    const modelUrl = `${FILE_URL}?code=${encodeURIComponent(code)}`;
+    const modelUrl = String(currentScene?.model_url || '').trim();
+    if (!modelUrl) throw new Error('scene_model_missing');
+
     attachViewer(modelUrl, currentScene?.poster_url || '');
     if (elViewCard) elViewCard.hidden = false;
+    if (elAuthCard) elAuthCard.hidden = true;
     setStatus('Загружаем 3D сцену…');
   }
 
@@ -128,7 +134,7 @@
     setStatus('Проверяем пароль…');
     const auth = await apiGet(AUTH_URL, 'POST', { code, password });
     const token = String(auth.token || '');
-    if (!token) throw new Error('token_missing');
+    if (!token) throw new Error('token_invalid');
 
     const modelUrl = `${FILE_URL}?code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
     attachViewer(modelUrl, currentScene?.poster_url || '');
@@ -139,7 +145,7 @@
 
   async function init() {
     if (!code) {
-      showError('В URL отсутствует параметр code.');
+      showError(friendlyErrors.code_required);
       return;
     }
 
@@ -150,24 +156,32 @@
       const lookup = await apiGet(lookupUrl.toString());
 
       const item = Array.isArray(lookup.data) && lookup.data.length ? lookup.data[0] : null;
-      if (!item) throw new Error('scene_not_found');
-      if (!isNavigationType(item.type || item.kind)) {
+      if (!item) throw new Error('lookup_empty');
+
+      currentScene = item.scene || null;
+      const qrType = item.type || item.kind;
+      if (!currentScene && !isNavigationType(qrType)) {
         showError('Этот QR относится к инструкции. Откройте страницу /instruction.');
         return;
       }
-
-      currentScene = item.scene || null;
       if (!currentScene) throw new Error('scene_not_linked');
       if (!currentScene.is_active) throw new Error('scene_disabled');
+      if (currentScene.expires_at) {
+        const expiresAt = Date.parse(currentScene.expires_at);
+        if (!Number.isNaN(expiresAt) && expiresAt <= Date.now()) {
+          throw new Error('scene_expired');
+        }
+      }
 
       if (elResultCard) elResultCard.hidden = false;
       if (elTitle) elTitle.textContent = currentScene.title || item.title || `QR ${code}`;
       if (elSub) elSub.textContent = item.product_id?.title || '3D-сцена';
-      if (elType) elType.textContent = currentScene.kind || item.type || 'navigation';
+      if (elType) elType.textContent = currentScene.kind || qrType || '3d';
 
       renderMeta([
         { label: 'Код', value: code },
         { label: 'Сцена', value: currentScene.id },
+        { label: 'Тип QR', value: qrType },
         { label: 'Доступ', value: currentScene.requires_password ? 'По паролю' : 'Открытый' },
         { label: 'Действует до', value: currentScene.expires_at || 'без ограничения' },
       ]);

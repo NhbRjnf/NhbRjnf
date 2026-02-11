@@ -209,7 +209,7 @@ add_action( 'init', 'twentytwentyfour_pattern_categories' );
 add_action('wp_enqueue_scripts', function () {
   if (is_page('scan')) {
     // меняй при правках, чтобы сбивать кэш
-    $ver = '1.4.4';
+    $ver = '1.4.5';
 
     wp_enqueue_style(
       'vp-scan',
@@ -238,6 +238,7 @@ add_action('wp_enqueue_scripts', function () {
     wp_localize_script('vp-scan', 'VP_SCAN', [
       'lookupUrl'  => home_url('/wp-json/vp/v1/lookup'),
       'suggestUrl' => home_url('/wp-json/vp/v1/suggest'),
+      'threeDUrl'  => home_url('/3d/'),
       'mode'       => 'proxy',
     ]);
   }
@@ -254,7 +255,7 @@ add_action('wp_enqueue_scripts', function () {
   }
 
   if (is_page('3d')) {
-    $ver = '1.1.0';
+    $ver = '1.1.1';
 
     wp_enqueue_style(
       'vp-3d',
@@ -283,6 +284,7 @@ add_action('wp_enqueue_scripts', function () {
       'lookupUrl' => home_url('/wp-json/vp/v1/lookup'),
       'authUrl' => home_url('/wp-json/vp/v1/3d/auth'),
       'fileUrl' => home_url('/wp-json/vp/v1/3d/file'),
+      'scanUrl' => home_url('/scan/'),
     ]);
   }
 });
@@ -300,3 +302,20 @@ add_action('wp_footer', function () {
     echo "<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/service-worker.js');}</script>";
   }
 });
+add_filter('query_vars', function ($vars) {
+  $vars[] = 'code';
+  return $vars;
+});
+
+add_filter('redirect_canonical', function ($redirectUrl) {
+  if (is_admin()) {
+    return $redirectUrl;
+  }
+
+  $code = isset($_GET['code']) ? trim((string) $_GET['code']) : '';
+  if ($code !== '' && is_page('3d')) {
+    return false;
+  }
+
+  return $redirectUrl;
+}, 10, 1);
