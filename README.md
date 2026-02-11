@@ -50,3 +50,11 @@ Directus: directus.xn--b1awacccnl0jqa.xn--p1ai
 - `model_url` публикуется только для сцен без пароля
 
 Подробности: `docs/scan-routing.md`.
+
+## 3D Engine Architecture
+- `model-viewer.min.js` — это ESM-бандл. Если загрузить его как обычный script (без `type="module"`), браузер парсит `export` как синтаксическую ошибку (`Unexpected token "export"`).
+- Глобальный `script_loader_tag` не используется, чтобы не менять поведение всех скриптов темы и не повторить прошлый 500-сценарий.
+- Подключение сделано локально и изолировано внутри `page-3d.php`: только на шаблоне `/3d` вставляется `<script type="module" ...model-viewer.min.js>`, без CDN и без влияния на `/scan`, `/instruction` и PWA-цепочку.
+- Flow сцен:
+  - public: `lookup` → `scene.model_url` → загрузка viewer без пароля;
+  - protected: `lookup` → форма пароля → `POST /wp-json/vp/v1/3d/auth` → `GET /wp-json/vp/v1/3d/file?code&token`.

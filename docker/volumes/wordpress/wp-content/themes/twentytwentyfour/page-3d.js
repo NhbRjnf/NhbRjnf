@@ -3,37 +3,33 @@
 
   const CFG = window.VP_3D || {};
   const LOOKUP_URL = CFG.lookupUrl || '/wp-json/vp/v1/lookup';
-  const AUTH_URL   = CFG.authUrl   || '/wp-json/vp/v1/3d/auth';
-  const FILE_URL   = CFG.fileUrl   || '/wp-json/vp/v1/3d/file';
+  const AUTH_URL = CFG.authUrl || '/wp-json/vp/v1/3d/auth';
+  const FILE_URL = CFG.fileUrl || '/wp-json/vp/v1/3d/file';
 
   const $ = (id) => document.getElementById(id);
 
-  // IDs из твоего page-3d.php
-  const elStatus = $('vp3d-status');
-
-  const elMetaBlock = $('vp3d-meta');
-  const elSceneTitle = $('vp3d-scene-title');
-  const elKindBadge = $('vp3d-kind');
-
-  const elCode = $('vp3d-code');
-  const elSceneId = $('vp3d-scene-id');
-  const elType = $('vp3d-type');
-  const elAccess = $('vp3d-access');
-  const elExpiry = $('vp3d-expiry');
-
-  const elAuthWrap = $('vp3d-auth');
-  const elAuthForm = $('vp3d-auth-form');
-  const elPassword = $('vp3d-password');
-  const elHint = $('vp3d-hint');
-
-  const elViewer = $('vp3d-viewer');
-  const elPlaceholder = $('vp3d-viewer-placeholder');
+  let elStatus;
+  let elMetaBlock;
+  let elSceneTitle;
+  let elKindBadge;
+  let elCode;
+  let elSceneId;
+  let elType;
+  let elAccess;
+  let elExpiry;
+  let elAuthWrap;
+  let elAuthForm;
+  let elPassword;
+  let elHint;
+  let elViewer;
+  let elPlaceholder;
 
   const params = new URLSearchParams(window.location.search);
   const code = String(params.get('code') || '').trim().toUpperCase();
 
   const MODEL_VIEWER_BOOT_TIMEOUT_MS = 15000;
   const MODEL_LOAD_TIMEOUT_MS = 20000;
+  const VIEWER_BOOT_ERROR_TEXT = '3D viewer не загрузился. Проверьте vendor ESM.';
 
   let currentScene = null;
 
@@ -73,6 +69,7 @@
       body: body ? JSON.stringify(body) : undefined,
       cache: 'no-store',
     });
+
     const json = await res.json().catch(() => ({}));
     if (!res.ok) {
       const e = new Error(json.error || 'request_failed');
@@ -84,7 +81,10 @@
   }
 
   async function waitForModelViewer() {
-    // Если model-viewer не загрузился (SyntaxError export) — custom element не появится
+    if (!window.customElements || typeof customElements.whenDefined !== 'function') {
+      throw new Error('viewer_not_registered');
+    }
+
     if (customElements.get('model-viewer')) return;
 
     setStatus('Инициализация 3D viewer…');
@@ -108,7 +108,9 @@
 
     await waitForModelViewer();
 
-    if (posterUrl) elViewer.setAttribute('poster', posterUrl);
+    if (posterUrl) {
+      elViewer.setAttribute('poster', posterUrl);
+    }
 
     setStatus('Загружаем 3D модель…');
     if (elPlaceholder) {
@@ -119,9 +121,9 @@
     elViewer.style.display = 'block';
 
     let done = false;
-    const cleanup = (t) => {
+    const cleanup = (timeoutHandle) => {
       done = true;
-      clearTimeout(t);
+      clearTimeout(timeoutHandle);
       elViewer.removeEventListener('load', onLoad);
       elViewer.removeEventListener('error', onError);
     };
@@ -146,7 +148,6 @@
     elViewer.addEventListener('load', onLoad, { once: true });
     elViewer.addEventListener('error', onError, { once: true });
 
-    // перезапуск загрузки
     elViewer.removeAttribute('src');
     elViewer.setAttribute('src', src);
   }
@@ -171,8 +172,8 @@
 
   function isExpired(scene) {
     if (!scene?.expires_at) return false;
-    const t = Date.parse(scene.expires_at);
-    return !Number.isNaN(t) && t <= Date.now();
+    const expiresAt = Date.parse(scene.expires_at);
+    return !Number.isNaN(expiresAt) && expiresAt <= Date.now();
   }
 
   async function loadPublic() {
@@ -188,8 +189,7 @@
     const token = String(auth.token || '').trim();
     if (!token) throw new Error('token_invalid');
 
-    const url =
-      `${FILE_URL}?code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
+    const url = `${FILE_URL}?code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
 
     await attachViewer(url, currentScene?.poster_url || '');
     if (elAuthWrap) elAuthWrap.hidden = true;
@@ -205,10 +205,10 @@
     try {
       setStatus('Загружаем метаданные сцены…');
 
-      const u = new URL(LOOKUP_URL, window.location.origin);
-      u.searchParams.set('code', code);
+      const lookupUrl = new URL(LOOKUP_URL, window.location.origin);
+      lookupUrl.searchParams.set('code', code);
 
-      const lookup = await apiJson(u.toString());
+      const lookup = await apiJson(lookupUrl.toString());
       const item = Array.isArray(lookup.data) && lookup.data.length ? lookup.data[0] : null;
       if (!item) throw new Error('lookup_empty');
 
@@ -238,33 +238,63 @@
     } catch (err) {
       console.error(err);
       if (err?.message === 'viewer_not_registered') {
-        showError('3D viewer не загрузился. Сейчас model-viewer подключён неверно (ESM должен быть type="module").');
+        showError(VIEWER_BOOT_ERROR_TEXT);
         return;
       }
       showError(resolveError(err));
     }
   }
 
-  if (elAuthForm) {
-    elAuthForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const password = String(elPassword?.value || '').trim();
-      if (!password) {
-        showError('Введите пароль.');
-        return;
-      }
-      try {
-        await loadProtected(password);
-      } catch (err) {
-        console.error(err);
-        if (err?.message === 'viewer_not_registered') {
-          showError('3D viewer не загрузился. Проверьте подключение model-viewer как type="module".');
-          return;
-        }
-        showError(resolveError(err));
-      }
-    });
+  function bindElements() {
+    elStatus = $('vp3d-status');
+    elMetaBlock = $('vp3d-meta');
+    elSceneTitle = $('vp3d-scene-title');
+    elKindBadge = $('vp3d-kind');
+    elCode = $('vp3d-code');
+    elSceneId = $('vp3d-scene-id');
+    elType = $('vp3d-type');
+    elAccess = $('vp3d-access');
+    elExpiry = $('vp3d-expiry');
+    elAuthWrap = $('vp3d-auth');
+    elAuthForm = $('vp3d-auth-form');
+    elPassword = $('vp3d-password');
+    elHint = $('vp3d-hint');
+    elViewer = $('vp3d-viewer');
+    elPlaceholder = $('vp3d-viewer-placeholder');
   }
 
-  init();
+  function bootstrap() {
+    bindElements();
+    if (!elStatus || !elViewer) return;
+
+    if (elAuthForm) {
+      elAuthForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = String(elPassword?.value || '').trim();
+        if (!password) {
+          showError('Введите пароль.');
+          return;
+        }
+
+        try {
+          await loadProtected(password);
+        } catch (err) {
+          console.error(err);
+          if (err?.message === 'viewer_not_registered') {
+            showError(VIEWER_BOOT_ERROR_TEXT);
+            return;
+          }
+          showError(resolveError(err));
+        }
+      });
+    }
+
+    init();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrap, { once: true });
+  } else {
+    bootstrap();
+  }
 })();

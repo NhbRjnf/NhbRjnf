@@ -69,3 +69,13 @@ curl -X POST "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/auth" -H 'con
 - история и ручной поиск работают;
 - QR типа instruction ведёт на `/instruction?code=...`;
 - QR типа 3d/navigation ведёт на `/3d?code=...`.
+
+## 3D Engine Architecture
+- `assets/vendor/model-viewer.min.js` — ESM. Его нельзя грузить обычным WordPress enqueue-тегом `type="text/javascript"`, иначе браузер падает на `export` с ошибкой `Unexpected token 'export'`.
+- Мы не используем глобальный `script_loader_tag`, чтобы не вмешиваться в вывод скриптов на остальных страницах и не создавать риск 500 из-за фильтра на весь сайт.
+- Поэтому подключение `model-viewer` выполнено локально в `page-3d.php` через `<script type="module" src=".../assets/vendor/model-viewer.min.js"></script>`. Это изолирует 3D-движок только на `/3d`.
+- Логика загрузки сцены в `page-3d.js`:
+  - ждём `customElements.whenDefined('model-viewer')` с таймаутом 15s;
+  - если viewer не зарегистрирован — показываем ошибку `3D viewer не загрузился. Проверьте vendor ESM.`;
+  - public сцена использует `scene.model_url`;
+  - protected сцена требует `POST /wp-json/vp/v1/3d/auth` и затем `GET /wp-json/vp/v1/3d/file?code&token`.
