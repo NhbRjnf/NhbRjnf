@@ -1539,6 +1539,11 @@ fields:
             value: location
           - text: service
             value: service
+          - icon: assistant_direction
+            text: 3D
+            value: 3D
+          - text: 3d
+            value: 3d
       readonly: false
       required: true
       searchable: true
@@ -2349,7 +2354,7 @@ fields:
       display_options: null
       field: password_hash
       group: null
-      hidden: true
+      hidden: false
       interface: input
       note: Хеш пароля (bcrypt/argon2). Пароль не хранить в чистом виде.
       options: null

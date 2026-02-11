@@ -1,27 +1,27 @@
 # cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-11T09:02:11+00:00
+# time: 2026-02-11T11:39:31+00:00
 
-[10:49:41] PATCH /users/me/track/page 204 11ms
-[10:49:50] GET /users/me?fields=id 304 8ms
-[10:49:54] GET /fields/vp_3d_scenes/password_hint 200 14ms
-[10:49:54] PATCH /users/me/track/page 204 9ms
-[10:49:55] GET /translations?fields%5B%5D=key&groupBy%5B%5D=key&limit=-1 304 11ms
-[10:49:59] GET /users/me?fields=id 304 8ms
-[10:50:06] GET /users/me?fields=id 304 7ms
-[10:50:09] PATCH /fields/vp_3d_scenes/password_hint 200 64ms
-[10:50:10] GET /fields 200 35ms
-[10:50:11] PATCH /users/me/track/page 204 10ms
-[10:52:24] GET /users/me?fields=id 304 12ms
-[10:52:42] GET /users/me?fields=id 304 8ms
-[11:02:07] GET /users/me 200 28ms
-[11:02:08] GET /schema/snapshot 200 118ms
-[11:02:08] GET /collections 200 11ms
-[11:02:08] GET /fields 200 39ms
-[11:02:08] GET /relations 200 18ms
-[11:02:08] GET /roles 200 14ms
-[11:02:08] GET /permissions?limit=-1 200 22ms
-[11:02:08] GET /policies?limit=-1 200 13ms
-[11:02:08] GET /flows?limit=-1 200 8ms
-[11:02:08] GET /operations?limit=-1 200 11ms
-[11:02:09] GET /users/me 200 10ms
-[11:02:09] GET /server/health 200 18ms
+[13:36:39] GET /policies?limit=-1 200 10ms
+[13:36:39] GET /flows?limit=-1 200 9ms
+[13:36:39] GET /operations?limit=-1 200 7ms
+[13:36:40] GET /users/me 200 9ms
+[13:36:40] GET /server/health 200 10ms
+[13:37:25] GET /users/me?fields=id 304 8ms
+[13:37:28] GET /collections 304 9ms
+[13:37:28] GET /users/me?fields%5B%5D=avatar.modified_on 304 10ms
+[13:37:29] PATCH /users/me/track/page 204 11ms
+[13:37:30] PATCH /users/me/track/page 204 10ms
+[13:37:32] GET /schema/snapshot 200 82ms
+[13:37:35] GET /users/me?fields=id 304 10ms
+[13:38:53] GET /users/me 200 20ms
+[13:38:53] GET /schema/snapshot 200 101ms
+[13:38:53] GET /collections 200 14ms
+[13:38:53] GET /fields 200 25ms
+[13:38:53] GET /relations 200 17ms
+[13:38:54] GET /roles 200 12ms
+[13:38:54] GET /permissions?limit=-1 200 22ms
+[13:38:54] GET /policies?limit=-1 200 11ms
+[13:38:54] GET /flows?limit=-1 200 10ms
+[13:38:54] GET /operations?limit=-1 200 12ms
+[13:38:54] GET /users/me 200 15ms
+[13:38:54] GET /server/health 200 9ms

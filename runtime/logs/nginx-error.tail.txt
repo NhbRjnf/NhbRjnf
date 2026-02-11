@@ -1,3 +1,4 @@
 2026/02/11 06:45:20 [crit] 878#878: *4268 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
 2026/02/11 07:16:40 [crit] 878#878: *4636 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
 2026/02/11 07:23:02 [error] 878#878: *4807 upstream prematurely closed connection while reading response header from upstream, client: [REDACTED_IP], server: directus.xn--b1awacccnl0jqa.xn--p1ai, request: "CONNECT /CSCOSSLC/tunnel HTTP/1.1", upstream: "http://[REDACTED_IP]:8055/CSCOSSLC/tunnel", host: "[REDACTED_IP]"
+2026/02/11 10:03:56 [crit] 878#878: *5586 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
