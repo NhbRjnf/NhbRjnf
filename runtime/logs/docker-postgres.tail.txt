@@ -1,9 +1,6 @@
 # cmd: docker logs --tail 24 vse_postgres
-# time: 2026-02-11T11:39:31+00:00
+# time: 2026-02-11T12:09:00+00:00
 
-2026-02-11 10:32:15.888 EET [26] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.406 s, sync=0.002 s, total=1.411 s; sync files=14, longest=0.001 s, average=0.001 s; distance=39 kB, estimate=292 kB
-2026-02-11 10:37:14.957 EET [26] LOG:  checkpoint starting: time
-2026-02-11 10:37:15.066 EET [26] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.102 s, sync=0.002 s, total=0.109 s; sync files=2, longest=0.001 s, average=0.001 s; distance=6 kB, estimate=263 kB
 2026-02-11 10:42:14.085 EET [26] LOG:  checkpoint starting: time
 2026-02-11 10:42:14.190 EET [26] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.002 s, total=0.106 s; sync files=2, longest=0.001 s, average=0.001 s; distance=6 kB, estimate=237 kB
 2026-02-11 10:52:14.221 EET [26] LOG:  checkpoint starting: time
@@ -25,3 +22,6 @@
 2026-02-11 12:37:17.996 EET [26] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.407 s, sync=0.002 s, total=1.412 s; sync files=15, longest=0.002 s, average=0.001 s; distance=39 kB, estimate=125 kB
 2026-02-11 12:42:17.010 EET [26] LOG:  checkpoint starting: time
 2026-02-11 12:42:18.322 EET [26] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.003 s, total=1.312 s; sync files=14, longest=0.002 s, average=0.001 s; distance=34 kB, estimate=115 kB
+2026-02-11 13:39:49.291 EET [1477] LOG:  could not receive data from client: Connection reset by peer
+2026-02-11 13:42:18.061 EET [26] LOG:  checkpoint starting: time
+2026-02-11 13:42:18.577 EET [26] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.504 s, sync=0.002 s, total=0.517 s; sync files=3, longest=0.002 s, average=0.001 s; distance=4 kB, estimate=104 kB

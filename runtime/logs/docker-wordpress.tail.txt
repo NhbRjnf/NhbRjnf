@@ -1,7 +1,11 @@
 # cmd: docker logs --tail 24 vse_wordpress
-# time: 2026-02-11T11:39:31+00:00
+# time: 2026-02-11T12:09:00+00:00
 
 AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using [REDACTED_IP]. Set the 'ServerName' directive globally to suppress this message
 AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using [REDACTED_IP]. Set the 'ServerName' directive globally to suppress this message
 [Wed Feb 11 13:39:31.212181 2026] [mpm_prefork:notice] [pid 1:tid 1] AH00163: Apache/2.4.66 (Debian) PHP/8.2.30 configured -- resuming normal operations
 [Wed Feb 11 13:39:31.212241 2026] [core:notice] [pid 1:tid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[REDACTED_IP] - - [11/Feb/2026:13:39:51 +0200] "GET /wp-json/ HTTP/1.0" 200 423908 "-" "curl/7.81.0"
+[REDACTED_IP] - - [11/Feb/2026:13:47:10 +0200] "GET /robots.txt HTTP/1.0" 200 341 "-" "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)"
+[REDACTED_IP] - - [11/Feb/2026:13:47:13 +0200] "GET / HTTP/1.0" 200 18808 "-" "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)"
+[REDACTED_IP] - - [11/Feb/2026:13:51:20 +0200] "HEAD /2025.7z HTTP/1.0" 404 372 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36"

@@ -1,27 +1,27 @@
 # cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-11T11:39:31+00:00
+# time: 2026-02-11T12:09:00+00:00
 
-[13:36:39] GET /policies?limit=-1 200 10ms
-[13:36:39] GET /flows?limit=-1 200 9ms
-[13:36:39] GET /operations?limit=-1 200 7ms
-[13:36:40] GET /users/me 200 9ms
-[13:36:40] GET /server/health 200 10ms
-[13:37:25] GET /users/me?fields=id 304 8ms
-[13:37:28] GET /collections 304 9ms
-[13:37:28] GET /users/me?fields%5B%5D=avatar.modified_on 304 10ms
-[13:37:29] PATCH /users/me/track/page 204 11ms
-[13:37:30] PATCH /users/me/track/page 204 10ms
-[13:37:32] GET /schema/snapshot 200 82ms
-[13:37:35] GET /users/me?fields=id 304 10ms
-[13:38:53] GET /users/me 200 20ms
-[13:38:53] GET /schema/snapshot 200 101ms
-[13:38:53] GET /collections 200 14ms
-[13:38:53] GET /fields 200 25ms
-[13:38:53] GET /relations 200 17ms
-[13:38:54] GET /roles 200 12ms
-[13:38:54] GET /permissions?limit=-1 200 22ms
-[13:38:54] GET /policies?limit=-1 200 11ms
-[13:38:54] GET /flows?limit=-1 200 10ms
-[13:38:54] GET /operations?limit=-1 200 12ms
-[13:38:54] GET /users/me 200 15ms
-[13:38:54] GET /server/health 200 9ms
+[13:41:32] GET /phpunit/Util/PHP/eval-stdin.php 404 6ms
+[13:41:33] GET /lib/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:33] GET /lib/phpunit/phpunit/Util/PHP/eval-stdin.php 404 6ms
+[13:41:33] GET /lib/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:34] GET /lib/phpunit/Util/PHP/eval-stdin.php 404 5ms
+[13:41:34] GET /lib/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:35] GET /laravel/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 5ms
+[13:41:35] GET /www/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:35] GET /ws/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:36] GET /yii/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:36] GET /zend/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 3ms
+[13:41:37] GET /ws/ec/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:37] GET /V2/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 6ms
+[13:41:37] GET /tests/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 5ms
+[13:41:38] GET /test/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 3ms
+[13:41:38] GET /testing/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:38] GET /api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:39] GET /demo/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 3ms
+[13:41:39] GET /cms/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
+[13:41:40] GET /crm/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 3ms
+[13:41:40] GET /admin/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 200 2ms
+[13:45:27] GET /favicon.ico 404 13ms
+[13:55:03] GET / 302 5ms
+[14:03:18] GET /.env 404 10ms
