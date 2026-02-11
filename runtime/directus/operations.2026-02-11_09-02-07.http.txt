@@ -1,14 +1,16 @@
-# time: 2026-02-10T11:50:14+00:00
-# url: https://directus.xn--b1awacccnl0jqa.xn--p1ai/schema/snapshot
+# time: 2026-02-11T09:02:08+00:00
+# url: https://directus.xn--b1awacccnl0jqa.xn--p1ai/operations?limit=-1
 
-HTTP/1.1 403 Forbidden
+HTTP/1.1 200 OK
 Server: nginx/1.18.0 (Ubuntu)
-Date: Tue, 10 Feb 2026 11:50:14 GMT
+Date: Wed, 11 Feb 2026 09:02:08 GMT
 Content-Type: application/json; charset=utf-8
-Content-Length: 102
+Content-Length: 11
 Connection: keep-alive
 Content-Security-Policy: script-src 'self' 'unsafe-eval';worker-src 'self' blob:;child-src 'self' blob:;img-src 'self' data: blob: https://raw.githubusercontent.com https://avatars.githubusercontent.com;media-src 'self';connect-src 'self' https://* wss://*;default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';object-src 'none';script-src-attr 'none';style-src 'self' https: 'unsafe-inline'
 X-Powered-By: Directus
-ETag: W/"66-OPr7zxcJy7+HqVGdrFe1XpeEIao"
+Cache-Control: no-cache
+Vary: Origin, Cache-Control
+ETag: W/"b-EFAlOux7Kcr/ZEgGkn2r+oFAbu4"
 
-{"errors":[{"message":"You don't have permission to access this.","extensions":{"code":"FORBIDDEN"}}]}
+{"data":[]}

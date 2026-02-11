@@ -1,27 +1,27 @@
 # cmd: docker logs --tail 24 vse_postgres
-# time: 2026-02-10T11:50:02+00:00
+# time: 2026-02-11T09:02:11+00:00
 
-2026-02-06 13:16:52.197 EET [27] LOG:  checkpoint starting: time
-2026-02-06 13:16:53.308 EET [27] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.003 s, total=1.112 s; sync files=13, longest=0.002 s, average=0.001 s; distance=39 kB, estimate=39 kB
-2026-02-06 13:21:52.409 EET [27] LOG:  checkpoint starting: time
-2026-02-06 13:21:52.915 EET [27] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.002 s, total=0.507 s; sync files=6, longest=0.001 s, average=0.001 s; distance=14 kB, estimate=36 kB
-2026-02-06 14:16:53.852 EET [27] LOG:  checkpoint starting: time
-2026-02-06 14:16:54.159 EET [27] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.002 s, total=0.308 s; sync files=4, longest=0.002 s, average=0.001 s; distance=11 kB, estimate=34 kB
-2026-02-10 07:38:03.771 EET [27] LOG:  checkpoint starting: time
-2026-02-10 07:38:04.381 EET [27] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.604 s, sync=0.002 s, total=0.611 s; sync files=7, longest=0.002 s, average=0.001 s; distance=22 kB, estimate=32 kB
-2026-02-10 07:43:03.427 EET [27] LOG:  checkpoint starting: time
-2026-02-10 07:43:07.444 EET [27] LOG:  checkpoint complete: wrote 41 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.013 s, sync=0.002 s, total=4.018 s; sync files=24, longest=0.001 s, average=0.001 s; distance=196 kB, estimate=196 kB
-2026-02-10 07:48:03.462 EET [27] LOG:  checkpoint starting: time
-2026-02-10 07:48:03.568 EET [27] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.102 s, sync=0.002 s, total=0.107 s; sync files=2, longest=0.001 s, average=0.001 s; distance=7 kB, estimate=177 kB
-2026-02-10 07:53:03.665 EET [27] LOG:  checkpoint starting: time
-2026-02-10 07:53:04.078 EET [27] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.001 s, total=0.414 s; sync files=5, longest=0.001 s, average=0.001 s; distance=14 kB, estimate=161 kB
-2026-02-10 08:03:03.160 EET [27] LOG:  checkpoint starting: time
-2026-02-10 08:03:03.468 EET [27] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.002 s, total=0.308 s; sync files=4, longest=0.002 s, average=0.001 s; distance=8 kB, estimate=146 kB
-2026-02-10 08:38:03.940 EET [27] LOG:  checkpoint starting: time
-2026-02-10 08:38:04.346 EET [27] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.002 s, total=0.407 s; sync files=5, longest=0.001 s, average=0.001 s; distance=11 kB, estimate=132 kB
-2026-02-10 10:53:37.035 EET [5856] LOG:  could not receive data from client: Connection reset by peer
-2026-02-10 10:57:07.439 EET [5862] LOG:  could not receive data from client: Connection reset by peer
-2026-02-10 10:57:07.439 EET [5863] LOG:  could not receive data from client: Connection reset by peer
-2026-02-10 11:49:12.204 EET [5919] LOG:  could not receive data from client: Connection reset by peer
-2026-02-10 12:43:06.829 EET [27] LOG:  checkpoint starting: time
-2026-02-10 12:43:14.572 EET [27] LOG:  checkpoint complete: wrote 78 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.735 s, sync=0.004 s, total=7.743 s; sync files=55, longest=0.001 s, average=0.001 s; distance=485 kB, estimate=485 kB
+2026-02-11 09:47:13.116 EET [26] LOG:  checkpoint starting: time
+2026-02-11 09:47:14.729 EET [26] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.608 s, sync=0.002 s, total=1.613 s; sync files=15, longest=0.001 s, average=0.001 s; distance=25 kB, estimate=32 kB
+2026-02-11 09:48:56.242 EET [1176] ERROR:  duplicate key value violates unique constraint "directus_extensions_pkey"
+2026-02-11 09:48:56.242 EET [1176] DETAIL:  Key (id)=(f1be1611-88f4-4413-b9dd-19c37fed45a9) already exists.
+2026-02-11 09:48:56.242 EET [1176] STATEMENT:  insert into "directus_extensions" ("bundle", "enabled", "folder", "id", "source") values ($1, $2, $3, $4, $5) returning "id"
+2026-02-11 09:52:13.816 EET [26] LOG:  checkpoint starting: time
+2026-02-11 09:52:15.126 EET [26] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.002 s, total=1.311 s; sync files=14, longest=0.001 s, average=0.001 s; distance=29 kB, estimate=31 kB
+2026-02-11 09:57:13.225 EET [26] LOG:  checkpoint starting: time
+2026-02-11 09:57:13.933 EET [26] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.704 s, sync=0.002 s, total=0.709 s; sync files=4, longest=0.001 s, average=0.001 s; distance=40 kB, estimate=40 kB
+2026-02-11 10:22:14.289 EET [26] LOG:  checkpoint starting: time
+2026-02-11 10:22:14.790 EET [1200] ERROR:  duplicate key value violates unique constraint "directus_roles_pkey"
+2026-02-11 10:22:14.790 EET [1200] DETAIL:  Key (id)=(893a1b06-02e1-4327-a1a9-fce9c380863b) already exists.
+2026-02-11 10:22:14.790 EET [1200] STATEMENT:  insert into "directus_roles" ("description", "icon", "id", "name", "parent") values ($1, $2, $3, $4, $5) returning "id"
+2026-02-11 10:22:22.021 EET [26] LOG:  checkpoint complete: wrote 78 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=7.724 s, sync=0.007 s, total=7.733 s; sync files=60, longest=0.002 s, average=0.001 s; distance=354 kB, estimate=354 kB
+2026-02-11 10:27:14.083 EET [26] LOG:  checkpoint starting: time
+2026-02-11 10:27:15.396 EET [26] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.004 s, total=1.313 s; sync files=8, longest=0.003 s, average=0.001 s; distance=12 kB, estimate=320 kB
+2026-02-11 10:32:14.478 EET [26] LOG:  checkpoint starting: time
+2026-02-11 10:32:15.888 EET [26] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.406 s, sync=0.002 s, total=1.411 s; sync files=14, longest=0.001 s, average=0.001 s; distance=39 kB, estimate=292 kB
+2026-02-11 10:37:14.957 EET [26] LOG:  checkpoint starting: time
+2026-02-11 10:37:15.066 EET [26] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.102 s, sync=0.002 s, total=0.109 s; sync files=2, longest=0.001 s, average=0.001 s; distance=6 kB, estimate=263 kB
+2026-02-11 10:42:14.085 EET [26] LOG:  checkpoint starting: time
+2026-02-11 10:42:14.190 EET [26] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.002 s, total=0.106 s; sync files=2, longest=0.001 s, average=0.001 s; distance=6 kB, estimate=237 kB
+2026-02-11 10:52:14.221 EET [26] LOG:  checkpoint starting: time
+2026-02-11 10:52:15.331 EET [26] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.105 s, sync=0.002 s, total=1.111 s; sync files=11, longest=0.001 s, average=0.001 s; distance=35 kB, estimate=217 kB

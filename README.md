@@ -27,3 +27,14 @@ Directus: directus.xn--b1awacccnl0jqa.xn--p1ai
 - runtime-state.md
 - troubleshooting.md
 - decision-log.md
+## Новый маршрут 3D/навигации
+В проект добавлена отдельная страница `/3d` (template: **VP 3D Navigation**, файл `page-3d.php`) для 3D/навигационных сценариев.
+
+Маршрутизация из `/scan` после `lookup`:
+- `instruction/product/service/manual` → `/instruction?code=...`
+- `3d/navigation/nav/location` → `/3d?code=...`
+- неизвестный тип → остаёмся на `/scan` с сообщением пользователю
+
+Технически `/3d` использует локальные `page-3d.css` и `page-3d.js` (без CDN).
+
+Подробности: `docs/scan-routing.md`.

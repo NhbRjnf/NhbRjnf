@@ -1,5 +1,5 @@
 version: 1
-directus: 11.14.0
+directus: 11.15.1
 vendor: postgres
 collections:
   - collection: instruction_assets
@@ -122,6 +122,30 @@ collections:
       versioning: false
     schema:
       name: qr_codes
+  - collection: vp_3d_scenes
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: vp_3d_scenes
+      color: null
+      display_template: '{{title}}'
+      group: null
+      hidden: false
+      icon: view_in_ar
+      item_duplication_fields: null
+      note: 3D сцены/модели для страницы /3d (навигация, стоматология и т.д.)
+      preview_url: null
+      singleton: false
+      sort: 30
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: vp_3d_scenes
   - collection: vp_cards
     meta:
       accountability: all
@@ -2027,6 +2051,625 @@ fields:
       has_auto_increment: false
       foreign_key_table: instruction_sets
       foreign_key_column: id
+  - collection: qr_codes
+    field: scene_id
+    type: integer
+    meta:
+      collection: qr_codes
+      conditions: null
+      display: null
+      display_options: null
+      field: scene_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: 3D сцена/модель (если type=3d/navigation)
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 132
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: scene_id
+      table: qr_codes
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_3d_scenes
+      foreign_key_column: id
+  - collection: vp_3d_scenes
+    field: id
+    type: integer
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: vp_3d_scenes
+      data_type: integer
+      default_value: nextval('vp_3d_scenes_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: title
+    type: string
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: Название сцены/модели
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: vp_3d_scenes
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: true
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: kind
+    type: string
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: kind
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: Тип сцены/кейса (управляет UI и логикой просмотра)
+      options:
+        choices:
+          - text: Навигация ТЦ (3D)
+            value: navigation
+          - text: Стоматология (челюсть)
+            value: dental
+          - text: Другое 3D
+            value: generic
+      readonly: false
+      required: true
+      searchable: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: kind
+      table: vp_3d_scenes
+      data_type: character varying
+      default_value: generic
+      max_length: 50
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: true
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: description
+    type: text
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: description
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: Краткое описание
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: description
+      table: vp_3d_scenes
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: is_active
+    type: boolean
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: is_active
+      group: null
+      hidden: false
+      interface: boolean
+      note: Показывать/использовать сцену
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_active
+      table: vp_3d_scenes
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: requires_password
+    type: boolean
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: requires_password
+      group: null
+      hidden: false
+      interface: boolean
+      note: Требовать пароль перед показом
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: requires_password
+      table: vp_3d_scenes
+      data_type: boolean
+      default_value: false
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: password_hash
+    type: string
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: password_hash
+      group: null
+      hidden: true
+      interface: input
+      note: Хеш пароля (bcrypt/argon2). Пароль не хранить в чистом виде.
+      options: null
+      readonly: false
+      required: false
+      searchable: false
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: password_hash
+      table: vp_3d_scenes
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: password_hint
+    type: string
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: password_hint
+      group: null
+      hidden: false
+      interface: input
+      note: Подсказка к паролю (опционально)
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: password_hint
+      table: vp_3d_scenes
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: expires_at
+    type: timestamp
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: datetime
+      display_options: null
+      field: expires_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: Дата/время, после которых доступ запрещён (опционально)
+      options:
+        relative: true
+      readonly: false
+      required: false
+      searchable: true
+      sort: 9
+      special:
+        - cast-timestamp
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: expires_at
+      table: vp_3d_scenes
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: true
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: model_file
+    type: uuid
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: model_file
+      group: null
+      hidden: false
+      interface: file
+      note: Основной 3D файл (рекомендуется GLB/GLTF). Можно ZIP для набора файлов.
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 10
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: model_file
+      table: vp_3d_scenes
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: vp_3d_scenes
+    field: poster_file
+    type: uuid
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: poster_file
+      group: null
+      hidden: false
+      interface: file-image
+      note: Превью/постер (опционально)
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 11
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: poster_file
+      table: vp_3d_scenes
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: vp_3d_scenes
+    field: viewer_config
+    type: json
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: null
+      display_options: null
+      field: viewer_config
+      group: null
+      hidden: false
+      interface: input-code
+      note: Настройки viewer (камера, аннотации, точки интереса и т.п.)
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 12
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: viewer_config
+      table: vp_3d_scenes
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: created_at
+    type: timestamp
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: datetime
+      display_options: null
+      field: created_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: Создано
+      options:
+        relative: true
+      readonly: true
+      required: false
+      searchable: true
+      sort: 13
+      special:
+        - date-created
+        - cast-timestamp
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: created_at
+      table: vp_3d_scenes
+      data_type: timestamp with time zone
+      default_value: CURRENT_TIMESTAMP
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_3d_scenes
+    field: updated_at
+    type: timestamp
+    meta:
+      collection: vp_3d_scenes
+      conditions: null
+      display: datetime
+      display_options: null
+      field: updated_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: Обновлено
+      options:
+        relative: true
+      readonly: true
+      required: false
+      searchable: true
+      sort: 14
+      special:
+        - date-updated
+        - cast-timestamp
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: updated_at
+      table: vp_3d_scenes
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: vp_cards
     field: id
     type: integer
@@ -2308,7 +2951,11 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
-systemFields: []
+systemFields:
+  - collection: directus_revisions
+    field: activity
+    schema:
+      is_indexed: true
 relations:
   - collection: instruction_assets
     field: instruction_id
@@ -2520,6 +3167,69 @@ relations:
       constraint_name: qr_codes_instruction_id_foreign
       on_update: NO ACTION
       on_delete: NO ACTION
+  - collection: qr_codes
+    field: scene_id
+    related_collection: vp_3d_scenes
+    meta:
+      junction_field: null
+      many_collection: qr_codes
+      many_field: scene_id
+      one_allowed_collections: null
+      one_collection: vp_3d_scenes
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: qr_codes
+      column: scene_id
+      foreign_key_table: vp_3d_scenes
+      foreign_key_column: id
+      constraint_name: qr_codes_scene_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_3d_scenes
+    field: model_file
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: vp_3d_scenes
+      many_field: model_file
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_3d_scenes
+      column: model_file
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: vp_3d_scenes_model_file_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_3d_scenes
+    field: poster_file
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: vp_3d_scenes
+      many_field: poster_file
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_3d_scenes
+      column: poster_file
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: vp_3d_scenes_poster_file_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
   - collection: vp_cards
     field: avatar_url
     related_collection: directus_files

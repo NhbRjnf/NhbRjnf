@@ -1,5 +1,5 @@
 # cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose config
-# time: 2026-02-10T09:48:57+00:00
+# time: 2026-02-11T09:02:11+00:00
 
 name: docker
 services:
@@ -10,7 +10,7 @@ services:
         condition: service_started
         required: true
     environment:
-      ADMIN_EMAIL: crimease@yandex.ru
+      ADMIN_EMAIL: [REDACTED_EMAIL]
       ADMIN_PASSWORD: '!!!LdfRjnf'
       DB_CLIENT: pg
       DB_DATABASE: vseponyatno
@@ -18,19 +18,19 @@ services:
       DB_PASSWORD: '!!!LdfRjnf'
       DB_PORT: "5432"
       DB_USER: vse_user
-      DIRECTUS_ADMIN_EMAIL: crimease@yandex.ru
+      DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
       DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
       DIRECTUS_API_TOKEN: CpizNhvS_C8hD026pVoemf3ZcymCgrsA
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
-      KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      
       POSTGRES_DB: vseponyatno
       POSTGRES_PASSWORD: '!!!LdfRjnf'
       POSTGRES_USER: vse_user
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
-      SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      
       TZ: Europe/Riga
       WP_DB_HOST: mariadb
       WP_DB_NAME: wp_vseponyatno
@@ -41,7 +41,7 @@ services:
       vseponyatno_net: null
     ports:
       - mode: ingress
-        host_ip: 127.0.0.1
+        host_ip: [REDACTED_IP]
         target: 8055
         published: "8055"
         protocol: tcp
@@ -58,7 +58,7 @@ services:
   mariadb:
     container_name: vse_mariadb
     environment:
-      DIRECTUS_ADMIN_EMAIL: crimease@yandex.ru
+      DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
       DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
       DIRECTUS_API_TOKEN: CpizNhvS_C8hD026pVoemf3ZcymCgrsA
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -90,7 +90,7 @@ services:
   postgres:
     container_name: vse_postgres
     environment:
-      DIRECTUS_ADMIN_EMAIL: crimease@yandex.ru
+      DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
       DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
       DIRECTUS_API_TOKEN: CpizNhvS_C8hD026pVoemf3ZcymCgrsA
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -122,7 +122,7 @@ services:
         condition: service_started
         required: true
     environment:
-      DIRECTUS_ADMIN_EMAIL: crimease@yandex.ru
+      DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
       DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
       DIRECTUS_API_TOKEN: CpizNhvS_C8hD026pVoemf3ZcymCgrsA
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -147,7 +147,7 @@ services:
       vseponyatno_net: null
     ports:
       - mode: ingress
-        host_ip: 127.0.0.1
+        host_ip: [REDACTED_IP]
         target: 80
         published: "8080"
         protocol: tcp

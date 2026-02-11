@@ -1,13 +1,3 @@
-2026/02/10 01:03:44 [crit] 1014#1014: *23799 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 03:40:04 [crit] 1014#1014: *24250 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 04:30:50 [crit] 1014#1014: *24332 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 04:31:44 [crit] 1014#1014: *24338 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 06:08:27 [crit] 1014#1014: *25060 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 06:41:54 [crit] 1014#1014: *25178 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 06:42:04 [crit] 1014#1014: *25181 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 06:56:29 [crit] 1014#1014: *25224 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 06:56:37 [crit] 1014#1014: *25237 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 06:56:46 [crit] 1014#1014: *25252 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 08:33:49 [crit] 1014#1014: *25462 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 09:05:08 [crit] 1014#1014: *25583 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/10 10:04:29 [crit] 1014#1014: *25679 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
+2026/02/11 06:45:20 [crit] 878#878: *4268 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
+2026/02/11 07:16:40 [crit] 878#878: *4636 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
+2026/02/11 07:23:02 [error] 878#878: *4807 upstream prematurely closed connection while reading response header from upstream, client: [REDACTED_IP], server: directus.xn--b1awacccnl0jqa.xn--p1ai, request: "CONNECT /CSCOSSLC/tunnel HTTP/1.1", upstream: "http://[REDACTED_IP]:8055/CSCOSSLC/tunnel", host: "[REDACTED_IP]"

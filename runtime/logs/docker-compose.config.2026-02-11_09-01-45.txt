@@ -1,5 +1,5 @@
 # cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose config
-# time: 2026-02-10T11:50:01+00:00
+# time: 2026-02-11T09:01:45+00:00
 
 name: docker
 services:
