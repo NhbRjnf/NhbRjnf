@@ -27,6 +27,7 @@ Directus: directus.xn--b1awacccnl0jqa.xn--p1ai
 - runtime-state.md
 - troubleshooting.md
 - decision-log.md
+
 ## Новый маршрут 3D/навигации
 В проект добавлена отдельная страница `/3d` (template: **VP 3D Navigation**, файл `page-3d.php`) для 3D/навигационных сценариев.
 
@@ -35,6 +36,17 @@ Directus: directus.xn--b1awacccnl0jqa.xn--p1ai
 - `3d/navigation/nav/location` → `/3d?code=...`
 - неизвестный тип → остаёмся на `/scan` с сообщением пользователю
 
-Технически `/3d` использует локальные `page-3d.css` и `page-3d.js` (без CDN).
+Технически `/3d` использует локальные `page-3d.css`, `assets/vendor/model-viewer.min.js` и `page-3d.js` (без CDN).
+
+## 3D scenes with password
+Для коллекции Directus `vp_3d_scenes` реализован безопасный доступ через WordPress proxy:
+- браузер работает только с WP REST (`/wp-json/vp/v1/...`)
+- Directus API token хранится только на сервере WP
+- для защищённых сцен используется краткоживущий токен после `POST /wp-json/vp/v1/3d/auth`
+- сама модель отдается через `GET /wp-json/vp/v1/3d/file?code=...&token=...`
+
+Дополнительно:
+- `lookup` для 3D типов возвращает объект `scene` (`id`, `kind`, `requires_password`, `password_hint`, `expires_at`, `is_active`, `poster_url?`, `model_url?`)
+- `model_url` публикуется только для сцен без пароля
 
 Подробности: `docs/scan-routing.md`.

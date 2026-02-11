@@ -1,44 +1,58 @@
 (() => {
   'use strict';
 
-  const LOOKUP_URL = (window.VP_3D && window.VP_3D.lookupUrl) || '/wp-json/vp/v1/lookup';
+  const CFG = window.VP_3D || {};
+  const LOOKUP_URL = CFG.lookupUrl || '/wp-json/vp/v1/lookup';
+  const AUTH_URL = CFG.authUrl || '/wp-json/vp/v1/3d/auth';
+  const FILE_URL = CFG.fileUrl || '/wp-json/vp/v1/3d/file';
 
   const $ = (id) => document.getElementById(id);
   const elStatus = $('vp3d-status');
   const elError = $('vp3d-error');
   const elResultCard = $('vp3d-result-card');
+  const elAuthCard = $('vp3d-auth-card');
   const elViewCard = $('vp3d-view-card');
   const elTitle = $('vp3d-title');
   const elSub = $('vp3d-sub');
   const elType = $('vp3d-type');
   const elMeta = $('vp3d-meta');
-  const elLinks = $('vp3d-links');
-  const elViewPlaceholder = $('vp3d-view-placeholder');
+  const elHint = $('vp3d-auth-hint');
+  const elAuthForm = $('vp3d-auth-form');
+  const elPassword = $('vp3d-password');
+  const elViewer = $('vp3d-viewer');
+  const elPlaceholder = $('vp3d-view-placeholder');
 
   const params = new URLSearchParams(window.location.search);
   const code = String(params.get('code') || '').trim().toUpperCase();
+  let currentScene = null;
+
+  const friendlyErrors = {
+    scene_not_found: 'Код не найден.',
+    scene_not_linked: 'Для этого QR не привязана 3D-сцена.',
+    scene_disabled: 'Сцена временно отключена.',
+    scene_expired: 'Срок действия сцены истёк.',
+    invalid_password: 'Неверный пароль. Проверьте и попробуйте ещё раз.',
+    token_invalid: 'Ссылка доступа устарела. Получите новый доступ через пароль.',
+    token_required: 'Требуется токен доступа.',
+  };
 
   function setStatus(text) {
     if (elStatus) elStatus.textContent = text;
   }
 
   function showError(text) {
-    setStatus('Не удалось загрузить данные');
+    setStatus('Ошибка');
     if (elError) {
       elError.hidden = false;
       elError.textContent = text;
     }
-    if (elResultCard) elResultCard.hidden = true;
-    if (elViewCard) elViewCard.hidden = true;
   }
 
-  function escapeHtml(value) {
-    return String(value || '')
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
+  function clearError() {
+    if (elError) {
+      elError.hidden = true;
+      elError.textContent = '';
+    }
   }
 
   function normalizeType(raw) {
@@ -46,137 +60,147 @@
   }
 
   function isNavigationType(rawType) {
-    const t = normalizeType(rawType);
-    return ['3d', '3d/navigation', 'navigation', 'nav', 'location'].includes(t);
-  }
-
-  function getNavigationPayload(item) {
-    // Ожидаем lookup.data[0] c полями от Directus (где часть полей может отсутствовать):
-    // {
-    //   type: '3d'|'navigation'|..., title, code,
-    //   location_payload: { scene_url, model_url, route_id, mall_id, start_point, end_point, floor, landmarks, description },
-    //   service_payload: { ...fallback payload... },
-    //   product_id: { title, brand, model, sku }
-    // }
-    const locationPayload = item && typeof item.location_payload === 'object' ? item.location_payload : null;
-    const servicePayload = item && typeof item.service_payload === 'object' ? item.service_payload : null;
-    return locationPayload || servicePayload || {};
+    return ['3d', '3d/navigation', 'navigation', 'nav', 'location'].includes(normalizeType(rawType));
   }
 
   function renderMeta(rows) {
     if (!elMeta) return;
     elMeta.innerHTML = rows
       .filter((row) => row && row.value)
-      .map(
-        (row) =>
-          `<div class="vp-3d-meta-item"><span class="vp-3d-meta-label">${escapeHtml(row.label)}</span><span class="vp-3d-meta-value">${escapeHtml(row.value)}</span></div>`
-      )
+      .map((row) => `<div class="vp-3d-meta-item"><span class="vp-3d-meta-label">${row.label}</span><span class="vp-3d-meta-value">${row.value}</span></div>`)
       .join('');
   }
 
-  function renderLinks(payload) {
-    if (!elLinks) return;
-    const linkRows = [
-      { label: 'Открыть scene_url', url: payload.scene_url },
-      { label: 'Открыть model_url', url: payload.model_url },
-      { label: 'Открыть route_url', url: payload.route_url },
-      { label: 'Открыть карту', url: payload.map_url },
-    ].filter((row) => /^https?:\/\//i.test(String(row.url || '')));
-
-    if (!linkRows.length) {
-      elLinks.innerHTML = '';
-      return;
-    }
-
-    elLinks.innerHTML = linkRows
-      .map(
-        (row) => `<a class="vp-3d-btn vp-3d-btn--primary" href="${escapeHtml(row.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(row.label)}</a>`
-      )
-      .join('');
-  }
-
-  async function apiLookup(codeValue) {
-    const url = new URL(LOOKUP_URL, window.location.origin);
-    url.searchParams.set('code', codeValue);
-
-    const response = await fetch(url.toString(), {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
+  async function apiGet(url, method = 'GET', body) {
+    const response = await fetch(url, {
+      method,
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
       cache: 'no-store',
     });
 
-    const body = await response.json().catch(() => ({}));
+    const json = await response.json().catch(() => ({}));
     if (!response.ok) {
-      const err = new Error('lookup_failed');
+      const err = new Error(json.error || 'request_failed');
       err.status = response.status;
-      err.body = body;
+      err.payload = json;
       throw err;
     }
 
-    return body;
+    return json;
+  }
+
+  function resolveError(err) {
+    const codeValue = err?.payload?.error || err?.message || 'unknown';
+    return friendlyErrors[codeValue] || 'Не удалось получить доступ к 3D-сцене.';
+  }
+
+  function attachViewer(src, poster) {
+    if (!elViewer) return;
+    if (poster) {
+      elViewer.setAttribute('poster', poster);
+    }
+
+    elViewer.addEventListener('load', () => {
+      if (elPlaceholder) elPlaceholder.hidden = true;
+      setStatus('Сцена загружена.');
+    }, { once: true });
+
+    elViewer.addEventListener('error', () => {
+      showError('Файл сцены не удалось загрузить.');
+    }, { once: true });
+
+    elViewer.setAttribute('src', src);
+    if (elPlaceholder) {
+      elPlaceholder.hidden = false;
+      elPlaceholder.textContent = 'Загружаем 3D модель…';
+    }
+  }
+
+  function loadPublicScene() {
+    const modelUrl = `${FILE_URL}?code=${encodeURIComponent(code)}`;
+    attachViewer(modelUrl, currentScene?.poster_url || '');
+    if (elViewCard) elViewCard.hidden = false;
+    setStatus('Загружаем 3D сцену…');
+  }
+
+  async function loadProtectedScene(password) {
+    setStatus('Проверяем пароль…');
+    const auth = await apiGet(AUTH_URL, 'POST', { code, password });
+    const token = String(auth.token || '');
+    if (!token) throw new Error('token_missing');
+
+    const modelUrl = `${FILE_URL}?code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
+    attachViewer(modelUrl, currentScene?.poster_url || '');
+    if (elViewCard) elViewCard.hidden = false;
+    if (elAuthCard) elAuthCard.hidden = true;
+    setStatus('Пароль принят. Загружаем модель…');
   }
 
   async function init() {
     if (!code) {
-      showError('В URL нет параметра code. Вернитесь на сканер и откройте QR повторно.');
+      showError('В URL отсутствует параметр code.');
       return;
     }
 
     try {
-      setStatus('Загружаем 3D/навигационные данные…');
-      const lookup = await apiLookup(code);
-      const item = Array.isArray(lookup?.data) && lookup.data.length ? lookup.data[0] : null;
+      setStatus('Загружаем метаданные сцены…');
+      const lookupUrl = new URL(LOOKUP_URL, window.location.origin);
+      lookupUrl.searchParams.set('code', code);
+      const lookup = await apiGet(lookupUrl.toString());
 
-      if (!item) {
-        showError('Код не найден в базе данных.');
-        return;
-      }
-
+      const item = Array.isArray(lookup.data) && lookup.data.length ? lookup.data[0] : null;
+      if (!item) throw new Error('scene_not_found');
       if (!isNavigationType(item.type || item.kind)) {
-        showError('Этот QR относится к другому типу. Для него используйте страницу инструкции.');
+        showError('Этот QR относится к инструкции. Откройте страницу /instruction.');
         return;
       }
 
-      const payload = getNavigationPayload(item);
-      const hasCoreData = Boolean(
-        payload.scene_url || payload.model_url || payload.route_id || payload.route_url || payload.map_url
-      );
+      currentScene = item.scene || null;
+      if (!currentScene) throw new Error('scene_not_linked');
+      if (!currentScene.is_active) throw new Error('scene_disabled');
 
-      if (!hasCoreData) {
-        showError('Для этого QR пока не заполнены 3D/навигационные поля (scene_url, model_url, route_id и т.д.).');
-        return;
-      }
-
-      const title = item.title || item.product_id?.title || `QR ${code}`;
-      const sub = [item.product_id?.brand, item.product_id?.model, item.product_id?.sku].filter(Boolean).join(' • ');
-
-      if (elError) elError.hidden = true;
       if (elResultCard) elResultCard.hidden = false;
-      if (elViewCard) elViewCard.hidden = false;
-
-      if (elTitle) elTitle.textContent = title;
-      if (elSub) elSub.textContent = sub || 'Навигационный сценарий';
-      if (elType) elType.textContent = item.type || item.kind || 'navigation';
-      if (elViewPlaceholder) {
-        elViewPlaceholder.textContent =
-          'Плейсхолдер готов. Подключите локальный 3D/viewer-движок и используйте scene_url/model_url/route_id из payload.';
-      }
+      if (elTitle) elTitle.textContent = currentScene.title || item.title || `QR ${code}`;
+      if (elSub) elSub.textContent = item.product_id?.title || '3D-сцена';
+      if (elType) elType.textContent = currentScene.kind || item.type || 'navigation';
 
       renderMeta([
         { label: 'Код', value: code },
-        { label: 'Маршрут (route_id)', value: payload.route_id },
-        { label: 'ТЦ/объект (mall_id)', value: payload.mall_id },
-        { label: 'Старт', value: payload.start_point || payload.start },
-        { label: 'Финиш', value: payload.end_point || payload.finish_point || payload.destination },
-        { label: 'Этаж', value: payload.floor },
+        { label: 'Сцена', value: currentScene.id },
+        { label: 'Доступ', value: currentScene.requires_password ? 'По паролю' : 'Открытый' },
+        { label: 'Действует до', value: currentScene.expires_at || 'без ограничения' },
       ]);
 
-      renderLinks(payload);
-      setStatus('Данные загружены.');
-    } catch (error) {
-      console.error(error);
-      showError('Ошибка загрузки данных. Проверьте код и попробуйте снова.');
+      if (currentScene.requires_password) {
+        if (elAuthCard) elAuthCard.hidden = false;
+        if (elHint) elHint.textContent = currentScene.password_hint ? `Подсказка: ${currentScene.password_hint}` : 'Введите пароль для доступа к сцене.';
+        setStatus('Сцена защищена паролем.');
+      } else {
+        loadPublicScene();
+      }
+    } catch (err) {
+      console.error(err);
+      showError(resolveError(err));
     }
+  }
+
+  if (elAuthForm) {
+    elAuthForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearError();
+      const password = String(elPassword?.value || '').trim();
+      if (!password) {
+        showError('Введите пароль.');
+        return;
+      }
+
+      try {
+        await loadProtectedScene(password);
+      } catch (err) {
+        showError(resolveError(err));
+      }
+    });
   }
 
   init();

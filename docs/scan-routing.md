@@ -11,37 +11,48 @@
 - `3d`, `3d/navigation`, `navigation`, `nav`, `location` → `/3d?code=<CODE>`
 - Если тип не определён/не поддержан → остаёмся на `/scan` и показываем понятное сообщение пользователю.
 
+## Lookup для 3D сцен
+Для 3D типов endpoint `lookup` возвращает `lookup.data[0].scene` (если в `qr_codes.scene_id` есть связь):
+
+```json
+{
+  "scene": {
+    "id": "...",
+    "title": "...",
+    "kind": "navigation|dental|generic",
+    "requires_password": true,
+    "password_hint": "...",
+    "expires_at": "...",
+    "is_active": true,
+    "poster_url": "https://.../wp-json/vp/v1/3d/poster?code=...",
+    "model_url": "https://.../wp-json/vp/v1/3d/file?code=..."
+  }
+}
+```
+
+Примечания:
+- `model_url` отдается только для публичной сцены (`requires_password=false`).
+- Для защищённой сцены загрузка модели идет только после `POST /wp-json/vp/v1/3d/auth`.
+- Прямые ссылки и токен Directus в браузер не передаются.
+
+## API защищённых 3D сцен (через WP proxy)
+- `POST /wp-json/vp/v1/3d/auth`
+  - body: `{ "code": "QR_CODE", "password": "..." }`
+  - проверяет `is_active`, `expires_at` и пароль (`password_verify` по hash из Directus)
+  - ответ при успехе: `{ "ok": true, "token": "...", "expires_in": 600 }`
+- `GET /wp-json/vp/v1/3d/file?code=...&token=...`
+  - стримит `model_file` server-to-server из Directus
+  - для `requires_password=true` требует short-lived token
+- `GET /wp-json/vp/v1/3d/poster?code=...`
+  - стримит `poster_file` как placeholder для `/3d`
+
 ## Что такое `/3d`
 `/3d` — отдельная страница WordPress с шаблоном **VP 3D Navigation** (`page-3d.php`).
 
 Подключения на `/3d`:
 - `page-3d.css`
+- `assets/vendor/model-viewer.min.js` (самохост)
 - `page-3d.js`
-
-Все ассеты локальные (самохост), без CDN.
-
-## Ожидаемые поля lookup для 3D/навигации
-Фронт ожидает, что `lookup.data[0]` может содержать (частично):
-
-- `type` (или `kind`) — тип QR сценария
-- `title`, `code`
-- `location_payload` (основной payload)
-- `service_payload` (fallback payload)
-- `product_id` (опционально: `title`, `brand`, `model`, `sku`)
-
-В payload полезны поля (любое подмножество):
-- `scene_url`
-- `model_url`
-- `route_id`
-- `route_url`
-- `map_url`
-- `mall_id`
-- `start_point` / `start`
-- `end_point` / `finish_point` / `destination`
-- `floor`
-- `landmarks`
-
-Ключевое требование: отсутствие части полей **не должно ломать фронт**. Вместо падения показывается fallback-сообщение и кнопка возврата на `/scan`.
 
 ## Команды для приёмки
 Подставьте свой домен/код:
@@ -49,6 +60,7 @@
 ```bash
 curl -I https://xn--b1awacccnl0jqa.xn--p1ai/3d/
 curl "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/lookup?code=<REAL>"
+curl -X POST "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/auth" -H 'content-type: application/json' -d '{"code":"<REAL>","password":"<PASS>"}'
 ```
 
 Ручной чек `/scan`:

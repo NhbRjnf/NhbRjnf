@@ -254,7 +254,7 @@ add_action('wp_enqueue_scripts', function () {
   }
 
   if (is_page('3d')) {
-    $ver = '1.0.0';
+    $ver = '1.1.0';
 
     wp_enqueue_style(
       'vp-3d',
@@ -264,15 +264,25 @@ add_action('wp_enqueue_scripts', function () {
     );
 
     wp_enqueue_script(
+      'vp-model-viewer',
+      get_stylesheet_directory_uri() . '/assets/vendor/model-viewer.min.js',
+      [],
+      '3.5.0',
+      true
+    );
+
+    wp_enqueue_script(
       'vp-3d',
       get_stylesheet_directory_uri() . '/page-3d.js',
-      [],
+      ['vp-model-viewer'],
       $ver,
       true
     );
 
     wp_localize_script('vp-3d', 'VP_3D', [
       'lookupUrl' => home_url('/wp-json/vp/v1/lookup'),
+      'authUrl' => home_url('/wp-json/vp/v1/3d/auth'),
+      'fileUrl' => home_url('/wp-json/vp/v1/3d/file'),
     ]);
   }
 });

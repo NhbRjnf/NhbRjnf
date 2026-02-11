@@ -42,6 +42,24 @@ add_action('rest_api_init', function () {
     'callback' => 'vp_instruction_callback',
     'permission_callback' => '__return_true',
   ]);
+
+  register_rest_route('vp/v1', '/3d/auth', [
+    'methods'  => 'POST',
+    'callback' => 'vp_3d_auth_callback',
+    'permission_callback' => '__return_true',
+  ]);
+
+  register_rest_route('vp/v1', '/3d/file', [
+    'methods'  => 'GET',
+    'callback' => 'vp_3d_file_callback',
+    'permission_callback' => '__return_true',
+  ]);
+
+  register_rest_route('vp/v1', '/3d/poster', [
+    'methods'  => 'GET',
+    'callback' => 'vp_3d_poster_callback',
+    'permission_callback' => '__return_true',
+  ]);
 });
 
 
@@ -80,6 +98,165 @@ function vp_directus_get($pathWithQuery) {
   return is_array($json) ? $json : [];
 }
 
+function vp_directus_request($pathWithQuery, $args = []) {
+  $base = vp_directus_base_url();
+  $token = vp_directus_token();
+
+  if (!$base || !$token) {
+    return new WP_Error('directus_env', 'DIRECTUS env missing', ['status' => 500]);
+  }
+
+  $url = $base . $pathWithQuery;
+  $defaultArgs = [
+    'timeout' => 35,
+    'headers' => [
+      'Authorization' => 'Bearer ' . $token,
+      'Accept'        => '*/*',
+    ],
+  ];
+
+  $merged = wp_parse_args($args, $defaultArgs);
+  $merged['headers'] = array_merge($defaultArgs['headers'], $args['headers'] ?? []);
+  return wp_remote_get($url, $merged);
+}
+
+function vp_scene_type_3d($rawType) {
+  $type = strtolower(trim((string)$rawType));
+  return in_array($type, ['3d', '3d/navigation', 'navigation', 'nav', 'location'], true);
+}
+
+function vp_scene_expired($expiresAt) {
+  if (!$expiresAt) return false;
+  $ts = strtotime((string)$expiresAt);
+  if (!$ts) return false;
+  return $ts < time();
+}
+
+function vp_3d_scene_payload($scene, $code = '') {
+  if (!is_array($scene) || empty($scene['id'])) return null;
+
+  $requiresPassword = !empty($scene['requires_password']);
+  $payload = [
+    'id' => $scene['id'],
+    'title' => (string)($scene['title'] ?? ''),
+    'kind' => (string)($scene['kind'] ?? 'generic'),
+    'requires_password' => $requiresPassword,
+    'password_hint' => (string)($scene['password_hint'] ?? ''),
+    'expires_at' => $scene['expires_at'] ?? null,
+    'is_active' => !empty($scene['is_active']),
+  ];
+
+  if (!empty($scene['poster_file']) && $code !== '') {
+    $payload['poster_url'] = home_url('/wp-json/vp/v1/3d/poster?code=' . rawurlencode($code));
+  }
+
+  if (!$requiresPassword && !empty($scene['model_file']) && $code !== '') {
+    $payload['model_url'] = home_url('/wp-json/vp/v1/3d/file?code=' . rawurlencode($code));
+  }
+
+  return $payload;
+}
+
+function vp_3d_fetch_by_code($code) {
+  $filter = rawurlencode(json_encode([
+    'code' => ['_eq' => $code],
+  ], JSON_UNESCAPED_UNICODE));
+
+  $fields = rawurlencode('id,code,title,type,scene_id.id,scene_id.title,scene_id.kind,scene_id.model_file,scene_id.poster_file,scene_id.viewer_config,scene_id.requires_password,scene_id.password_hash,scene_id.password_hint,scene_id.expires_at,scene_id.is_active');
+  $json = vp_directus_get("/items/qr_codes?limit=1&fields={$fields}&filter={$filter}");
+  if (is_wp_error($json)) return $json;
+
+  $rows = $json['data'] ?? [];
+  if (!is_array($rows) || count($rows) === 0) {
+    return new WP_Error('scene_not_found', 'QR code not found', ['status' => 404]);
+  }
+
+  $row = $rows[0];
+  $scene = is_array($row['scene_id'] ?? null) ? $row['scene_id'] : null;
+
+  if (!$scene || empty($scene['id'])) {
+    return new WP_Error('scene_not_linked', '3D scene is not linked to this QR code', ['status' => 404]);
+  }
+
+  return [
+    'row' => $row,
+    'scene' => $scene,
+  ];
+}
+
+function vp_3d_stream_asset($assetId, $noStore = false) {
+  $assetId = trim((string)$assetId);
+  if ($assetId === '') {
+    return new WP_REST_Response(['error' => 'asset_missing'], 404);
+  }
+
+  $res = vp_directus_request('/assets/' . rawurlencode($assetId));
+  if (is_wp_error($res)) {
+    return new WP_REST_Response(['error' => 'directus_asset_error'], 502);
+  }
+
+  $status = wp_remote_retrieve_response_code($res);
+  $body = wp_remote_retrieve_body($res);
+  if ($status < 200 || $status >= 300 || $body === '') {
+    return new WP_REST_Response(['error' => 'asset_not_found'], $status >= 400 ? $status : 404);
+  }
+
+  $contentType = (string)wp_remote_retrieve_header($res, 'content-type');
+
+  if ($contentType === '') {
+    $contentType = 'application/octet-stream';
+  }
+
+  if (str_contains($contentType, 'application/octet-stream')) {
+    $guess = strtolower(pathinfo($assetId, PATHINFO_EXTENSION));
+    if ($guess === 'glb') {
+      $contentType = 'model/gltf-binary';
+    }
+  }
+
+  nocache_headers();
+  status_header(200);
+  header('Content-Type: ' . $contentType);
+  header('Content-Length: ' . strlen($body));
+  header('X-Content-Type-Options: nosniff');
+  header('Content-Disposition: inline');
+  header($noStore ? 'Cache-Control: no-store, max-age=0' : 'Cache-Control: private, max-age=120');
+
+  echo $body;
+  exit;
+}
+
+function vp_3d_make_token($code, $sceneId) {
+  $token = wp_generate_password(48, false, false);
+  $key = 'vp_3d_token_' . hash('sha256', $token);
+  set_transient($key, [
+    'code' => (string)$code,
+    'scene_id' => (string)$sceneId,
+  ], 10 * MINUTE_IN_SECONDS);
+  return $token;
+}
+
+function vp_3d_consume_token($token, $code, $sceneId) {
+  $token = trim((string)$token);
+  if ($token === '') {
+    return new WP_Error('token_required', 'Token is required', ['status' => 401]);
+  }
+
+  $key = 'vp_3d_token_' . hash('sha256', $token);
+  $payload = get_transient($key);
+  if (!is_array($payload)) {
+    return new WP_Error('token_invalid', 'Token is invalid or expired', ['status' => 401]);
+  }
+
+  delete_transient($key);
+
+  if ((string)($payload['code'] ?? '') !== (string)$code || (string)($payload['scene_id'] ?? '') !== (string)$sceneId) {
+    return new WP_Error('token_mismatch', 'Token does not match requested resource', ['status' => 403]);
+  }
+
+  return true;
+}
+
 function vp_lookup_callback(WP_REST_Request $req) {
   $code = trim((string)$req->get_param('code'));
   if ($code === '') {
@@ -91,7 +268,7 @@ function vp_lookup_callback(WP_REST_Request $req) {
   ], JSON_UNESCAPED_UNICODE));
 
   // product_id.* чтобы сразу отдавать “смысл”
-  $fields = rawurlencode('*,product_id.*,qr_file.*,qr_file_png.*');
+  $fields = rawurlencode('*,product_id.*,qr_file.*,qr_file_png.*,scene_id.id,scene_id.title,scene_id.kind,scene_id.model_file,scene_id.poster_file,scene_id.viewer_config,scene_id.requires_password,scene_id.password_hint,scene_id.expires_at,scene_id.is_active');
 
   $json = vp_directus_get("/items/qr_codes?limit=1&fields={$fields}&filter={$filter}");
   if (is_wp_error($json)) {
@@ -103,7 +280,107 @@ function vp_lookup_callback(WP_REST_Request $req) {
     ], $d['status'] ?? 500);
   }
 
+  if (!empty($json['data']) && is_array($json['data'])) {
+    foreach ($json['data'] as &$item) {
+      $type = $item['type'] ?? '';
+      $scene = is_array($item['scene_id'] ?? null) ? $item['scene_id'] : null;
+      if (vp_scene_type_3d($type) && $scene) {
+        $item['scene'] = vp_3d_scene_payload($scene, (string)($item['code'] ?? ''));
+      }
+      unset($item['scene_id']);
+    }
+    unset($item);
+  }
+
   return new WP_REST_Response($json, 200);
+}
+
+function vp_3d_auth_callback(WP_REST_Request $req) {
+  $body = $req->get_json_params();
+  $code = strtoupper(trim((string)($body['code'] ?? '')));
+  $password = (string)($body['password'] ?? '');
+
+  if ($code === '') {
+    return new WP_REST_Response(['ok' => false, 'error' => 'code_required'], 400);
+  }
+
+  $bundle = vp_3d_fetch_by_code($code);
+  if (is_wp_error($bundle)) {
+    return new WP_REST_Response(['ok' => false, 'error' => $bundle->get_error_code()], (int)($bundle->get_error_data()['status'] ?? 404));
+  }
+
+  $scene = $bundle['scene'];
+  if (empty($scene['is_active'])) {
+    return new WP_REST_Response(['ok' => false, 'error' => 'scene_disabled'], 403);
+  }
+  if (vp_scene_expired($scene['expires_at'] ?? null)) {
+    return new WP_REST_Response(['ok' => false, 'error' => 'scene_expired'], 410);
+  }
+
+  if (!empty($scene['requires_password'])) {
+    $hash = (string)($scene['password_hash'] ?? '');
+    if ($hash === '' || $password === '' || !password_verify($password, $hash)) {
+      return new WP_REST_Response(['ok' => false, 'error' => 'invalid_password'], 401);
+    }
+  }
+
+  $token = vp_3d_make_token($code, $scene['id']);
+  return new WP_REST_Response([
+    'ok' => true,
+    'token' => $token,
+    'expires_in' => 600,
+  ], 200);
+}
+
+function vp_3d_file_callback(WP_REST_Request $req) {
+  $code = strtoupper(trim((string)$req->get_param('code')));
+  $token = trim((string)$req->get_param('token'));
+
+  if ($code === '') {
+    return new WP_REST_Response(['error' => 'code_required'], 400);
+  }
+
+  $bundle = vp_3d_fetch_by_code($code);
+  if (is_wp_error($bundle)) {
+    return new WP_REST_Response(['error' => $bundle->get_error_code()], (int)($bundle->get_error_data()['status'] ?? 404));
+  }
+
+  $scene = $bundle['scene'];
+  if (empty($scene['is_active'])) {
+    return new WP_REST_Response(['error' => 'scene_disabled'], 403);
+  }
+  if (vp_scene_expired($scene['expires_at'] ?? null)) {
+    return new WP_REST_Response(['error' => 'scene_expired'], 410);
+  }
+
+  $requiresPassword = !empty($scene['requires_password']);
+  if ($requiresPassword) {
+    $tokenValidation = vp_3d_consume_token($token, $code, $scene['id']);
+    if (is_wp_error($tokenValidation)) {
+      return new WP_REST_Response(['error' => $tokenValidation->get_error_code()], (int)($tokenValidation->get_error_data()['status'] ?? 401));
+    }
+  }
+
+  return vp_3d_stream_asset($scene['model_file'] ?? '', $requiresPassword);
+}
+
+function vp_3d_poster_callback(WP_REST_Request $req) {
+  $code = strtoupper(trim((string)$req->get_param('code')));
+  if ($code === '') {
+    return new WP_REST_Response(['error' => 'code_required'], 400);
+  }
+
+  $bundle = vp_3d_fetch_by_code($code);
+  if (is_wp_error($bundle)) {
+    return new WP_REST_Response(['error' => $bundle->get_error_code()], (int)($bundle->get_error_data()['status'] ?? 404));
+  }
+
+  $scene = $bundle['scene'];
+  if (empty($scene['is_active']) || vp_scene_expired($scene['expires_at'] ?? null)) {
+    return new WP_REST_Response(['error' => 'scene_unavailable'], 410);
+  }
+
+  return vp_3d_stream_asset($scene['poster_file'] ?? '', true);
 }
 
 function vp_suggest_callback(WP_REST_Request $req) {

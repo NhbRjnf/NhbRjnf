@@ -7,7 +7,7 @@ get_header();
     <div>
       <div class="vp-3d-kicker">ВсёПонятно</div>
       <h1 class="vp-3d-title">3D и навигация</h1>
-      <p class="vp-3d-sub">Просмотр сцены, маршрута и связанных данных по QR-коду.</p>
+      <p class="vp-3d-sub">Безопасный просмотр 3D-сцены через WordPress proxy.</p>
     </div>
     <a class="vp-3d-btn vp-3d-btn--ghost" href="/scan">Назад на сканер</a>
   </header>
@@ -28,14 +28,22 @@ get_header();
     <div class="vp-3d-meta" id="vp3d-meta"></div>
   </section>
 
+  <section class="vp-3d-card" id="vp3d-auth-card" hidden>
+    <h2>Доступ к сцене</h2>
+    <p class="vp-3d-auth-hint" id="vp3d-auth-hint"></p>
+    <form id="vp3d-auth-form" class="vp-3d-auth-form" autocomplete="off">
+      <label class="vp-3d-label" for="vp3d-password">Пароль</label>
+      <input id="vp3d-password" class="vp-3d-input" type="password" name="password" required />
+      <button type="submit" class="vp-3d-btn vp-3d-btn--primary">Открыть сцену</button>
+    </form>
+  </section>
+
   <section class="vp-3d-card vp-3d-view-card" id="vp3d-view-card" hidden>
-    <h2>Зона 3D/карты</h2>
-    <div class="vp-3d-view" id="vp3d-view" role="region" aria-label="Плейсхолдер 3D просмотра">
-      <div class="vp-3d-view-placeholder" id="vp3d-view-placeholder">
-        Подготовлено место под интеграцию движка (Three.js/Babylon/встроенный viewer).
-      </div>
+    <h2>3D просмотр</h2>
+    <div class="vp-3d-view" id="vp3d-view" role="region" aria-label="3D просмотрщик">
+      <model-viewer id="vp3d-viewer" camera-controls touch-action="pan-y" loading="eager" reveal="auto"></model-viewer>
+      <div class="vp-3d-view-placeholder" id="vp3d-view-placeholder">Подготовка сцены…</div>
     </div>
-    <div class="vp-3d-links" id="vp3d-links"></div>
   </section>
 </main>
 <?php get_footer(); ?>
