@@ -47,6 +47,12 @@ docker/volumes/wordpress/wp-content/*
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.php
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.css
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.js
+!docker/volumes/wordpress/wp-content/mu-plugins/vp-dentist-cabinet.php
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-dentist-login.php
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-dentist.php
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/vp-dentist.css
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/vp-dentist.js
+!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/functions.php
 
 # Разрешаем assets
 !docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/

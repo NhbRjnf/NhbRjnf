@@ -244,3 +244,49 @@ add_action('wp_head', function () {
     echo '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">';
   }
 });
+/**
+ * VP: assets for /dentist cabinet pages
+ */
+add_action('wp_enqueue_scripts', function () {
+  if (!is_page(array('dentist-login', 'dentist', 'dentist-new-case'))) {
+    return;
+  }
+
+  $uiVer = '1.0.0';
+  wp_enqueue_style(
+    'vp-ui',
+    get_stylesheet_directory_uri() . '/assets/vp-ui.css',
+    [],
+    $uiVer
+  );
+
+  wp_enqueue_script(
+    'vp-menu',
+    get_stylesheet_directory_uri() . '/assets/vp-menu.js',
+    [],
+    $uiVer,
+    true
+  );
+
+  wp_localize_script('vp-menu', 'VP_MENU', [
+    'scanUrl' => home_url('/scan/'),
+    'instructionUrl' => home_url('/instruction/'),
+    'threeDUrl' => home_url('/3d/'),
+  ]);
+
+  $verDentist = '1.0.0';
+  wp_enqueue_style(
+    'vp-dentist',
+    get_stylesheet_directory_uri() . '/assets/vp-dentist.css',
+    ['vp-ui'],
+    $verDentist
+  );
+
+  wp_enqueue_script(
+    'vp-dentist',
+    get_stylesheet_directory_uri() . '/assets/vp-dentist.js',
+    ['vp-menu'],
+    $verDentist,
+    true
+  );
+});

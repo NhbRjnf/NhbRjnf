@@ -11,3 +11,14 @@
 ../docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-scan.php
 ../docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/vp-scan.js
 ../docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/vp-scan.css
+docker/volumes/wordpress/wp-content/mu-plugins/vp-dentist-cabinet.php
+
+docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-dentist-login.php
+
+docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-dentist.php
+
+docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/vp-dentist.css
+
+docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/vp-dentist.js
+
+docker/volumes/wordpress/wp-content/themes/twentytwentyfour/functions.php

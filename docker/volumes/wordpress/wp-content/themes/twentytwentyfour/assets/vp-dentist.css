@@ -1,0 +1,152 @@
+.vp-dentist {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 20px 16px 100px;
+  color: #e7edf5;
+}
+
+.vp-d-card {
+  background: #111a26;
+  border: 1px solid #223247;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.vp-d-kicker {
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: 0.8;
+  letter-spacing: 0.08em;
+}
+
+.vp-d-title {
+  margin: 8px 0;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.vp-d-sub {
+  margin: 0;
+  opacity: 0.88;
+}
+
+.vp-d-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.vp-d-label {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.vp-d-input {
+  width: 100%;
+  border: 1px solid #2a3d57;
+  background: #0c1320;
+  color: #f2f5f9;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.vp-d-full {
+  width: 100%;
+}
+
+.vp-d-links {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.vp-d-status {
+  margin-top: 10px;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+.vp-d-header {
+  display: grid;
+  gap: 14px;
+}
+
+.vp-d-tenant-select {
+  max-width: 360px;
+}
+
+.vp-d-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.vp-d-panel-head h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.vp-d-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.vp-d-cases-list {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.vp-d-case-card {
+  background: #0d1623;
+  border: 1px solid #27384d;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.vp-d-case-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.vp-d-case-title {
+  margin: 0;
+  font-size: 17px;
+}
+
+.vp-d-case-meta {
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.vp-d-case-actions {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vp-d-badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid #3d5e82;
+}
+
+@media (min-width: 768px) {
+  .vp-d-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .vp-d-actions-inline {
+    grid-column: 1 / -1;
+  }
+}
