@@ -2,6 +2,7 @@
 /* Template Name: VP Instruction */
 get_header();
 ?>
+
 <main id="vp-instruction">
   <div id="vp-inst-header">
     <div class="vp-inst-hero">
@@ -10,10 +11,12 @@ get_header();
           <div class="vp-inst-eyebrow" id="vp-inst-eyebrow">Инструкция</div>
           <span class="vp-inst-type" id="vp-inst-type-badge">product</span>
         </div>
+
         <h1>Инструкция</h1>
         <div id="vp-inst-sub"></div>
         <div class="vp-inst-chips" id="vp-inst-chips" aria-label="Параметры товара"></div>
       </div>
+
       <div class="vp-inst-hero-actions" aria-label="Действия">
         <button class="vp-inst-btn vp-inst-btn--primary" id="vp-inst-open-btn" type="button">
           Открыть инструкцию
@@ -33,6 +36,7 @@ get_header();
       <section class="vp-inst-card vp-inst-card--full vp-inst-skeleton-card"></section>
     </div>
   </div>
+
   <div id="vp-inst-error" style="display:none; color: #b00020;"></div>
   <div id="vp-inst-warning" class="vp-inst-warning" style="display:none;"></div>
 
@@ -42,6 +46,7 @@ get_header();
         <span class="vp-inst-anchor"></span>
         <h2>Товар</h2>
       </div>
+
       <dl class="vp-inst-meta">
         <div>
           <dt>Бренд</dt>
@@ -71,6 +76,7 @@ get_header();
         <span class="vp-inst-anchor"></span>
         <h2>Навигация</h2>
       </div>
+
       <div class="vp-inst-nav-card">
         <div class="vp-inst-nav-meta">
           <div>
@@ -86,9 +92,11 @@ get_header();
             <div class="vp-inst-nav-value" id="vp-inst-nav-landmarks">—</div>
           </div>
         </div>
+
         <div class="vp-inst-nav-media" id="vp-inst-nav-media"></div>
         <div class="vp-inst-nav-actions" id="vp-inst-nav-actions"></div>
         <div class="vp-inst-nav-steps" id="vp-inst-nav-steps"></div>
+
         <div class="vp-inst-nav-fallback" id="vp-inst-nav-fallback" style="display:none;">
           <div class="vp-inst-nav-fallback-text">Навигационные данные пока недоступны.</div>
           <button class="vp-inst-btn vp-inst-btn--ghost" id="vp-inst-nav-report" type="button">
@@ -107,10 +115,33 @@ get_header();
     </section>
   </div>
 
+  <div class="vp-3d-fab" data-vp-fab data-page-type="instruction" aria-label="Контекстное меню">
+    <button
+      class="vp-fab-toggle"
+      type="button"
+      data-vp-fab-toggle
+      aria-expanded="false"
+      aria-controls="vp-fab-panel-instruction"
+    >⋯</button>
+
+    <div class="vp-fab-panel" id="vp-fab-panel-instruction" data-vp-fab-panel>
+      <button type="button" class="vp-fab-action" data-vp-action="openInstruction" data-vp-pages="instruction">
+        Открыть инструкцию
+      </button>
+      <button type="button" class="vp-fab-action" data-vp-action="share" data-vp-pages="instruction,3d,scan">
+        Поделиться
+      </button>
+      <button type="button" class="vp-fab-action" data-vp-action="copyCode" data-vp-pages="instruction,3d,scan">
+        Скопировать код
+      </button>
+      <button type="button" class="vp-fab-action" data-vp-action="backToScan" data-vp-pages="instruction,3d,scan">
+        Назад к сканеру
+      </button>
+    </div>
+  </div>
+
   <div class="vp-inst-sticky" id="vp-inst-sticky" aria-label="Быстрые действия">
-    <button class="vp-inst-btn vp-inst-btn--primary" id="vp-inst-open-btn-sticky" type="button">
-      Открыть
-    </button>
+    <button class="vp-inst-btn vp-inst-btn--primary" id="vp-inst-open-btn-sticky" type="button">Открыть</button>
     <button class="vp-inst-btn" id="vp-inst-share-btn-sticky" type="button">Поделиться</button>
     <button class="vp-inst-btn" id="vp-inst-copy-btn-sticky" type="button">Код</button>
     <a class="vp-inst-btn vp-inst-btn--ghost" id="vp-inst-back-btn-sticky" href="/scan">Сканер</a>
@@ -131,10 +162,12 @@ get_header();
   const elEyebrow = document.getElementById('vp-inst-eyebrow');
   const elTypeBadge = document.getElementById('vp-inst-type-badge');
   const elChips = document.getElementById('vp-inst-chips');
+
   const elBrand = document.getElementById('vp-inst-brand');
   const elModel = document.getElementById('vp-inst-model');
   const elSku = document.getElementById('vp-inst-sku');
   const elDescription = document.getElementById('vp-inst-description-text');
+
   const elNavigation = document.getElementById('vp-inst-navigation');
   const elNavStart = document.getElementById('vp-inst-nav-start');
   const elNavEnd = document.getElementById('vp-inst-nav-end');
@@ -144,14 +177,18 @@ get_header();
   const elNavSteps = document.getElementById('vp-inst-nav-steps');
   const elNavFallback = document.getElementById('vp-inst-nav-fallback');
   const elNavReport = document.getElementById('vp-inst-nav-report');
+
   const elInstruction = document.getElementById('vp-inst-instruction');
+
   const elOpenBtn = document.getElementById('vp-inst-open-btn');
   const elShareBtn = document.getElementById('vp-inst-share-btn');
   const elCopyBtn = document.getElementById('vp-inst-copy-btn');
+
   const elSticky = document.getElementById('vp-inst-sticky');
   const elOpenBtnSticky = document.getElementById('vp-inst-open-btn-sticky');
   const elShareBtnSticky = document.getElementById('vp-inst-share-btn-sticky');
   const elCopyBtnSticky = document.getElementById('vp-inst-copy-btn-sticky');
+
   const elBackBtn = document.getElementById('vp-inst-back-btn');
   const elBackBtnSticky = document.getElementById('vp-inst-back-btn-sticky');
 
@@ -169,7 +206,7 @@ get_header();
   }
 
   if (!code) {
-    showError('Нет параметра code в URL');
+    showError('Нет парметра code в URL');
     return;
   }
 
@@ -191,10 +228,12 @@ get_header();
   function renderChips(product, codeValue) {
     if (!elChips) return;
     const chips = [];
+
     if (product.brand) chips.push({ label: 'Бренд', value: product.brand });
     if (product.model) chips.push({ label: 'Модель', value: product.model });
     if (product.sku) chips.push({ label: 'SKU', value: product.sku });
     if (codeValue) chips.push({ label: 'Код', value: codeValue });
+
     elChips.innerHTML = chips
       .map(
         (chip) =>
@@ -242,7 +281,10 @@ get_header();
           : step.media_url
             ? renderMediaCard({ type: step.media_type || 'image', url: step.media_url })
             : '';
-        const floor = step.floor ? `<span class="vp-inst-nav-floor">Этаж ${escapeHtml(step.floor)}</span>` : '';
+        const floor = step.floor
+          ? `<span class="vp-inst-nav-floor">Этаж ${escapeHtml(step.floor)}</span>`
+          : '';
+
         return `
           <div class="vp-inst-nav-step">
             <div class="vp-inst-nav-step-head">
@@ -281,16 +323,20 @@ get_header();
 
     elNavActions.innerHTML = buttons
       .map((btn, index) => {
+        const primary = index === 0 ? 'vp-inst-btn--primary' : '';
         if (btn.url) {
-          return `<a class="vp-inst-btn ${index === 0 ? 'vp-inst-btn--primary' : ''}" href="${escapeHtml(btn.url)}" target="_blank" rel="noopener noreferrer">${btn.label}</a>`;
+          return `<a class="vp-inst-btn ${primary}" href="${escapeHtml(
+            btn.url
+          )}" target="_blank" rel="noopener noreferrer">${btn.label}</a>`;
         }
-        return `<button class="vp-inst-btn ${index === 0 ? 'vp-inst-btn--primary' : ''}" type="button" data-action="${btn.action}">${btn.label}</button>`;
+        return `<button class="vp-inst-btn ${primary}" type="button" data-action="${btn.action}">${btn.label}</button>`;
       })
       .join('');
 
     elNavActions.querySelectorAll('button[data-action]').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const action = btn.getAttribute('data-action');
+
         if (action === 'share-route' && navigator.share) {
           await navigator.share({
             title: document.title,
@@ -298,18 +344,17 @@ get_header();
             url: mapUrl || location.href,
           });
         }
+
         if (action === 'copy-point' && navigator.clipboard) {
           await navigator.clipboard.writeText(payload?.point || payload?.location || codeValue);
         }
+
         if (action === 'how-to') {
-          if (payload?.how_to) {
-            alert(payload.how_to);
-          }
+          if (payload?.how_to) alert(payload.how_to);
         }
+
         if (action === 'hours') {
-          if (payload?.hours) {
-            alert(payload.hours);
-          }
+          if (payload?.hours) alert(payload.hours);
         }
       });
     });
@@ -317,13 +362,17 @@ get_header();
 
   function renderNavigationBlock(type, payload, codeValue) {
     if (!elNavigation) return;
+
     const isNav = type === 'navigation' || type === 'location';
     elNavigation.style.display = isNav ? 'block' : 'none';
     if (!isNav) return;
 
     const start = payload?.start || payload?.from || '—';
     const end = payload?.end || payload?.to || '—';
-    const landmarks = Array.isArray(payload?.landmarks) ? payload.landmarks.join(' • ') : payload?.landmarks || '—';
+    const landmarks = Array.isArray(payload?.landmarks)
+      ? payload.landmarks.join(' • ')
+      : payload?.landmarks || '—';
+
     const media = payload?.map_image
       ? { type: 'image', url: payload.map_image }
       : payload?.map_video
@@ -333,9 +382,11 @@ get_header();
     if (elNavStart) elNavStart.textContent = start;
     if (elNavEnd) elNavEnd.textContent = end;
     if (elNavLandmarks) elNavLandmarks.textContent = landmarks;
+
     if (elNavMedia) {
       elNavMedia.innerHTML = media ? renderMediaCard(media) : '';
     }
+
     if (elNavSteps) {
       elNavSteps.innerHTML = renderNavSteps(payload?.steps || payload?.route_steps || []);
     }
@@ -344,6 +395,7 @@ get_header();
     if (elNavFallback) {
       elNavFallback.style.display = hasPayload ? 'none' : 'block';
     }
+
     if (elNavReport) {
       elNavReport.onclick = () => {
         const subject = encodeURIComponent(`Проблема с навигацией (${codeValue})`);
@@ -357,20 +409,16 @@ get_header();
 
   function getPrimaryCtaByType(type, instructionUrl, payload) {
     const mapUrl = payload?.map_url || payload?.mapUrl || payload?.route_url || payload?.routeUrl;
-    if (type === 'navigation') {
-      return { label: 'Открыть маршрут', url: mapUrl || instructionUrl };
-    }
-    if (type === 'location') {
-      return { label: 'Показать на карте', url: mapUrl || instructionUrl };
-    }
-    if (type === 'service') {
-      return { label: 'Открыть сервис', url: instructionUrl };
-    }
+
+    if (type === 'navigation') return { label: 'Открыть маршрут', url: mapUrl || instructionUrl };
+    if (type === 'location') return { label: 'Показать на карте', url: mapUrl || instructionUrl };
+    if (type === 'service') return { label: 'Открыть сервис', url: instructionUrl };
     return { label: 'Открыть инструкцию', url: instructionUrl };
   }
 
   function setTypeBadge(typeValue) {
     if (!elTypeBadge) return;
+
     const raw = String(typeValue || '').trim().toLowerCase();
     const type = raw || 'product';
     const typeLabels = {
@@ -379,6 +427,7 @@ get_header();
       location: 'Локация',
       navigation: 'Навигация',
     };
+
     elTypeBadge.textContent = typeLabels[type] || type;
     elTypeBadge.className = `vp-inst-type vp-inst-type--${type}`;
   }
@@ -425,17 +474,24 @@ get_header();
   function setHeroCta(label, url) {
     if (elOpenBtn) elOpenBtn.textContent = label;
     if (elOpenBtnSticky) elOpenBtnSticky.textContent = label;
+
     const canOpen = Boolean(url);
     if (elOpenBtn) elOpenBtn.disabled = !canOpen;
     if (elOpenBtnSticky) elOpenBtnSticky.disabled = !canOpen;
-    if (elOpenBtn) elOpenBtn.onclick = () => {
-      if (!url) return;
-      window.open(url, '_blank', 'noopener,noreferrer');
-    };
-    if (elOpenBtnSticky) elOpenBtnSticky.onclick = () => {
-      if (!url) return;
-      window.open(url, '_blank', 'noopener,noreferrer');
-    };
+
+    if (elOpenBtn) {
+      elOpenBtn.onclick = () => {
+        if (!url) return;
+        window.open(url, '_blank', 'noopener,noreferrer');
+      };
+    }
+
+    if (elOpenBtnSticky) {
+      elOpenBtnSticky.onclick = () => {
+        if (!url) return;
+        window.open(url, '_blank', 'noopener,noreferrer');
+      };
+    }
   }
 
   setActionState(false);
@@ -463,10 +519,11 @@ get_header();
       if (product.brand) subParts.push(product.brand);
       if (product.model) subParts.push(product.model);
       if (inst.level) subParts.push(`LEVEL ${inst.level}`);
+
       elSub.textContent = subParts.join(' • ');
-      if (elEyebrow) {
-        elEyebrow.textContent = 'Инструкция';
-      }
+
+      if (elEyebrow) elEyebrow.textContent = 'Инструкция';
+
       setTypeBadge(scenarioType);
 
       elLoading.style.display = 'none';
@@ -474,6 +531,7 @@ get_header();
       elGrid.style.display = 'grid';
       elSteps.style.display = 'block';
       elSteps.innerHTML = '';
+
       setStickyVisibility(true);
       setActionState(true);
 
@@ -486,35 +544,40 @@ get_header();
       elBrand.textContent = product.brand || '—';
       elModel.textContent = product.model || '—';
       elSku.textContent = product.sku || '—';
-      elDescription.innerHTML = renderMarkdownLinks(
-        inst.description || product.description || 'Описание пока не добавлено.'
-      );
+
+      elDescription.innerHTML = renderMarkdownLinks(inst.description || product.description || 'Описание пока не добавлено.');
+
       renderChips(product, code);
       renderNavigationBlock(scenarioType, payload, code);
 
       const instructionUrl = inst.url || inst.instruction_url || product.instruction_url || '';
       const primaryCta = getPrimaryCtaByType(scenarioType, instructionUrl, payload);
+
       setHeroCta(primaryCta.label, primaryCta.url);
+
       const shareText = title ? `${title} (${code})` : `Инструкция (${code})`;
       wireActions({ instructionUrl, shareText, copyText: code });
 
       if (!steps.length) {
         const li = document.createElement('li');
         li.className = 'vp-inst-step';
+
         const hint = document.createElement('div');
         hint.className = 'vp-inst-step-body';
         hint.innerHTML = instructionUrl
           ? `Шаги пока не добавлены. <a href="${instructionUrl}" target="_blank" rel="noopener noreferrer">Открыть инструкцию</a>`
           : 'Шаги пока не добавлены.';
+
         const report = document.createElement('button');
         report.type = 'button';
         report.className = 'vp-inst-btn vp-inst-btn--ghost vp-inst-step-report';
-        report.textContent = 'Сообщить о проблеме';
+        report.textContent = 'Сообщть о проблеме';
         report.onclick = () => {
           const subject = encodeURIComponent(`Проблема с инструкцией (${code})`);
           const body = encodeURIComponent('Опишите, что не так с инструкцией.');
           window.location.href = `mailto:support@xn--b1awacccnl0jqa.xn--p1ai?subject=${subject}&body=${body}`;
         };
+
         li.appendChild(hint);
         li.appendChild(report);
         elSteps.appendChild(li);
@@ -536,12 +599,15 @@ get_header();
           const idx = s.body.indexOf('Важно:');
           const beforeText = s.body.substring(0, idx);
           const importantText = s.body.substring(idx);
+
           body.innerHTML = '';
+
           if (beforeText.trim()) {
             const span = document.createElement('span');
             span.textContent = beforeText.trim();
             body.appendChild(span);
           }
+
           const imp = document.createElement('div');
           imp.className = 'vp-inst-important';
           imp.innerHTML = renderMarkdownLinks(importantText.trim());
@@ -551,6 +617,7 @@ get_header();
         if (s.media_url) {
           const mediaWrap = document.createElement('div');
           mediaWrap.className = 'vp-inst-media';
+
           if (s.media_type === 'video') {
             const v = document.createElement('video');
             v.className = 'vp-inst-media-video';
@@ -563,6 +630,7 @@ get_header();
             img.alt = s.title || 'media';
             mediaWrap.appendChild(img);
           }
+
           li.appendChild(mediaWrap);
         }
 
@@ -610,6 +678,7 @@ get_header();
       controls.appendChild(progressText);
       controls.appendChild(progressDots);
       controls.appendChild(btnNext);
+
       elInstruction.appendChild(controls);
       controls.style.display = 'flex';
 
@@ -625,9 +694,7 @@ get_header();
         progressDots.querySelectorAll('.vp-inst-progress-dot').forEach((dot, idx) => {
           dot.classList.toggle('is-active', idx === currentStepIndex);
         });
-        if (nextStepBtn) {
-          nextStepBtn.disabled = currentStepIndex >= totalSteps - 1;
-        }
+        if (nextStepBtn) nextStepBtn.disabled = currentStepIndex >= totalSteps - 1;
       };
 
       nextStepBtn.addEventListener('click', () => {
@@ -671,4 +738,5 @@ get_header();
     });
 })();
 </script>
+
 <?php get_footer(); ?>

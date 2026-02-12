@@ -131,6 +131,41 @@ add_action( 'init', 'twentytwentyfour_pattern_categories' );
  */
 add_action('wp_enqueue_scripts', function () {
 
+  if (is_page(array('scan', 'instruction', '3d'))) {
+    $uiVer = '1.0.0';
+
+    wp_enqueue_style(
+      'vp-ui',
+      get_stylesheet_directory_uri() . '/assets/vp-ui.css',
+      [],
+      $uiVer
+    );
+
+    wp_enqueue_script(
+      'vp-menu',
+      get_stylesheet_directory_uri() . '/assets/vp-menu.js',
+      [],
+      $uiVer,
+      true
+    );
+
+    wp_localize_script('vp-menu', 'VP_MENU', [
+      'scanUrl' => home_url('/scan/'),
+      'instructionUrl' => home_url('/instruction/'),
+      'threeDUrl' => home_url('/3d/'),
+    ]);
+  }
+
+  if (is_page('instruction')) {
+    $verInstruction = '1.0.0';
+    wp_enqueue_style(
+      'vp-instruction',
+      get_stylesheet_directory_uri() . '/instruction.css',
+      array('vp-ui'),
+      $verInstruction
+    );
+  }
+
   // /scan (PWA-сканер)
   if (is_page('scan')) {
     // меняй при правках, чтобы сбивать кэш
@@ -139,7 +174,7 @@ add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style(
       'vp-scan',
       get_stylesheet_directory_uri() . '/assets/vp-scan.css',
-      [],
+      array('vp-ui'),
       $ver
     );
 
@@ -177,7 +212,7 @@ add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style(
       'vp-3d',
       get_stylesheet_directory_uri() . '/page-3d.css',
-      [],
+      array('vp-ui'),
       $ver3d
     );
 
@@ -205,29 +240,3 @@ add_action('wp_head', function () {
     echo '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">';
     echo '<link rel="manifest" href="/manifest.json">';
     echo '<meta name="theme-color" content="#0b0f14">';
-  }
-});
-
-add_action('wp_footer', function () {
-  if (is_page('scan')) {
-    echo "<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/service-worker.js');}</script>";
-  }
-});
-
-add_filter('query_vars', function ($vars) {
-  $vars[] = 'code';
-  return $vars;
-});
-
-add_filter('redirect_canonical', function ($redirectUrl) {
-  if (is_admin()) {
-    return $redirectUrl;
-  }
-
-  $code = isset($_GET['code']) ? trim((string) $_GET['code']) : '';
-  if ($code !== '' && is_page('3d')) {
-    return false;
-  }
-
-  return $redirectUrl;
-}, 10, 1);

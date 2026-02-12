@@ -82,6 +82,18 @@ get_header();
       ></model-viewer>
     </div>
   </section>
+
+  <div class="vp-3d-fab" data-vp-fab data-page-type="3d" aria-label="Контекстное меню">
+    <button class="vp-fab-toggle" type="button" data-vp-fab-toggle aria-expanded="false" aria-controls="vp-fab-panel-3d">⋯</button>
+    <div class="vp-fab-panel" id="vp-fab-panel-3d" data-vp-fab-panel>
+      <button type="button" class="vp-fab-action" data-vp-action="backToScan" data-vp-pages="3d,instruction,scan">Назад к сканеру</button>
+      <button type="button" class="vp-fab-action" data-vp-action="share" data-vp-pages="3d,instruction,scan">Поделиться</button>
+      <button type="button" class="vp-fab-action" data-vp-action="copyCode" data-vp-pages="3d,instruction,scan">Скопировать код</button>
+      <button type="button" class="vp-fab-action" data-vp-action="reloadModel" data-vp-pages="3d">Перезагрузить модель</button>
+      <button type="button" class="vp-fab-action" data-vp-action="resetView" data-vp-pages="3d">Сбросить вид</button>
+    </div>
+  </div>
+
   <script type="module" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/vendor/model-viewer.min.js' ); ?>"></script>
 
 </main>
