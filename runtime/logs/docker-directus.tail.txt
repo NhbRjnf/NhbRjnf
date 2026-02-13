@@ -1,27 +1,27 @@
 # cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-12T12:37:27+00:00
+# time: 2026-02-13T11:37:52+00:00
 
-[14:14:01] GET /fields 200 94ms
-[14:14:19] GET /collections 304 15ms
-[14:14:19] GET /users/me?fields%5B%5D=avatar.modified_on 304 12ms
-[14:14:19] PATCH /users/me/track/page 204 11ms
-[14:14:44] GET /users/me?fields=id 304 9ms
-[14:20:29] GET /users/me?fields=id 304 18ms
-[14:21:25] GET /users/me?fields=id 304 13ms
-[14:24:45] GET /robots.txt 200 1ms
-[14:32:00] GET /users/me?fields=id 304 19ms
-[14:33:48] GET /users/me?fields=id 304 7ms
-[14:33:56] GET /users/me?fields=id 304 9ms
-[14:34:19] GET /users/me?fields=id 304 10ms
-[14:34:23] GET /users/me?fields=id 304 7ms
-[14:34:26] GET /users/me?fields=id 304 7ms
-[14:34:29] GET /users/me?fields=id 304 8ms
-[14:34:37] GET /users/me?fields=id 304 13ms
-[14:34:43] GET /users/me?fields=id 304 8ms
-[14:34:55] GET /users/me?fields=id 304 8ms
-[14:34:58] GET /users/me?fields=id 304 10ms
-[14:35:47] GET /users/me?fields=id 304 10ms
-[14:35:54] GET /users/me?fields=id 304 7ms
-[14:35:58] GET /users/me?fields=id 304 9ms
-[14:37:04] GET /users/me?fields=id 304 13ms
-[14:37:11] GET /users/me?fields=id 304 12ms
+[13:27:21] GET /roles?limit=25&fields=icon,name,description,id&sort%5B%5D=name&page=1&filter%5Bid%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b 304 8ms
+[13:27:21] GET /roles?filter%5Bid%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&aggregate%5BcountDistinct%5D=id 304 8ms
+[13:27:21] GET /policies?limit=25&fields=icon,name,app_access,admin_access,description,id&sort%5B%5D=name&page=1&filter%5B_and%5D%5B0%5D%5B$FOLLOW(directus_access,policy)%5D%5B_none%5D%5Brole%5D%5B_eq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b 304 17ms
+[13:27:21] GET /roles?aggregate%5BcountDistinct%5D=id&filter%5Bid%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b 304 22ms
+[13:27:21] GET /policies?aggregate%5BcountDistinct%5D=id&filter%5B_and%5D%5B0%5D%5B$FOLLOW(directus_access,policy)%5D%5B_none%5D%5Brole%5D%5B_eq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b 304 17ms
+[13:27:21] GET /policies?filter%5B_and%5D%5B0%5D%5B$FOLLOW(directus_access,policy)%5D%5B_none%5D%5Brole%5D%5B_eq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&aggregate%5BcountDistinct%5D=id 304 9ms
+[13:27:21] GET /users?limit=25&fields=id,avatar.modified_on,avatar.type,avatar.filename_disk,avatar.storage,avatar.id,first_name,last_name,email&sort%5B%5D=-email&page=1&filter%5B_and%5D%5B0%5D%5B_or%5D%5B0%5D%5Brole%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&filter%5B_and%5D%5B0%5D%5B_or%5D%5B1%5D%5Brole%5D%5B_null%5D=true 304 12ms
+[13:27:21] GET /users?filter%5B_and%5D%5B0%5D%5B_or%5D%5B0%5D%5Brole%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&filter%5B_and%5D%5B0%5D%5B_or%5D%5B1%5D%5Brole%5D%5B_null%5D=true&aggregate%5BcountDistinct%5D=id 304 8ms
+[13:27:21] GET /users?aggregate%5BcountDistinct%5D=id&filter%5B_and%5D%5B0%5D%5B_or%5D%5B0%5D%5Brole%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&filter%5B_and%5D%5B0%5D%5B_or%5D%5B1%5D%5Brole%5D%5B_null%5D=true 304 7ms
+[13:27:21] PATCH /users/me/track/page 204 8ms
+[13:27:39] GET /aaa9 404 8ms
+[13:27:39] GET /aab9 404 6ms
+[13:27:58] GET /aaa9 404 4ms
+[13:27:58] GET /aab9 404 7ms
+[13:28:00] GET / 302 1ms
+[13:29:39] GET /users/me 401 4ms
+[13:30:59] GET / 302 2ms
+[13:30:59] GET /admin 200 2ms
+[13:33:51] GET /users/me?fields=id 304 18ms
+[13:33:59] GET /collections 304 17ms
+[13:33:59] GET /users/me?fields%5B%5D=avatar.modified_on 304 16ms
+[13:34:00] PATCH /users/me/track/page 204 16ms
+[13:34:03] PATCH /users/me/track/page 204 12ms
+[13:34:05] GET /schema/snapshot 200 233ms

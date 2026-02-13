@@ -1,27 +1,16 @@
 # cmd: docker logs --tail 24 vse_postgres
-# time: 2026-02-12T12:37:27+00:00
+# time: 2026-02-13T11:37:52+00:00
 
-2026-02-11 12:22:18.231 EET [26] LOG:  checkpoint complete: wrote 23 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.209 s, sync=0.002 s, total=2.215 s; sync files=21, longest=0.001 s, average=0.001 s; distance=57 kB, estimate=154 kB
-2026-02-11 12:27:16.309 EET [26] LOG:  checkpoint starting: time
-2026-02-11 12:27:17.820 EET [26] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.506 s, sync=0.002 s, total=1.511 s; sync files=12, longest=0.001 s, average=0.001 s; distance=55 kB, estimate=144 kB
-2026-02-11 12:32:16.920 EET [26] LOG:  checkpoint starting: time
-2026-02-11 12:32:18.530 EET [26] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.606 s, sync=0.002 s, total=1.611 s; sync files=13, longest=0.001 s, average=0.001 s; distance=47 kB, estimate=134 kB
-2026-02-11 12:37:16.584 EET [26] LOG:  checkpoint starting: time
-2026-02-11 12:37:17.996 EET [26] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.407 s, sync=0.002 s, total=1.412 s; sync files=15, longest=0.002 s, average=0.001 s; distance=39 kB, estimate=125 kB
-2026-02-11 12:42:17.010 EET [26] LOG:  checkpoint starting: time
-2026-02-11 12:42:18.322 EET [26] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.003 s, total=1.312 s; sync files=14, longest=0.002 s, average=0.001 s; distance=34 kB, estimate=115 kB
-2026-02-11 13:39:49.291 EET [1477] LOG:  could not receive data from client: Connection reset by peer
-2026-02-11 13:42:18.061 EET [26] LOG:  checkpoint starting: time
-2026-02-11 13:42:18.577 EET [26] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.504 s, sync=0.002 s, total=0.517 s; sync files=3, longest=0.002 s, average=0.001 s; distance=4 kB, estimate=104 kB
-2026-02-11 14:09:19.688 EET [1510] LOG:  could not receive data from client: Connection reset by peer
-2026-02-11 14:42:47.055 EET [1547] LOG:  could not receive data from client: Connection reset by peer
-2026-02-11 15:12:19.644 EET [26] LOG:  checkpoint starting: time
-2026-02-11 15:12:19.954 EET [26] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.002 s, total=0.310 s; sync files=4, longest=0.002 s, average=0.001 s; distance=14 kB, estimate=95 kB
-2026-02-12 13:32:37.054 EET [26] LOG:  checkpoint starting: time
-2026-02-12 13:32:37.669 EET [26] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.604 s, sync=0.002 s, total=0.616 s; sync files=7, longest=0.002 s, average=0.001 s; distance=27 kB, estimate=89 kB
-2026-02-12 13:37:37.709 EET [26] LOG:  checkpoint starting: time
-2026-02-12 13:37:37.814 EET [26] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.001 s, total=0.106 s; sync files=2, longest=0.001 s, average=0.001 s; distance=6 kB, estimate=80 kB
-2026-02-12 14:02:38.158 EET [26] LOG:  checkpoint starting: time
-2026-02-12 14:02:38.264 EET [26] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.102 s, sync=0.001 s, total=0.107 s; sync files=2, longest=0.001 s, average=0.001 s; distance=7 kB, estimate=73 kB
-2026-02-12 14:17:38.511 EET [26] LOG:  checkpoint starting: time
-2026-02-12 14:17:54.072 EET [26] LOG:  checkpoint complete: wrote 156 buffers (1.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=15.546 s, sync=0.011 s, total=15.561 s; sync files=102, longest=0.006 s, average=0.001 s; distance=890 kB, estimate=890 kB
+
+PostgreSQL Database directory appears to contain a database; Skipping initialization
+
+2026-02-13 10:37:52.242 EET [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-02-13 10:37:52.244 EET [1] LOG:  listening on IPv4 address "[REDACTED_IP]", port 5432
+2026-02-13 10:37:52.245 EET [1] LOG:  listening on IPv6 address "::", port 5432
+2026-02-13 10:37:52.247 EET [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-02-13 10:37:52.253 EET [28] LOG:  database system was shut down at 2026-02-13 10:37:50 EET
+2026-02-13 10:37:52.260 EET [1] LOG:  database system is ready to accept connections
+2026-02-13 10:42:52.349 EET [26] LOG:  checkpoint starting: time
+2026-02-13 10:42:52.963 EET [26] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.605 s, sync=0.003 s, total=0.614 s; sync files=8, longest=0.002 s, average=0.001 s; distance=24 kB, estimate=24 kB
+2026-02-13 13:27:55.186 EET [26] LOG:  checkpoint starting: time
+2026-02-13 13:27:55.494 EET [26] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.002 s, total=0.308 s; sync files=4, longest=0.002 s, average=0.001 s; distance=16 kB, estimate=23 kB

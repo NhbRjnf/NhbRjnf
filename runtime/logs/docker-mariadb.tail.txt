@@ -1,27 +1,27 @@
 # cmd: docker logs --tail 24 vse_mariadb
-# time: 2026-02-12T12:37:27+00:00
+# time: 2026-02-13T11:37:52+00:00
 
-2026-02-10 15:22:01 0 [Note] mariadbd: O_TMPFILE is not supported on /tmp (disabling future attempts)
-2026-02-10 15:22:01 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+2026-02-12 20:03:01 0 [Note] Starting MariaDB 10.11.15-MariaDB-ubu2204 source revision cb0d6dd835023a7162ace471cd047161f205dd58 server_uid w/oknVyw3escWjttum3P6SyBA/c= as process 1
+2026-02-12 20:03:01 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2026-02-12 20:03:01 0 [Note] InnoDB: Number of transaction pools: 1
+2026-02-12 20:03:01 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+2026-02-12 20:03:01 0 [Note] mariadbd: O_TMPFILE is not supported on /tmp (disabling future attempts)
+2026-02-12 20:03:01 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
 create_uring failed: falling back to libaio
-2026-02-10 15:22:01 0 [Note] InnoDB: Using Linux native AIO
-2026-02-10 15:22:01 0 [Note] InnoDB: innodb_buffer_pool_size_max=128m, innodb_buffer_pool_size=128m
-2026-02-10 15:22:01 0 [Note] InnoDB: Completed initialization of buffer pool
-2026-02-10 15:22:01 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
-2026-02-10 15:22:01 0 [Note] InnoDB: Starting crash recovery from checkpoint LSN=60743695
-2026-02-10 15:22:01 0 [Note] InnoDB: End of log at LSN=61020091
-2026-02-10 15:22:01 0 [Note] InnoDB: To recover: 40 pages
-2026-02-10 15:22:01 0 [Note] InnoDB: 128 rollback segments are active.
-2026-02-10 15:22:01 0 [Note] InnoDB: Removed temporary tablespace data file: "./ibtmp1"
-2026-02-10 15:22:01 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
-2026-02-10 15:22:01 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
-2026-02-10 15:22:01 0 [Note] InnoDB: log sequence number 61020091; transaction id 28263
-2026-02-10 15:22:01 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
-2026-02-10 15:22:01 0 [Note] Plugin 'FEEDBACK' is disabled.
-2026-02-10 15:22:01 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
-2026-02-10 15:22:01 0 [Note] Server socket created on IP: '[REDACTED_IP]', port: '3306'.
-2026-02-10 15:22:01 0 [Note] Server socket created on IP: '::', port: '3306'.
-2026-02-10 15:22:01 0 [Note] InnoDB: Buffer pool(s) load completed at 260210 15:22:01
-2026-02-10 15:22:01 0 [Note] mariadbd: ready for connections.
+2026-02-12 20:03:01 0 [Note] InnoDB: Using Linux native AIO
+2026-02-12 20:03:01 0 [Note] InnoDB: innodb_buffer_pool_size_max=128m, innodb_buffer_pool_size=128m
+2026-02-12 20:03:01 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-02-12 20:03:01 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+2026-02-12 20:03:01 0 [Note] InnoDB: End of log at LSN=67325622
+2026-02-12 20:03:02 0 [Note] InnoDB: 128 rollback segments are active.
+2026-02-12 20:03:02 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-02-12 20:03:02 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2026-02-12 20:03:02 0 [Note] InnoDB: log sequence number 67325622; transaction id 30245
+2026-02-12 20:03:02 0 [Note] Plugin 'FEEDBACK' is disabled.
+2026-02-12 20:03:02 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2026-02-12 20:03:02 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
+2026-02-12 20:03:02 0 [Note] Server socket created on IP: '[REDACTED_IP]', port: '3306'.
+2026-02-12 20:03:02 0 [Note] Server socket created on IP: '::', port: '3306'.
+2026-02-12 20:03:02 0 [Note] InnoDB: Buffer pool(s) load completed at 260212 20:03:02
+2026-02-12 20:03:02 0 [Note] mariadbd: ready for connections.
 Version: '10.11.15-MariaDB-ubu2204'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
-2026-02-10 20:45:27 1552 [Warning] Access denied for user 'DB_USER'@'localhost' (using 

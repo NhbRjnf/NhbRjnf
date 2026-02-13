@@ -1,5 +1,5 @@
 # cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose config
-# time: 2026-02-12T12:37:27+00:00
+# time: 2026-02-13T11:37:52+00:00
 
 name: docker
 services:
@@ -25,6 +25,7 @@ services:
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      DIRECTUS_URL: http://vse_directus:8055
       
       POSTGRES_DB: vseponyatno
       POSTGRES_PASSWORD: '!!!LdfRjnf'
@@ -36,7 +37,7 @@ services:
       WP_DB_NAME: wp_vseponyatno
       WP_DB_PASSWORD: '!!!LdfRjnf'
       WP_DB_USER: wp_user
-    image: directus/directus:latest
+    image: directus/directus:11.15.2
     networks:
       vseponyatno_net: null
     ports:
@@ -65,6 +66,7 @@ services:
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      DIRECTUS_URL: http://vse_directus:8055
       MARIADB_DATABASE: wp_vseponyatno
       MARIADB_PASSWORD: '!!!LdfRjnf'
       MARIADB_ROOT_PASSWORD: '!!!LdfRjnf'
@@ -97,6 +99,7 @@ services:
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      DIRECTUS_URL: http://vse_directus:8055
       POSTGRES_DB: vseponyatno
       POSTGRES_PASSWORD: '!!!LdfRjnf'
       POSTGRES_USER: vse_user
@@ -129,6 +132,7 @@ services:
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      DIRECTUS_URL: http://vse_directus:8055
       POSTGRES_DB: vseponyatno
       POSTGRES_PASSWORD: '!!!LdfRjnf'
       POSTGRES_USER: vse_user
