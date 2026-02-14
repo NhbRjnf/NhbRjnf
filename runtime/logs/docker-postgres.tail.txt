@@ -1,16 +1,39 @@
-# cmd: docker logs --tail 24 vse_postgres
-# time: 2026-02-13T11:37:52+00:00
+# cmd: docker logs --tail 36 vse_postgres
+# time: 2026-02-14T19:42:24+00:00
 
-
-PostgreSQL Database directory appears to contain a database; Skipping initialization
-
-2026-02-13 10:37:52.242 EET [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
-2026-02-13 10:37:52.244 EET [1] LOG:  listening on IPv4 address "[REDACTED_IP]", port 5432
-2026-02-13 10:37:52.245 EET [1] LOG:  listening on IPv6 address "::", port 5432
-2026-02-13 10:37:52.247 EET [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2026-02-13 10:37:52.253 EET [28] LOG:  database system was shut down at 2026-02-13 10:37:50 EET
-2026-02-13 10:37:52.260 EET [1] LOG:  database system is ready to accept connections
-2026-02-13 10:42:52.349 EET [26] LOG:  checkpoint starting: time
-2026-02-13 10:42:52.963 EET [26] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.605 s, sync=0.003 s, total=0.614 s; sync files=8, longest=0.002 s, average=0.001 s; distance=24 kB, estimate=24 kB
-2026-02-13 13:27:55.186 EET [26] LOG:  checkpoint starting: time
-2026-02-13 13:27:55.494 EET [26] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.002 s, total=0.308 s; sync files=4, longest=0.002 s, average=0.001 s; distance=16 kB, estimate=23 kB
+2026-02-13 22:44:38.456 EET [1] LOG:  listening on IPv4 address "[REDACTED_IP]", port 5432
+2026-02-13 22:44:38.456 EET [1] LOG:  listening on IPv6 address "::", port 5432
+2026-02-13 22:44:38.458 EET [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-02-13 22:44:38.464 EET [28] LOG:  database system was shut down at 2026-02-13 22:44:37 EET
+2026-02-13 22:44:38.470 EET [1] LOG:  database system is ready to accept connections
+2026-02-13 22:49:38.514 EET [26] LOG:  checkpoint starting: time
+2026-02-13 22:49:38.521 EET [26] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.002 s, total=0.008 s; sync files=2, longest=0.002 s, average=0.001 s; distance=0 kB, estimate=0 kB
+2026-02-13 22:57:51.369 EET [77] ERROR:  column "role" of relation "directus_permissions" does not exist at character 44
+2026-02-13 22:57:51.369 EET [77] STATEMENT:  INSERT INTO public.directus_permissions
+	  (role, policy, collection, action, permissions, validation, presets, fields)
+	SELECT
+	  NULL,
+	  '4488f76a-6818-483d-98b1-4b974fbc9ad2'::uuid,
+	  'vp_onboarding_requests',
+	  'read',
+	  '{}'::json,
+	  NULL,
+	  NULL,
+	  '*'
+	WHERE NOT EXISTS (
+	  SELECT 1
+	  FROM public.directus_permissions
+	  WHERE policy='4488f76a-6818-483d-98b1-4b974fbc9ad2'::uuid
+	    AND collection='vp_onboarding_requests'
+	    AND action='read'
+	);
+2026-02-14 06:04:45.005 EET [26] LOG:  checkpoint starting: time
+2026-02-14 06:04:45.312 EET [26] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.002 s, total=0.308 s; sync files=4, longest=0.001 s, average=0.001 s; distance=19 kB, estimate=19 kB
+2026-02-14 06:09:45.409 EET [26] LOG:  checkpoint starting: time
+2026-02-14 06:09:45.515 EET [26] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.102 s, sync=0.001 s, total=0.107 s; sync files=2, longest=0.001 s, average=0.001 s; distance=6 kB, estimate=18 kB
+2026-02-14 06:24:45.743 EET [26] LOG:  checkpoint starting: time
+2026-02-14 06:24:46.450 EET [26] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.704 s, sync=0.002 s, total=0.707 s; sync files=8, longest=0.001 s, average=0.001 s; distance=29 kB, estimate=29 kB
+2026-02-14 06:29:45.493 EET [26] LOG:  checkpoint starting: time
+2026-02-14 06:29:47.805 EET [26] LOG:  checkpoint complete: wrote 24 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.308 s, sync=0.002 s, total=2.313 s; sync files=17, longest=0.001 s, average=0.001 s; distance=65 kB, estimate=65 kB
+2026-02-14 20:44:56.590 EET [26] LOG:  checkpoint starting: time
+2026-02-14 20:44:57.801 EET [26] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.206 s, sync=0.002 s, total=1.212 s; sync files=6, longest=0.001 s, average=0.001 s; distance=55 kB, estimate=64 kB

@@ -1,6 +1,11 @@
-# cmd: docker logs --tail 24 vse_mariadb
-# time: 2026-02-13T11:37:52+00:00
+# cmd: docker logs --tail 36 vse_mariadb
+# time: 2026-02-14T19:42:24+00:00
 
+2026-02-12 20:03:01+02:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.11.15+maria~ubu2204 started.
+2026-02-12 20:03:01+02:00 [Warn] [Entrypoint]: /sys/fs/cgroup///memory.pressure not writable, functionality unavailable to MariaDB
+2026-02-12 20:03:01+02:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2026-02-12 20:03:01+02:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.11.15+maria~ubu2204 started.
+2026-02-12 20:03:01+02:00 [Note] [Entrypoint]: MariaDB upgrade not required
 2026-02-12 20:03:01 0 [Note] Starting MariaDB 10.11.15-MariaDB-ubu2204 source revision cb0d6dd835023a7162ace471cd047161f205dd58 server_uid w/oknVyw3escWjttum3P6SyBA/c= as process 1
 2026-02-12 20:03:01 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
 2026-02-12 20:03:01 0 [Note] InnoDB: Number of transaction pools: 1

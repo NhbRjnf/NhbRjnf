@@ -290,3 +290,42 @@ add_action('wp_enqueue_scripts', function () {
     true
   );
 });
+
+/**
+ * VP: assets for universal /login page
+ */
+add_action('wp_enqueue_scripts', function () {
+  if (!is_page('login')) {
+    return;
+  }
+
+  $uiVer = '1.0.0';
+  wp_enqueue_style(
+    'vp-ui',
+    get_stylesheet_directory_uri() . '/assets/vp-ui.css',
+    [],
+    $uiVer
+  );
+
+  wp_enqueue_style(
+    'vp-dentist',
+    get_stylesheet_directory_uri() . '/assets/vp-dentist.css',
+    ['vp-ui'],
+    '1.0.0'
+  );
+
+  wp_enqueue_style(
+    'vp-login',
+    get_stylesheet_directory_uri() . '/assets/login.css',
+    ['vp-dentist'],
+    '1.0.0'
+  );
+
+  wp_enqueue_script(
+    'vp-login',
+    get_stylesheet_directory_uri() . '/assets/vp-login.js',
+    [],
+    '1.0.0',
+    true
+  );
+});

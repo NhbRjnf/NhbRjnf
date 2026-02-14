@@ -1,27 +1,39 @@
-# cmd: docker logs --tail 24 vse_directus
-# time: 2026-02-13T11:37:52+00:00
+# cmd: docker logs --tail 36 vse_directus
+# time: 2026-02-14T19:42:24+00:00
 
-[13:27:21] GET /roles?limit=25&fields=icon,name,description,id&sort%5B%5D=name&page=1&filter%5Bid%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b 304 8ms
-[13:27:21] GET /roles?filter%5Bid%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&aggregate%5BcountDistinct%5D=id 304 8ms
-[13:27:21] GET /policies?limit=25&fields=icon,name,app_access,admin_access,description,id&sort%5B%5D=name&page=1&filter%5B_and%5D%5B0%5D%5B$FOLLOW(directus_access,policy)%5D%5B_none%5D%5Brole%5D%5B_eq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b 304 17ms
-[13:27:21] GET /roles?aggregate%5BcountDistinct%5D=id&filter%5Bid%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b 304 22ms
-[13:27:21] GET /policies?aggregate%5BcountDistinct%5D=id&filter%5B_and%5D%5B0%5D%5B$FOLLOW(directus_access,policy)%5D%5B_none%5D%5Brole%5D%5B_eq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b 304 17ms
-[13:27:21] GET /policies?filter%5B_and%5D%5B0%5D%5B$FOLLOW(directus_access,policy)%5D%5B_none%5D%5Brole%5D%5B_eq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&aggregate%5BcountDistinct%5D=id 304 9ms
-[13:27:21] GET /users?limit=25&fields=id,avatar.modified_on,avatar.type,avatar.filename_disk,avatar.storage,avatar.id,first_name,last_name,email&sort%5B%5D=-email&page=1&filter%5B_and%5D%5B0%5D%5B_or%5D%5B0%5D%5Brole%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&filter%5B_and%5D%5B0%5D%5B_or%5D%5B1%5D%5Brole%5D%5B_null%5D=true 304 12ms
-[13:27:21] GET /users?filter%5B_and%5D%5B0%5D%5B_or%5D%5B0%5D%5Brole%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&filter%5B_and%5D%5B0%5D%5B_or%5D%5B1%5D%5Brole%5D%5B_null%5D=true&aggregate%5BcountDistinct%5D=id 304 8ms
-[13:27:21] GET /users?aggregate%5BcountDistinct%5D=id&filter%5B_and%5D%5B0%5D%5B_or%5D%5B0%5D%5Brole%5D%5B_neq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&filter%5B_and%5D%5B0%5D%5B_or%5D%5B1%5D%5Brole%5D%5B_null%5D=true 304 7ms
-[13:27:21] PATCH /users/me/track/page 204 8ms
-[13:27:39] GET /aaa9 404 8ms
-[13:27:39] GET /aab9 404 6ms
-[13:27:58] GET /aaa9 404 4ms
-[13:27:58] GET /aab9 404 7ms
-[13:28:00] GET / 302 1ms
-[13:29:39] GET /users/me 401 4ms
-[13:30:59] GET / 302 2ms
-[13:30:59] GET /admin 200 2ms
-[13:33:51] GET /users/me?fields=id 304 18ms
-[13:33:59] GET /collections 304 17ms
-[13:33:59] GET /users/me?fields%5B%5D=avatar.modified_on 304 16ms
-[13:34:00] PATCH /users/me/track/page 204 16ms
-[13:34:03] PATCH /users/me/track/page 204 12ms
-[13:34:05] GET /schema/snapshot 200 233ms
+[20:42:09] GET /presets?filter%5Brole%5D%5B_null%5D=true&filter%5Buser%5D%5B_null%5D=true&limit=-1 304 19ms
+[20:42:09] GET /settings 304 17ms
+[20:42:09] GET /relations 304 50ms
+[20:42:09] GET /panels?fields%5B%5D=*&sort%5B%5D=dashboard&limit=-1 304 28ms
+[20:42:09] GET /dashboards?fields%5B%5D=*&sort%5B%5D=name&limit=-1 304 52ms
+[20:42:09] GET /notifications?filter%5B_and%5D%5B0%5D%5Brecipient%5D%5B_eq%5D=1c40d2d0-0aa6-45db-8379-c3c91709b9ec&filter%5B_and%5D%5B1%5D%5Bstatus%5D%5B_eq%5D=inbox&aggregate%5Bcount%5D=id 304 21ms
+[20:42:09] GET /flows?fields%5B%5D=*&fields%5B%5D=operations.*&limit=-1 304 32ms
+[20:42:09] GET /presets?filter%5Brole%5D%5B_eq%5D=893a1b06-02e1-4327-a1a9-fce9c380863b&filter%5Buser%5D%5B_null%5D=true&limit=-1 304 21ms
+[20:42:09] GET /translations?fields%5B%5D=language&fields%5B%5D=key&fields%5B%5D=value&filter%5Blanguage%5D%5B_eq%5D=en-US&limit=-1 304 19ms
+[20:42:12] GET /access?fields%5B%5D=policy.name&fields%5B%5D=policy.id&fields%5B%5D=id&fields%5B%5D=sort&filter%5B_and%5D%5B0%5D%5Buser%5D=ac01f8d1-fbfb-4f2b-8f8e-ddf679e19de6&page=1&limit=15 304 40ms
+[20:42:12] GET /users/me?fields%5B%5D=avatar.modified_on 304 42ms
+[20:42:12] GET /roles?sort=name&fields%5B%5D=id&fields%5B%5D=name&fields%5B%5D=icon&fields%5B%5D=parent 304 32ms
+[20:42:12] GET /access?aggregate%5Bcount%5D=id&filter%5B_and%5D%5B0%5D%5Buser%5D=ac01f8d1-fbfb-4f2b-8f8e-ddf679e19de6 304 41ms
+[20:42:12] GET /users/ac01f8d1-fbfb-4f2b-8f8e-ddf679e19de6?fields=*,role.*,avatar.id,avatar.modified_on 200 93ms
+[20:42:12] GET /revisions?filter%5B_and%5D%5B0%5D%5Bcollection%5D%5B_eq%5D=directus_users&filter%5B_and%5D%5B1%5D%5Bitem%5D%5B_eq%5D=ac01f8d1-fbfb-4f2b-8f8e-ddf679e19de6&filter%5B_and%5D%5B2%5D%5Bversion%5D%5B_null%5D=true&aggregate%5Bcount%5D=id 304 35ms
+[20:42:12] GET /comments?filter%5B_and%5D%5B0%5D%5Bcollection%5D%5B_eq%5D=directus_users&filter%5B_and%5D%5B1%5D%5Bitem%5D%5B_eq%5D=ac01f8d1-fbfb-4f2b-8f8e-ddf679e19de6&aggregate%5Bcount%5D=id 304 14ms
+[20:42:12] PATCH /users/me/track/page 204 23ms
+[20:42:13] GET /files/21e5e27d-ab04-469b-a7cd-401baad13335?fields%5B%5D=id&fields%5B%5D=title&fields%5B%5D=type&fields%5B%5D=filename_download&fields%5B%5D=modified_on 304 8ms
+[20:42:13] GET /roles?aggregate%5BcountDistinct%5D=id 304 8ms
+[20:42:13] GET /roles?limit=25&fields=icon,name,description,id&sort%5B%5D=name&page=1 304 14ms
+[20:42:13] GET /roles/893a1b06-02e1-4327-a1a9-fce9c380863b?fields%5B%5D=name&fields%5B%5D=id 304 10ms
+[20:42:13] GET /policies?limit=25&fields=icon,name,app_access,admin_access,description,id&sort%5B%5D=name&page=1&filter%5B_and%5D%5B0%5D%5B$FOLLOW(directus_access,policy)%5D%5B_none%5D%5Buser%5D%5B_eq%5D=ac01f8d1-fbfb-4f2b-8f8e-ddf679e19de6 304 21ms
+[20:42:13] GET /policies?filter%5B_and%5D%5B0%5D%5B$FOLLOW(directus_access,policy)%5D%5B_none%5D%5Buser%5D%5B_eq%5D=ac01f8d1-fbfb-4f2b-8f8e-ddf679e19de6&aggregate%5BcountDistinct%5D=id 304 10ms
+[20:42:13] GET /policies?aggregate%5BcountDistinct%5D=id&filter%5B_and%5D%5B0%5D%5B$FOLLOW(directus_access,policy)%5D%5B_none%5D%5Buser%5D%5B_eq%5D=ac01f8d1-fbfb-4f2b-8f8e-ddf679e19de6 304 8ms
+[20:42:13] GET /roles?aggregate%5BcountDistinct%5D=id 304 8ms
+[20:42:13] GET /files/21e5e27d-ab04-469b-a7cd-401baad13335?fields%5B%5D=id&fields%5B%5D=type&fields%5B%5D=title&fields%5B%5D=modified_on&fields%5B%5D=title 304 10ms
+[21:16:38] GET /owa/auth/x.js 404 9ms
+[21:23:58] GET /robots.txt 200 2ms
+[21:23:58] GET /robots.txt 200 1ms
+[21:39:22] GET /assets/21e5e27d-ab04-469b-a7cd-401baad13335? 200 33ms
+[21:39:22] GET /assets/21e5e27d-ab04-469b-a7cd-401baad13335? 200 41ms
+[21:39:22] GET /users/me?fields=id 304 11ms
+[21:39:59] GET / 302 3ms
+[21:40:00] GET / 302 2ms
+[21:40:00] GET /admin 200 1ms
+[21:40:14] GET / 302 1ms

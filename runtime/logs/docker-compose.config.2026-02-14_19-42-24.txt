@@ -1,5 +1,5 @@
 # cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose config
-# time: 2026-02-13T11:37:52+00:00
+# time: 2026-02-14T19:42:24+00:00
 
 name: docker
 services:
@@ -20,7 +20,7 @@ services:
       DB_USER: vse_user
       DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
       DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
-      DIRECTUS_API_TOKEN: CpizNhvS_C8hD026pVoemf3ZcymCgrsA
+      DIRECTUS_API_TOKEN: XBb93GNWfZ1qTCtI8QRyz8PSdVN2LVcz
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -61,7 +61,7 @@ services:
     environment:
       DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
       DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
-      DIRECTUS_API_TOKEN: CpizNhvS_C8hD026pVoemf3ZcymCgrsA
+      DIRECTUS_API_TOKEN: XBb93GNWfZ1qTCtI8QRyz8PSdVN2LVcz
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -94,7 +94,7 @@ services:
     environment:
       DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
       DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
-      DIRECTUS_API_TOKEN: CpizNhvS_C8hD026pVoemf3ZcymCgrsA
+      DIRECTUS_API_TOKEN: XBb93GNWfZ1qTCtI8QRyz8PSdVN2LVcz
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -127,7 +127,7 @@ services:
     environment:
       DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
       DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
-      DIRECTUS_API_TOKEN: CpizNhvS_C8hD026pVoemf3ZcymCgrsA
+      DIRECTUS_API_TOKEN: XBb93GNWfZ1qTCtI8QRyz8PSdVN2LVcz
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
