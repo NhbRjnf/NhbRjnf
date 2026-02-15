@@ -1,0 +1,25 @@
+{
+  "collection": "instruction_sets",
+  "field": "tenant_id",
+  "related_collection": "vp_tenants",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "instruction_sets",
+    "many_field": "tenant_id",
+    "one_allowed_collections": null,
+    "one_collection": "vp_tenants",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": null,
+    "sort_field": null
+  },
+  "schema": {
+    "table": "instruction_sets",
+    "column": "tenant_id",
+    "foreign_key_table": "vp_tenants",
+    "foreign_key_column": "id",
+    "constraint_name": "instruction_sets_tenant_id_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}

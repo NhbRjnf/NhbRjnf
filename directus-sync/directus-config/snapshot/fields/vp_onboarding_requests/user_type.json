@@ -1,0 +1,71 @@
+{
+  "collection": "vp_onboarding_requests",
+  "field": "user_type",
+  "type": "string",
+  "meta": {
+    "collection": "vp_onboarding_requests",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "user_type",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "Доктор (стоматолог)",
+          "value": "dentist_doctor"
+        },
+        {
+          "text": "Админ клиники",
+          "value": "clinic_admin"
+        },
+        {
+          "text": "Владелец авто",
+          "value": "car_owner"
+        },
+        {
+          "text": "Автосервис/дилер",
+          "value": "auto_business"
+        },
+        {
+          "text": "Локация/ТЦ админ",
+          "value": "location_admin"
+        },
+        {
+          "text": "Партнёр/производитель",
+          "value": "content_partner"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": true,
+    "searchable": true,
+    "sort": 14,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "user_type",
+    "table": "vp_onboarding_requests",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 32,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_indexed": true,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

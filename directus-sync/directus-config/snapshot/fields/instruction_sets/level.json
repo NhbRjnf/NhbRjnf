@@ -1,0 +1,59 @@
+{
+  "collection": "instruction_sets",
+  "field": "level",
+  "type": "string",
+  "meta": {
+    "collection": "instruction_sets",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "level",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "A (2D интерактив)",
+          "value": "A"
+        },
+        {
+          "text": "B (простое 3D)",
+          "value": "B"
+        },
+        {
+          "text": "C (полное 3D/AR)",
+          "value": "C"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": false,
+    "searchable": true,
+    "sort": 5,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "level",
+    "table": "instruction_sets",
+    "data_type": "character varying",
+    "default_value": null,
+    "max_length": 16,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

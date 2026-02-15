@@ -1,0 +1,68 @@
+{
+  "collection": "qr_codes",
+  "field": "type",
+  "type": "string",
+  "meta": {
+    "collection": "qr_codes",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "type",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "product",
+          "value": "product"
+        },
+        {
+          "text": "location",
+          "value": "location"
+        },
+        {
+          "text": "service",
+          "value": "service"
+        },
+        {
+          "icon": "assistant_direction",
+          "text": "3D",
+          "value": "3D"
+        },
+        {
+          "text": "3d",
+          "value": "3d"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": true,
+    "searchable": true,
+    "sort": 20,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "half"
+  },
+  "schema": {
+    "name": "type",
+    "table": "qr_codes",
+    "data_type": "character varying",
+    "default_value": "product",
+    "max_length": 50,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "collection": "vp_onboarding_requests",
+  "field": "created_profile_id",
+  "related_collection": "vp_user_profiles",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "vp_onboarding_requests",
+    "many_field": "created_profile_id",
+    "one_allowed_collections": null,
+    "one_collection": "vp_user_profiles",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": "id",
+    "sort_field": null
+  },
+  "schema": {
+    "table": "vp_onboarding_requests",
+    "column": "created_profile_id",
+    "foreign_key_table": "vp_user_profiles",
+    "foreign_key_column": "id",
+    "constraint_name": "vp_onboarding_requests_created_profile_id_foreign",
+    "on_update": "CASCADE",
+    "on_delete": "SET NULL"
+  }
+}

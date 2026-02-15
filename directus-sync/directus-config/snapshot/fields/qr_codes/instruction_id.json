@@ -1,0 +1,46 @@
+{
+  "collection": "qr_codes",
+  "field": "instruction_id",
+  "type": "integer",
+  "meta": {
+    "collection": "qr_codes",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "instruction_id",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown-m2o",
+    "note": "Инструкция, открываемая по QR",
+    "options": null,
+    "readonly": false,
+    "required": false,
+    "searchable": true,
+    "sort": 131,
+    "special": [
+      "m2o"
+    ],
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "instruction_id",
+    "table": "qr_codes",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "instruction_sets",
+    "foreign_key_column": "id"
+  }
+}

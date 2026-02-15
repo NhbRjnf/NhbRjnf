@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Administrator",
+    "icon": "verified",
+    "description": "$t:admin_description",
+    "parent": null,
+    "app_access": true,
+    "admin_access": false,
+    "_syncId": "_sync_default_admin_role"
+  },
+  {
+    "name": "api_public",
+    "icon": "swap_horizontal_circle",
+    "description": null,
+    "parent": null,
+    "app_access": true,
+    "admin_access": true,
+    "_syncId": "6c22b786-4b39-4b0e-9c9a-0d45f2b89775"
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "collection": "vp_case_scans",
+  "field": "kind",
+  "type": "string",
+  "meta": {
+    "collection": "vp_case_scans",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "kind",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "Верхняя челюсть",
+          "value": "upper"
+        },
+        {
+          "text": "Нижняя челюсть",
+          "value": "lower"
+        },
+        {
+          "text": "Прикус",
+          "value": "bite"
+        },
+        {
+          "text": "Другое",
+          "value": "other"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": true,
+    "searchable": true,
+    "sort": 30,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "kind",
+    "table": "vp_case_scans",
+    "data_type": "character varying",
+    "default_value": "''upper'",
+    "max_length": 16,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

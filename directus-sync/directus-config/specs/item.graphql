@@ -1,0 +1,4673 @@
+type Query {
+  vp_3d_scenes(filter: vp_3d_scenes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_3d_scenes!]!
+  vp_3d_scenes_by_id(id: ID!, version: String): vp_3d_scenes
+  vp_3d_scenes_aggregated(groupBy: [String], filter: vp_3d_scenes_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_3d_scenes_aggregated!]!
+  vp_3d_scenes_by_version(version: String!, id: ID!): version_vp_3d_scenes
+  vp_tenants(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_tenants!]!
+  vp_tenants_by_id(id: ID!, version: String): vp_tenants
+  vp_tenants_aggregated(groupBy: [String], filter: vp_tenants_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_tenants_aggregated!]!
+  vp_tenants_by_version(version: String!, id: ID!): version_vp_tenants
+  instruction_sets(filter: instruction_sets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [instruction_sets!]!
+  instruction_sets_by_id(id: ID!, version: String): instruction_sets
+  instruction_sets_aggregated(groupBy: [String], filter: instruction_sets_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [instruction_sets_aggregated!]!
+  instruction_sets_by_version(version: String!, id: ID!): version_instruction_sets
+  qr_codes(filter: qr_codes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [qr_codes!]!
+  qr_codes_by_id(id: ID!, version: String): qr_codes
+  qr_codes_aggregated(groupBy: [String], filter: qr_codes_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [qr_codes_aggregated!]!
+  qr_codes_by_version(version: String!, id: ID!): version_qr_codes
+  instruction_steps(filter: instruction_steps_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [instruction_steps!]!
+  instruction_steps_by_id(id: ID!, version: String): instruction_steps
+  instruction_steps_aggregated(groupBy: [String], filter: instruction_steps_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [instruction_steps_aggregated!]!
+  instruction_steps_by_version(version: String!, id: ID!): version_instruction_steps
+  instruction_assets(filter: instruction_assets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [instruction_assets!]!
+  instruction_assets_by_id(id: ID!, version: String): instruction_assets
+  instruction_assets_aggregated(groupBy: [String], filter: instruction_assets_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [instruction_assets_aggregated!]!
+  instruction_assets_by_version(version: String!, id: ID!): version_instruction_assets
+  vp_cards(filter: vp_cards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_cards!]!
+  vp_cards_by_id(id: ID!, version: String): vp_cards
+  vp_cards_aggregated(groupBy: [String], filter: vp_cards_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_cards_aggregated!]!
+  vp_cards_by_version(version: String!, id: ID!): version_vp_cards
+  vp_case_scans(filter: vp_case_scans_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_case_scans!]!
+  vp_case_scans_by_id(id: ID!, version: String): vp_case_scans
+  vp_case_scans_aggregated(groupBy: [String], filter: vp_case_scans_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_case_scans_aggregated!]!
+  vp_case_scans_by_version(version: String!, id: ID!): version_vp_case_scans
+  vp_share_links(filter: vp_share_links_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_share_links!]!
+  vp_share_links_by_id(id: ID!, version: String): vp_share_links
+  vp_share_links_aggregated(groupBy: [String], filter: vp_share_links_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_share_links_aggregated!]!
+  vp_share_links_by_version(version: String!, id: ID!): version_vp_share_links
+  products(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [products!]!
+  products_by_id(id: ID!, version: String): products
+  products_aggregated(groupBy: [String], filter: products_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [products_aggregated!]!
+  products_by_version(version: String!, id: ID!): version_products
+  vp_memberships(filter: vp_memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_memberships!]!
+  vp_memberships_by_id(id: ID!, version: String): vp_memberships
+  vp_memberships_aggregated(groupBy: [String], filter: vp_memberships_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_memberships_aggregated!]!
+  vp_memberships_by_version(version: String!, id: ID!): version_vp_memberships
+  vp_invites(filter: vp_invites_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_invites!]!
+  vp_invites_by_id(id: ID!, version: String): vp_invites
+  vp_invites_aggregated(groupBy: [String], filter: vp_invites_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_invites_aggregated!]!
+  vp_invites_by_version(version: String!, id: ID!): version_vp_invites
+  vp_clinics(filter: vp_clinics_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_clinics!]!
+  vp_clinics_by_id(id: ID!, version: String): vp_clinics
+  vp_clinics_aggregated(groupBy: [String], filter: vp_clinics_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_clinics_aggregated!]!
+  vp_clinics_by_version(version: String!, id: ID!): version_vp_clinics
+  vp_patients(filter: vp_patients_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_patients!]!
+  vp_patients_by_id(id: ID!, version: String): vp_patients
+  vp_patients_aggregated(groupBy: [String], filter: vp_patients_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_patients_aggregated!]!
+  vp_patients_by_version(version: String!, id: ID!): version_vp_patients
+  vp_cases(filter: vp_cases_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_cases!]!
+  vp_cases_by_id(id: ID!, version: String): vp_cases
+  vp_cases_aggregated(groupBy: [String], filter: vp_cases_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_cases_aggregated!]!
+  vp_cases_by_version(version: String!, id: ID!): version_vp_cases
+  vp_onboarding_requests(filter: vp_onboarding_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_onboarding_requests!]!
+  vp_onboarding_requests_by_id(id: ID!, version: String): vp_onboarding_requests
+  vp_onboarding_requests_aggregated(groupBy: [String], filter: vp_onboarding_requests_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_onboarding_requests_aggregated!]!
+  vp_onboarding_requests_by_version(version: String!, id: ID!): version_vp_onboarding_requests
+  vp_user_profiles(filter: vp_user_profiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_user_profiles!]!
+  vp_user_profiles_by_id(id: ID!, version: String): vp_user_profiles
+  vp_user_profiles_aggregated(groupBy: [String], filter: vp_user_profiles_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_user_profiles_aggregated!]!
+  vp_user_profiles_by_version(version: String!, id: ID!): version_vp_user_profiles
+  vp_allowlist_domains(filter: vp_allowlist_domains_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_allowlist_domains!]!
+  vp_allowlist_domains_by_id(id: ID!, version: String): vp_allowlist_domains
+  vp_allowlist_domains_aggregated(groupBy: [String], filter: vp_allowlist_domains_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [vp_allowlist_domains_aggregated!]!
+  vp_allowlist_domains_by_version(version: String!, id: ID!): version_vp_allowlist_domains
+  directus_sync_id_map(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_sync_id_map!]!
+  directus_sync_id_map_by_id(id: ID!, version: String): directus_sync_id_map
+  directus_sync_id_map_aggregated(groupBy: [String], filter: directus_sync_id_map_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [directus_sync_id_map_aggregated!]!
+  directus_sync_id_map_by_version(version: String!, id: ID!): version_directus_sync_id_map
+}
+
+type Mutation {
+  create_vp_3d_scenes_items(filter: vp_3d_scenes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_3d_scenes_input!]): [vp_3d_scenes!]!
+  create_vp_3d_scenes_item(data: create_vp_3d_scenes_input!): vp_3d_scenes
+  create_vp_tenants_items(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_tenants_input!]): [vp_tenants!]!
+  create_vp_tenants_item(data: create_vp_tenants_input!): vp_tenants
+  create_instruction_sets_items(filter: instruction_sets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_instruction_sets_input!]): [instruction_sets!]!
+  create_instruction_sets_item(data: create_instruction_sets_input!): instruction_sets
+  create_qr_codes_items(filter: qr_codes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_qr_codes_input!]): [qr_codes!]!
+  create_qr_codes_item(data: create_qr_codes_input!): qr_codes
+  create_instruction_steps_items(filter: instruction_steps_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_instruction_steps_input!]): [instruction_steps!]!
+  create_instruction_steps_item(data: create_instruction_steps_input!): instruction_steps
+  create_instruction_assets_items(filter: instruction_assets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_instruction_assets_input!]): [instruction_assets!]!
+  create_instruction_assets_item(data: create_instruction_assets_input!): instruction_assets
+  create_vp_cards_items(filter: vp_cards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_cards_input!]): [vp_cards!]!
+  create_vp_cards_item(data: create_vp_cards_input!): vp_cards
+  create_vp_case_scans_items(filter: vp_case_scans_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_case_scans_input!]): [vp_case_scans!]!
+  create_vp_case_scans_item(data: create_vp_case_scans_input!): vp_case_scans
+  create_vp_share_links_items(filter: vp_share_links_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_share_links_input!]): [vp_share_links!]!
+  create_vp_share_links_item(data: create_vp_share_links_input!): vp_share_links
+  create_products_items(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_products_input!]): [products!]!
+  create_products_item(data: create_products_input!): products
+  create_vp_memberships_items(filter: vp_memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_memberships_input!]): [vp_memberships!]!
+  create_vp_memberships_item(data: create_vp_memberships_input!): vp_memberships
+  create_vp_invites_items(filter: vp_invites_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_invites_input!]): [vp_invites!]!
+  create_vp_invites_item(data: create_vp_invites_input!): vp_invites
+  create_vp_clinics_items(filter: vp_clinics_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_clinics_input!]): [vp_clinics!]!
+  create_vp_clinics_item(data: create_vp_clinics_input!): vp_clinics
+  create_vp_patients_items(filter: vp_patients_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_patients_input!]): [vp_patients!]!
+  create_vp_patients_item(data: create_vp_patients_input!): vp_patients
+  create_vp_cases_items(filter: vp_cases_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_cases_input!]): [vp_cases!]!
+  create_vp_cases_item(data: create_vp_cases_input!): vp_cases
+  create_vp_onboarding_requests_items(filter: vp_onboarding_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_onboarding_requests_input!]): [vp_onboarding_requests!]!
+  create_vp_onboarding_requests_item(data: create_vp_onboarding_requests_input!): vp_onboarding_requests
+  create_vp_user_profiles_items(filter: vp_user_profiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_user_profiles_input!]): [vp_user_profiles!]!
+  create_vp_user_profiles_item(data: create_vp_user_profiles_input!): vp_user_profiles
+  create_vp_allowlist_domains_items(filter: vp_allowlist_domains_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_vp_allowlist_domains_input!]): [vp_allowlist_domains!]!
+  create_vp_allowlist_domains_item(data: create_vp_allowlist_domains_input!): vp_allowlist_domains
+  create_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_directus_sync_id_map_input!]): [directus_sync_id_map!]!
+  create_directus_sync_id_map_item(data: create_directus_sync_id_map_input!): directus_sync_id_map
+  update_vp_3d_scenes_items(filter: vp_3d_scenes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_3d_scenes_input!): [vp_3d_scenes!]!
+  update_vp_3d_scenes_batch(filter: vp_3d_scenes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_3d_scenes_input!]): [vp_3d_scenes!]!
+  update_vp_3d_scenes_item(id: ID!, data: update_vp_3d_scenes_input!): vp_3d_scenes
+  update_vp_tenants_items(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_tenants_input!): [vp_tenants!]!
+  update_vp_tenants_batch(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_tenants_input!]): [vp_tenants!]!
+  update_vp_tenants_item(id: ID!, data: update_vp_tenants_input!): vp_tenants
+  update_instruction_sets_items(filter: instruction_sets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_instruction_sets_input!): [instruction_sets!]!
+  update_instruction_sets_batch(filter: instruction_sets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_instruction_sets_input!]): [instruction_sets!]!
+  update_instruction_sets_item(id: ID!, data: update_instruction_sets_input!): instruction_sets
+  update_qr_codes_items(filter: qr_codes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_qr_codes_input!): [qr_codes!]!
+  update_qr_codes_batch(filter: qr_codes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_qr_codes_input!]): [qr_codes!]!
+  update_qr_codes_item(id: ID!, data: update_qr_codes_input!): qr_codes
+  update_instruction_steps_items(filter: instruction_steps_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_instruction_steps_input!): [instruction_steps!]!
+  update_instruction_steps_batch(filter: instruction_steps_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_instruction_steps_input!]): [instruction_steps!]!
+  update_instruction_steps_item(id: ID!, data: update_instruction_steps_input!): instruction_steps
+  update_instruction_assets_items(filter: instruction_assets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_instruction_assets_input!): [instruction_assets!]!
+  update_instruction_assets_batch(filter: instruction_assets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_instruction_assets_input!]): [instruction_assets!]!
+  update_instruction_assets_item(id: ID!, data: update_instruction_assets_input!): instruction_assets
+  update_vp_cards_items(filter: vp_cards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_cards_input!): [vp_cards!]!
+  update_vp_cards_batch(filter: vp_cards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_cards_input!]): [vp_cards!]!
+  update_vp_cards_item(id: ID!, data: update_vp_cards_input!): vp_cards
+  update_vp_case_scans_items(filter: vp_case_scans_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_case_scans_input!): [vp_case_scans!]!
+  update_vp_case_scans_batch(filter: vp_case_scans_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_case_scans_input!]): [vp_case_scans!]!
+  update_vp_case_scans_item(id: ID!, data: update_vp_case_scans_input!): vp_case_scans
+  update_vp_share_links_items(filter: vp_share_links_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_share_links_input!): [vp_share_links!]!
+  update_vp_share_links_batch(filter: vp_share_links_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_share_links_input!]): [vp_share_links!]!
+  update_vp_share_links_item(id: ID!, data: update_vp_share_links_input!): vp_share_links
+  update_products_items(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_products_input!): [products!]!
+  update_products_batch(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_products_input!]): [products!]!
+  update_products_item(id: ID!, data: update_products_input!): products
+  update_vp_memberships_items(filter: vp_memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_memberships_input!): [vp_memberships!]!
+  update_vp_memberships_batch(filter: vp_memberships_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_memberships_input!]): [vp_memberships!]!
+  update_vp_memberships_item(id: ID!, data: update_vp_memberships_input!): vp_memberships
+  update_vp_invites_items(filter: vp_invites_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_invites_input!): [vp_invites!]!
+  update_vp_invites_batch(filter: vp_invites_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_invites_input!]): [vp_invites!]!
+  update_vp_invites_item(id: ID!, data: update_vp_invites_input!): vp_invites
+  update_vp_clinics_items(filter: vp_clinics_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_clinics_input!): [vp_clinics!]!
+  update_vp_clinics_batch(filter: vp_clinics_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_clinics_input!]): [vp_clinics!]!
+  update_vp_clinics_item(id: ID!, data: update_vp_clinics_input!): vp_clinics
+  update_vp_patients_items(filter: vp_patients_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_patients_input!): [vp_patients!]!
+  update_vp_patients_batch(filter: vp_patients_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_patients_input!]): [vp_patients!]!
+  update_vp_patients_item(id: ID!, data: update_vp_patients_input!): vp_patients
+  update_vp_cases_items(filter: vp_cases_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_cases_input!): [vp_cases!]!
+  update_vp_cases_batch(filter: vp_cases_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_cases_input!]): [vp_cases!]!
+  update_vp_cases_item(id: ID!, data: update_vp_cases_input!): vp_cases
+  update_vp_onboarding_requests_items(filter: vp_onboarding_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_onboarding_requests_input!): [vp_onboarding_requests!]!
+  update_vp_onboarding_requests_batch(filter: vp_onboarding_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_onboarding_requests_input!]): [vp_onboarding_requests!]!
+  update_vp_onboarding_requests_item(id: ID!, data: update_vp_onboarding_requests_input!): vp_onboarding_requests
+  update_vp_user_profiles_items(filter: vp_user_profiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_user_profiles_input!): [vp_user_profiles!]!
+  update_vp_user_profiles_batch(filter: vp_user_profiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_user_profiles_input!]): [vp_user_profiles!]!
+  update_vp_user_profiles_item(id: ID!, data: update_vp_user_profiles_input!): vp_user_profiles
+  update_vp_allowlist_domains_items(filter: vp_allowlist_domains_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_vp_allowlist_domains_input!): [vp_allowlist_domains!]!
+  update_vp_allowlist_domains_batch(filter: vp_allowlist_domains_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_vp_allowlist_domains_input!]): [vp_allowlist_domains!]!
+  update_vp_allowlist_domains_item(id: ID!, data: update_vp_allowlist_domains_input!): vp_allowlist_domains
+  update_directus_sync_id_map_items(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_directus_sync_id_map_input!): [directus_sync_id_map!]!
+  update_directus_sync_id_map_batch(filter: directus_sync_id_map_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_directus_sync_id_map_input!]): [directus_sync_id_map!]!
+  update_directus_sync_id_map_item(id: ID!, data: update_directus_sync_id_map_input!): directus_sync_id_map
+  delete_vp_3d_scenes_items(ids: [ID]!): delete_many
+  delete_vp_3d_scenes_item(id: ID!): delete_one
+  delete_vp_tenants_items(ids: [ID]!): delete_many
+  delete_vp_tenants_item(id: ID!): delete_one
+  delete_instruction_sets_items(ids: [ID]!): delete_many
+  delete_instruction_sets_item(id: ID!): delete_one
+  delete_qr_codes_items(ids: [ID]!): delete_many
+  delete_qr_codes_item(id: ID!): delete_one
+  delete_instruction_steps_items(ids: [ID]!): delete_many
+  delete_instruction_steps_item(id: ID!): delete_one
+  delete_instruction_assets_items(ids: [ID]!): delete_many
+  delete_instruction_assets_item(id: ID!): delete_one
+  delete_vp_cards_items(ids: [ID]!): delete_many
+  delete_vp_cards_item(id: ID!): delete_one
+  delete_vp_case_scans_items(ids: [ID]!): delete_many
+  delete_vp_case_scans_item(id: ID!): delete_one
+  delete_vp_share_links_items(ids: [ID]!): delete_many
+  delete_vp_share_links_item(id: ID!): delete_one
+  delete_products_items(ids: [ID]!): delete_many
+  delete_products_item(id: ID!): delete_one
+  delete_vp_memberships_items(ids: [ID]!): delete_many
+  delete_vp_memberships_item(id: ID!): delete_one
+  delete_vp_invites_items(ids: [ID]!): delete_many
+  delete_vp_invites_item(id: ID!): delete_one
+  delete_vp_clinics_items(ids: [ID]!): delete_many
+  delete_vp_clinics_item(id: ID!): delete_one
+  delete_vp_patients_items(ids: [ID]!): delete_many
+  delete_vp_patients_item(id: ID!): delete_one
+  delete_vp_cases_items(ids: [ID]!): delete_many
+  delete_vp_cases_item(id: ID!): delete_one
+  delete_vp_onboarding_requests_items(ids: [ID]!): delete_many
+  delete_vp_onboarding_requests_item(id: ID!): delete_one
+  delete_vp_user_profiles_items(ids: [ID]!): delete_many
+  delete_vp_user_profiles_item(id: ID!): delete_one
+  delete_vp_allowlist_domains_items(ids: [ID]!): delete_many
+  delete_vp_allowlist_domains_item(id: ID!): delete_one
+  delete_directus_sync_id_map_items(ids: [ID]!): delete_many
+  delete_directus_sync_id_map_item(id: ID!): delete_one
+}
+
+type Subscription {
+  directus_activity_mutated(event: EventEnum): directus_activity_mutated
+  directus_permissions_mutated(event: EventEnum): directus_permissions_mutated
+  directus_files_mutated(event: EventEnum): directus_files_mutated
+  directus_folders_mutated(event: EventEnum): directus_folders_mutated
+  directus_users_mutated(event: EventEnum): directus_users_mutated
+  directus_presets_mutated(event: EventEnum): directus_presets_mutated
+  directus_roles_mutated(event: EventEnum): directus_roles_mutated
+  directus_revisions_mutated(event: EventEnum): directus_revisions_mutated
+  directus_panels_mutated(event: EventEnum): directus_panels_mutated
+  directus_notifications_mutated(event: EventEnum): directus_notifications_mutated
+  directus_shares_mutated(event: EventEnum): directus_shares_mutated
+  directus_flows_mutated(event: EventEnum): directus_flows_mutated
+  directus_dashboards_mutated(event: EventEnum): directus_dashboards_mutated
+  directus_operations_mutated(event: EventEnum): directus_operations_mutated
+  directus_translations_mutated(event: EventEnum): directus_translations_mutated
+  directus_policies_mutated(event: EventEnum): directus_policies_mutated
+  directus_access_mutated(event: EventEnum): directus_access_mutated
+  directus_versions_mutated(event: EventEnum): directus_versions_mutated
+  directus_comments_mutated(event: EventEnum): directus_comments_mutated
+  directus_deployment_runs_mutated(event: EventEnum): directus_deployment_runs_mutated
+  vp_3d_scenes_mutated(event: EventEnum): vp_3d_scenes_mutated
+  directus_settings_mutated(event: EventEnum): directus_settings_mutated
+  directus_deployments_mutated(event: EventEnum): directus_deployments_mutated
+  directus_deployment_projects_mutated(event: EventEnum): directus_deployment_projects_mutated
+  vp_tenants_mutated(event: EventEnum): vp_tenants_mutated
+  instruction_sets_mutated(event: EventEnum): instruction_sets_mutated
+  qr_codes_mutated(event: EventEnum): qr_codes_mutated
+  instruction_steps_mutated(event: EventEnum): instruction_steps_mutated
+  instruction_assets_mutated(event: EventEnum): instruction_assets_mutated
+  vp_cards_mutated(event: EventEnum): vp_cards_mutated
+  vp_case_scans_mutated(event: EventEnum): vp_case_scans_mutated
+  vp_share_links_mutated(event: EventEnum): vp_share_links_mutated
+  products_mutated(event: EventEnum): products_mutated
+  vp_memberships_mutated(event: EventEnum): vp_memberships_mutated
+  vp_invites_mutated(event: EventEnum): vp_invites_mutated
+  vp_clinics_mutated(event: EventEnum): vp_clinics_mutated
+  vp_patients_mutated(event: EventEnum): vp_patients_mutated
+  vp_cases_mutated(event: EventEnum): vp_cases_mutated
+  vp_onboarding_requests_mutated(event: EventEnum): vp_onboarding_requests_mutated
+  vp_user_profiles_mutated(event: EventEnum): vp_user_profiles_mutated
+  vp_allowlist_domains_mutated(event: EventEnum): vp_allowlist_domains_mutated
+  directus_sync_id_map_mutated(event: EventEnum): directus_sync_id_map_mutated
+}
+
+"""The `Boolean` scalar type represents `true` or `false`."""
+scalar Boolean
+
+"""ISO8601 Date values"""
+scalar Date
+
+"""
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
+"""
+scalar Float
+
+"""BigInt value"""
+scalar GraphQLBigInt
+
+"""A Float or a String"""
+scalar GraphQLStringOrFloat
+
+"""Hashed string values"""
+scalar Hash
+
+"""
+The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+"""
+scalar ID
+
+"""
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+"""
+scalar Int
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+"""
+scalar String
+
+enum EventEnum {
+  create
+  update
+  delete
+}
+
+type count_functions {
+  count: Int
+}
+
+type datetime_functions {
+  year: Int
+  month: Int
+  week: Int
+  day: Int
+  weekday: Int
+  hour: Int
+  minute: Int
+  second: Int
+}
+
+type delete_many {
+  ids: [ID]!
+}
+
+type delete_one {
+  id: ID!
+}
+
+type directus_access {
+  id: ID!
+  role(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_roles
+  user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  policy(filter: directus_policies_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_policies
+  sort: Int
+}
+
+type directus_access_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_access
+}
+
+type directus_activity {
+  id: ID!
+  action: String!
+  user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  timestamp: Date
+  timestamp_func: datetime_functions
+  ip: String
+  user_agent: String
+  collection: String!
+  item: String!
+  origin: String
+  revisions(filter: directus_revisions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_revisions]
+  revisions_func: count_functions
+}
+
+type directus_activity_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_activity
+}
+
+type directus_comments {
+  id: ID!
+  collection: String!
+  item: String!
+  comment: String!
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+}
+
+type directus_comments_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_comments
+}
+
+type directus_dashboards {
+  id: ID!
+  name: String!
+  icon: String
+  note: String
+  date_created: Date
+  date_created_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  color: String
+  panels(filter: directus_panels_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_panels]
+  panels_func: count_functions
+}
+
+type directus_dashboards_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_dashboards
+}
+
+type directus_deployment_projects {
+  id: ID!
+  deployment(filter: directus_deployments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_deployments
+  external_id: String!
+  name: String!
+  date_created: Date
+  date_created_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  runs(filter: directus_deployment_runs_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_deployment_runs]
+  runs_func: count_functions
+}
+
+type directus_deployment_projects_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_deployment_projects
+}
+
+type directus_deployment_runs {
+  id: ID!
+  project(filter: directus_deployment_projects_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_deployment_projects
+  external_id: String!
+  target: String!
+  date_created: Date
+  date_created_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+}
+
+type directus_deployment_runs_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_deployment_runs
+}
+
+type directus_deployments {
+  id: ID!
+  provider: String!
+  credentials: String
+  options: JSON
+  options_func: count_functions
+  date_created: Date
+  date_created_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  projects(filter: directus_deployment_projects_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_deployment_projects]
+  projects_func: count_functions
+}
+
+type directus_deployments_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_deployments
+}
+
+type directus_files {
+  id: ID!
+  storage: String!
+  filename_disk: String
+  filename_download: String!
+  title: String
+  type: String
+  folder(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_folders
+  uploaded_by(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  created_on: Date
+  created_on_func: datetime_functions
+  modified_by(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  modified_on: Date
+  modified_on_func: datetime_functions
+  charset: String
+  filesize: GraphQLBigInt
+  width: Int
+  height: Int
+  duration: Int
+  embed: String
+  description: String
+  location: String
+  tags: JSON
+  tags_func: count_functions
+  metadata: JSON
+  metadata_func: count_functions
+  focal_point_x: Int
+  focal_point_y: Int
+  tus_id: String
+  tus_data: JSON
+  tus_data_func: count_functions
+  uploaded_on: Date
+  uploaded_on_func: datetime_functions
+}
+
+type directus_files_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_files
+}
+
+type directus_flows {
+  id: ID!
+  name: String!
+  icon: String
+  color: String
+  description: String
+  status: String
+  trigger: String
+  accountability: String
+  options: JSON
+  options_func: count_functions
+  operation(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_operations
+  date_created: Date
+  date_created_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  operations(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_operations]
+  operations_func: count_functions
+}
+
+type directus_flows_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_flows
+}
+
+type directus_folders {
+  id: ID!
+  name: String!
+  parent(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_folders
+}
+
+type directus_folders_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_folders
+}
+
+type directus_notifications {
+  id: ID!
+  timestamp: Date
+  timestamp_func: datetime_functions
+  status: String
+  recipient(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  sender(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  subject: String!
+  message: String
+  collection: String
+  item: String
+}
+
+type directus_notifications_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_notifications
+}
+
+type directus_operations {
+  id: ID!
+  name: String
+  key: String!
+  type: String!
+  position_x: Int!
+  position_y: Int!
+  options: JSON
+  options_func: count_functions
+  resolve(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_operations
+  reject(filter: directus_operations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_operations
+  flow(filter: directus_flows_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_flows
+  date_created: Date
+  date_created_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+}
+
+type directus_operations_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_operations
+}
+
+type directus_panels {
+  id: ID!
+  dashboard(filter: directus_dashboards_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_dashboards
+  name: String
+  icon: String
+  color: String
+  show_header: Boolean!
+  note: String
+  type: String!
+  position_x: Int!
+  position_y: Int!
+  width: Int!
+  height: Int!
+  options: JSON
+  options_func: count_functions
+  date_created: Date
+  date_created_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+}
+
+type directus_panels_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_panels
+}
+
+type directus_permissions {
+  id: ID
+  collection: String!
+  action: String!
+  permissions: JSON
+  permissions_func: count_functions
+  validation: JSON
+  validation_func: count_functions
+  presets: JSON
+  presets_func: count_functions
+  fields: [String]
+  policy(filter: directus_policies_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_policies
+}
+
+type directus_permissions_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_permissions
+}
+
+type directus_policies {
+  id: ID!
+  name: String!
+  icon: String
+  description: String
+  ip_access: [String]
+
+  """$t:field_options.directus_policies.enforce_tfa"""
+  enforce_tfa: Boolean!
+  admin_access: Boolean!
+  app_access: Boolean!
+  permissions(filter: directus_permissions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_permissions]
+  permissions_func: count_functions
+  users(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access]
+  users_func: count_functions
+  roles(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access]
+  roles_func: count_functions
+}
+
+type directus_policies_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_policies
+}
+
+type directus_presets {
+  id: ID!
+  bookmark: String
+  user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  role(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_roles
+  collection: String
+  search: String
+  layout: String
+  layout_query: JSON
+  layout_query_func: count_functions
+  layout_options: JSON
+  layout_options_func: count_functions
+  refresh_interval: Int
+  filter: JSON
+  filter_func: count_functions
+  icon: String
+  color: String
+}
+
+type directus_presets_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_presets
+}
+
+type directus_revisions {
+  id: ID!
+  activity(filter: directus_activity_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_activity
+  collection: String!
+  item: String!
+  data: JSON
+  data_func: count_functions
+  delta: JSON
+  delta_func: count_functions
+  parent(filter: directus_revisions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_revisions
+  version(filter: directus_versions_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_versions
+}
+
+type directus_revisions_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_revisions
+}
+
+type directus_roles {
+  id: ID!
+  name: String!
+  icon: String
+  description: String
+  parent(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_roles
+  app_access: Boolean
+  admin_access: Boolean!
+  children(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_roles]
+  children_func: count_functions
+  policies(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access]
+  policies_func: count_functions
+  users(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_users]
+  users_func: count_functions
+}
+
+type directus_roles_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_roles
+}
+
+type directus_settings {
+  id: ID!
+  project_name: String
+  project_url: String
+
+  """$t:field_options.directus_settings.project_color_note"""
+  project_color: String
+  project_logo(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  public_foreground(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  public_background(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  public_note: String
+  auth_login_attempts: Int
+  auth_password_policy: String
+  storage_asset_transform: String
+  storage_asset_presets: JSON
+  storage_asset_presets_func: count_functions
+  custom_css: String
+  storage_default_folder(filter: directus_folders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_folders
+  basemaps: JSON
+  basemaps_func: count_functions
+  mapbox_key: String
+  module_bar: JSON
+  module_bar_func: count_functions
+  project_descriptor: String
+  default_language: String
+  custom_aspect_ratios: JSON
+  custom_aspect_ratios_func: count_functions
+  public_favicon(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  default_appearance: String
+  default_theme_light: String
+  theme_light_overrides: JSON
+  theme_light_overrides_func: count_functions
+  default_theme_dark: String
+  theme_dark_overrides: JSON
+  theme_dark_overrides_func: count_functions
+  report_error_url: String
+  report_bug_url: String
+  report_feature_url: String
+
+  """$t:fields.directus_settings.public_registration_note"""
+  public_registration: Boolean!
+
+  """$t:fields.directus_settings.public_registration_verify_email_note"""
+  public_registration_verify_email: Boolean
+  public_registration_role(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_roles
+
+  """$t:fields.directus_settings.public_registration_email_filter_note"""
+  public_registration_email_filter: JSON
+  public_registration_email_filter_func: count_functions
+  visual_editor_urls: JSON
+  visual_editor_urls_func: count_functions
+  project_id: ID
+
+  """$t:fields.directus_settings.mcp_enabled_note"""
+  mcp_enabled: Boolean!
+
+  """$t:fields.directus_settings.mcp_allow_deletes_note"""
+  mcp_allow_deletes: Boolean!
+
+  """$t:fields.directus_settings.mcp_prompts_collection_note"""
+  mcp_prompts_collection: String
+
+  """$t:fields.directus_settings.mcp_system_prompt_enabled_note"""
+  mcp_system_prompt_enabled: Boolean
+
+  """$t:fields.directus_settings.mcp_system_prompt_note"""
+  mcp_system_prompt: String
+  project_owner: String
+  project_usage: String
+  org_name: String
+  product_updates: Boolean
+  project_status: String
+  ai_openai_api_key: String
+  ai_anthropic_api_key: String
+
+  """$t:fields.directus_settings.ai_system_prompt_note"""
+  ai_system_prompt: String
+  ai_google_api_key: String
+  ai_openai_compatible_api_key: String
+  ai_openai_compatible_base_url: String
+  ai_openai_compatible_name: String
+  ai_openai_compatible_models: JSON
+  ai_openai_compatible_models_func: count_functions
+  ai_openai_compatible_headers: JSON
+  ai_openai_compatible_headers_func: count_functions
+  ai_openai_allowed_models: JSON
+  ai_openai_allowed_models_func: count_functions
+  ai_anthropic_allowed_models: JSON
+  ai_anthropic_allowed_models_func: count_functions
+  ai_google_allowed_models: JSON
+  ai_google_allowed_models_func: count_functions
+
+  """$t:fields.directus_settings.collaborative_editing_note"""
+  collaborative_editing_enabled: Boolean!
+}
+
+type directus_settings_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_settings
+}
+
+type directus_shares {
+  id: ID!
+  name: String
+  collection: String!
+  item: String!
+  role(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_roles
+
+  """$t:shared_leave_blank_for_passwordless_access"""
+  password: Hash
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  date_created: Date
+  date_created_func: datetime_functions
+
+  """$t:shared_leave_blank_for_unlimited"""
+  date_start: Date
+  date_start_func: datetime_functions
+
+  """$t:shared_leave_blank_for_unlimited"""
+  date_end: Date
+  date_end_func: datetime_functions
+  times_used: Int
+
+  """$t:shared_leave_blank_for_unlimited"""
+  max_uses: Int
+}
+
+type directus_shares_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_shares
+}
+
+type directus_sync_id_map {
+  id: ID!
+  table: String!
+  sync_id: String!
+  local_id: String!
+  created_at: Date
+  created_at_func: datetime_functions
+}
+
+type directus_sync_id_map_aggregated {
+  group: JSON
+  countAll: Int
+  count: directus_sync_id_map_aggregated_count
+  countDistinct: directus_sync_id_map_aggregated_count
+  avg: directus_sync_id_map_aggregated_fields
+  sum: directus_sync_id_map_aggregated_fields
+  avgDistinct: directus_sync_id_map_aggregated_fields
+  sumDistinct: directus_sync_id_map_aggregated_fields
+  min: directus_sync_id_map_aggregated_fields
+  max: directus_sync_id_map_aggregated_fields
+}
+
+type directus_sync_id_map_aggregated_count {
+  id: Int
+  table: Int
+  sync_id: Int
+  local_id: Int
+  created_at: Int
+}
+
+type directus_sync_id_map_aggregated_fields {
+  id: Float
+}
+
+type directus_sync_id_map_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_sync_id_map
+}
+
+type directus_translations {
+  id: ID!
+  language: String!
+  key: String!
+  value: String!
+}
+
+type directus_translations_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_translations
+}
+
+type directus_users {
+  id: ID!
+  first_name: String
+  last_name: String
+  email: String
+  password: Hash
+  location: String
+  title: String
+  description: String
+  tags: JSON
+  tags_func: count_functions
+  avatar(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  language: String
+  tfa_secret: Hash
+  status: String
+  role(filter: directus_roles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_roles
+  token: Hash
+  last_access: Date
+  last_access_func: datetime_functions
+  last_page: String
+  provider: String
+  external_identifier: String
+  auth_data: JSON
+  auth_data_func: count_functions
+  email_notifications: Boolean
+  appearance: String
+  theme_dark: String
+  theme_light: String
+  theme_light_overrides: JSON
+  theme_light_overrides_func: count_functions
+  theme_dark_overrides: JSON
+  theme_dark_overrides_func: count_functions
+  text_direction: String
+  policies(filter: directus_access_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_access]
+  policies_func: count_functions
+}
+
+type directus_users_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_users
+}
+
+type directus_versions {
+  id: ID!
+  key: String!
+  name: String
+  collection: String!
+  item: String!
+  hash: String
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  delta: JSON
+  delta_func: count_functions
+}
+
+type directus_versions_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_versions
+}
+
+type instruction_assets {
+  id: ID!
+  instruction_id(filter: instruction_sets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): instruction_sets
+  title: String
+  kind: String!
+  file(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  meta: JSON
+  meta_func: count_functions
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+}
+
+type instruction_assets_aggregated {
+  group: JSON
+  countAll: Int
+  count: instruction_assets_aggregated_count
+  countDistinct: instruction_assets_aggregated_count
+  avg: instruction_assets_aggregated_fields
+  sum: instruction_assets_aggregated_fields
+  avgDistinct: instruction_assets_aggregated_fields
+  sumDistinct: instruction_assets_aggregated_fields
+  min: instruction_assets_aggregated_fields
+  max: instruction_assets_aggregated_fields
+}
+
+type instruction_assets_aggregated_count {
+  id: Int
+  instruction_id: Int
+  title: Int
+  kind: Int
+  file: Int
+  meta: Int
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Int
+}
+
+type instruction_assets_aggregated_fields {
+  id: Float
+  instruction_id: Float
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Float
+}
+
+type instruction_assets_mutated {
+  key: ID!
+  event: EventEnum
+  data: instruction_assets
+}
+
+type instruction_sets {
+  id: ID!
+  title: String!
+  brand: String
+  model: String
+  level: String!
+
+  """например: ru-RU"""
+  language: String
+  source_file(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  source_url: String
+  notes: String
+  is_published: Boolean!
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  assets(filter: instruction_assets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [instruction_assets]
+  steps(filter: instruction_steps_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [instruction_steps]
+}
+
+type instruction_sets_aggregated {
+  group: JSON
+  countAll: Int
+  count: instruction_sets_aggregated_count
+  countDistinct: instruction_sets_aggregated_count
+  avg: instruction_sets_aggregated_fields
+  sum: instruction_sets_aggregated_fields
+  avgDistinct: instruction_sets_aggregated_fields
+  sumDistinct: instruction_sets_aggregated_fields
+  min: instruction_sets_aggregated_fields
+  max: instruction_sets_aggregated_fields
+}
+
+type instruction_sets_aggregated_count {
+  id: Int
+  title: Int
+  brand: Int
+  model: Int
+  level: Int
+
+  """например: ru-RU"""
+  language: Int
+
+  """Оригинальный PDF/PNG"""
+  source_file: Int
+  source_url: Int
+  notes: Int
+  is_published: Int
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Int
+}
+
+type instruction_sets_aggregated_fields {
+  id: Float
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Float
+}
+
+type instruction_sets_mutated {
+  key: ID!
+  event: EventEnum
+  data: instruction_sets
+}
+
+type instruction_steps {
+  id: ID!
+  instruction_id(filter: instruction_sets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): instruction_sets
+  step_no: Int!
+  title: String
+  body: String
+  image_file(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+
+  """Массив кликабельных областей на изображении"""
+  hotspots: JSON
+  hotspots_func: count_functions
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+}
+
+type instruction_steps_aggregated {
+  group: JSON
+  countAll: Int
+  count: instruction_steps_aggregated_count
+  countDistinct: instruction_steps_aggregated_count
+  avg: instruction_steps_aggregated_fields
+  sum: instruction_steps_aggregated_fields
+  avgDistinct: instruction_steps_aggregated_fields
+  sumDistinct: instruction_steps_aggregated_fields
+  min: instruction_steps_aggregated_fields
+  max: instruction_steps_aggregated_fields
+}
+
+type instruction_steps_aggregated_count {
+  id: Int
+  instruction_id: Int
+  step_no: Int
+  title: Int
+  body: Int
+
+  """Картинка шага (LEVEL A)"""
+  image_file: Int
+
+  """Массив кликабельных областей на изображении"""
+  hotspots: Int
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Int
+}
+
+type instruction_steps_aggregated_fields {
+  id: Float
+  instruction_id: Float
+  step_no: Float
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Float
+}
+
+type instruction_steps_mutated {
+  key: ID!
+  event: EventEnum
+  data: instruction_steps
+}
+
+type products {
+  id: ID!
+  title: String!
+  brand: String
+  model: String
+
+  """Артикул / внутренний код (по желанию)"""
+  sku: String
+
+  """Ссылка на 3D/инструкцию/страницу"""
+  instruction_url: String
+  description: String
+  instruction_id(filter: instruction_sets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): instruction_sets
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  qr_codes(filter: qr_codes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [qr_codes]
+}
+
+type products_aggregated {
+  group: JSON
+  countAll: Int
+  count: products_aggregated_count
+  countDistinct: products_aggregated_count
+  avg: products_aggregated_fields
+  sum: products_aggregated_fields
+  avgDistinct: products_aggregated_fields
+  sumDistinct: products_aggregated_fields
+  min: products_aggregated_fields
+  max: products_aggregated_fields
+}
+
+type products_aggregated_count {
+  id: Int
+  title: Int
+  brand: Int
+  model: Int
+
+  """Артикул / внутренний код (по желанию)"""
+  sku: Int
+
+  """Ссылка на 3D/инструкцию/страницу"""
+  instruction_url: Int
+  description: Int
+
+  """Основная инструкция товара"""
+  instruction_id: Int
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Int
+}
+
+type products_aggregated_fields {
+  id: Float
+
+  """Основная инструкция товара"""
+  instruction_id: Float
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Float
+}
+
+type products_mutated {
+  key: ID!
+  event: EventEnum
+  data: products
+}
+
+type qr_codes {
+  id: ID!
+
+  """Например: VP-TEST-001"""
+  code: String!
+  type: String
+
+  """Опционально: заголовок (если не product)"""
+  title: String
+
+  """Override: если нужно переопределить ссылку продукта"""
+  instruction_url: String
+  is_active: Boolean
+  notes: String
+  location_title: String
+  location_payload: JSON
+  location_payload_func: count_functions
+  service_payload: JSON
+  service_payload_func: count_functions
+  product_id(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): products
+
+  """Фактический URL, который кодируется в QR (заполняется автоматически)"""
+  qr_payload_url: String
+  qr_file(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  qr_file_png(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  instruction_id(filter: instruction_sets_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): instruction_sets
+  scene_id(filter: vp_3d_scenes_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_3d_scenes
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+}
+
+type qr_codes_aggregated {
+  group: JSON
+  countAll: Int
+  count: qr_codes_aggregated_count
+  countDistinct: qr_codes_aggregated_count
+  avg: qr_codes_aggregated_fields
+  sum: qr_codes_aggregated_fields
+  avgDistinct: qr_codes_aggregated_fields
+  sumDistinct: qr_codes_aggregated_fields
+  min: qr_codes_aggregated_fields
+  max: qr_codes_aggregated_fields
+}
+
+type qr_codes_aggregated_count {
+  id: Int
+
+  """Например: VP-TEST-001"""
+  code: Int
+  type: Int
+
+  """Опционально: заголовок (если не product)"""
+  title: Int
+
+  """Override: если нужно переопределить ссылку продукта"""
+  instruction_url: Int
+  is_active: Int
+  notes: Int
+  location_title: Int
+  location_payload: Int
+  service_payload: Int
+
+  """Связь с продуктом (если type=product)"""
+  product_id: Int
+
+  """Фактический URL, который кодируется в QR (заполняется автоматически)"""
+  qr_payload_url: Int
+
+  """QR-код (SVG). Генерируется автоматически Directus."""
+  qr_file: Int
+
+  """QR-код (PNG). Генерируется автоматически Directus (опционально)."""
+  qr_file_png: Int
+
+  """Инструкция, открываемая по QR"""
+  instruction_id: Int
+
+  """3D сцена/модель (если type=3d/navigation)"""
+  scene_id: Int
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Int
+}
+
+type qr_codes_aggregated_fields {
+  id: Float
+
+  """Связь с продуктом (если type=product)"""
+  product_id: Float
+
+  """Инструкция, открываемая по QR"""
+  instruction_id: Float
+
+  """3D сцена/модель (если type=3d/navigation)"""
+  scene_id: Float
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Float
+}
+
+type qr_codes_mutated {
+  key: ID!
+  event: EventEnum
+  data: qr_codes
+}
+
+""""""
+type version_directus_sync_id_map {
+  id: ID
+  table: String
+  sync_id: String
+  local_id: String
+  created_at: Date
+}
+
+""""""
+type version_instruction_assets {
+  id: ID
+  instruction_id: JSON
+  title: String
+  kind: String
+  file: JSON
+  meta: JSON
+  tenant_id: JSON
+}
+
+""""""
+type version_instruction_sets {
+  id: ID
+  title: String
+  brand: String
+  model: String
+  level: String
+
+  """например: ru-RU"""
+  language: String
+  source_file: JSON
+  source_url: String
+  notes: String
+  is_published: Boolean
+  tenant_id: JSON
+  assets: JSON
+  steps: JSON
+}
+
+""""""
+type version_instruction_steps {
+  id: ID
+  instruction_id: JSON
+  step_no: Int
+  title: String
+  body: String
+  image_file: JSON
+
+  """Массив кликабельных областей на изображении"""
+  hotspots: JSON
+  tenant_id: JSON
+}
+
+""""""
+type version_products {
+  id: ID
+  title: String
+  brand: String
+  model: String
+
+  """Артикул / внутренний код (по желанию)"""
+  sku: String
+
+  """Ссылка на 3D/инструкцию/страницу"""
+  instruction_url: String
+  description: String
+  instruction_id: JSON
+  tenant_id: JSON
+  qr_codes: JSON
+}
+
+""""""
+type version_qr_codes {
+  id: ID
+
+  """Например: VP-TEST-001"""
+  code: String
+  type: String
+
+  """Опционально: заголовок (если не product)"""
+  title: String
+
+  """Override: если нужно переопределить ссылку продукта"""
+  instruction_url: String
+  is_active: Boolean
+  notes: String
+  location_title: String
+  location_payload: JSON
+  service_payload: JSON
+  product_id: JSON
+
+  """Фактический URL, который кодируется в QR (заполняется автоматически)"""
+  qr_payload_url: String
+  qr_file: JSON
+  qr_file_png: JSON
+  instruction_id: JSON
+  scene_id: JSON
+  tenant_id: JSON
+}
+
+""""""
+type version_vp_3d_scenes {
+  id: ID
+
+  """Название сцены/модели"""
+  title: String
+
+  """Тип сцены/кейса (управляет UI и логикой просмотра)"""
+  kind: String
+
+  """Краткое описание"""
+  description: String
+
+  """Показывать/использовать сцену"""
+  is_active: Boolean
+
+  """Требовать пароль перед показом"""
+  requires_password: Boolean
+
+  """Хеш пароля (bcrypt/argon2). Пароль не хранить в чистом виде."""
+  password_hash: String
+
+  """Подсказка к паролю (опционально)"""
+  password_hint: String
+
+  """Дата/время, после которых доступ запрещён (опционально)"""
+  expires_at: Date
+  model_file: JSON
+  poster_file: JSON
+
+  """Настройки viewer (камера, аннотации, точки интереса и т.п.)"""
+  viewer_config: JSON
+
+  """Создано"""
+  created_at: Date
+
+  """Обновлено"""
+  updated_at: Date
+  tenant_id: JSON
+  case_scan_id: JSON
+}
+
+""""""
+type version_vp_allowlist_domains {
+  id: ID
+
+  """Example: clinic.com (без @)"""
+  domain: String
+  is_active: Boolean
+
+  """Для аудита/отладки, обычно 'allowlist'"""
+  auto_approve_method: String
+  notes: String
+  sort: Int
+  created_at: Date
+}
+
+""""""
+type version_vp_cards {
+  id: ID
+  title: String
+  position: String
+  avatar_url: JSON
+  description: String
+  color: String
+  links: String
+  tenant_id: JSON
+}
+
+""""""
+type version_vp_case_scans {
+  id: ID
+  tenant_id: JSON
+  case_id: JSON
+  kind: String
+
+  """STL/PLY/OBJ/GLB и т.п."""
+  source_format: String
+  source_file: JSON
+  converted_file: JSON
+  preview_image: JSON
+
+  """JSON: измерения/единицы/комментарии."""
+  metadata: JSON
+  conversion_status: String
+  conversion_error: String
+  created_at: Date
+}
+
+""""""
+type version_vp_cases {
+  id: ID
+  tenant_id: JSON
+  clinic_id: JSON
+  patient_id: JSON
+
+  """Код кейса (может использоваться в QR/ссылках)."""
+  case_code: String
+  title: String
+  status: String
+  description: String
+  created_at: Date
+  updated_at: Date
+}
+
+""""""
+type version_vp_clinics {
+  id: ID
+  tenant_id: JSON
+  name: String
+  city: String
+  address: String
+  phone: String
+  website: String
+  timezone: String
+
+  """JSON (логотип, цвета, подпись)."""
+  branding: JSON
+  created_at: Date
+}
+
+""""""
+type version_vp_invites {
+  id: ID
+  tenant_id: JSON
+  email: String
+  role: String
+
+  """Случайный токен инвайта."""
+  token: String
+  expires_at: Date
+  accepted_at: Date
+  created_by: JSON
+  created_at: Date
+}
+
+""""""
+type version_vp_memberships {
+  id: ID
+  tenant_id: JSON
+  user_id: JSON
+  role: String
+  status: String
+  created_at: Date
+}
+
+""""""
+type version_vp_onboarding_requests {
+  id: ID
+  email: String
+  phone: String
+  first_name: String
+  last_name: String
+  user_type: String
+  status: String
+  auto_approve_method: String
+
+  """если используем авто‑утверждение по инвайту"""
+  invite_code: String
+
+  """для клиники/бизнеса/локации/партнёра"""
+  requested_tenant_name: String
+
+  """если нужен конкретный slug"""
+  requested_tenant_slug: String
+
+  """Свободный текст/ссылки/описание подтверждения"""
+  evidence_note: String
+  source_ip: String
+  user_agent: String
+  created_user_id: JSON
+  created_profile_id: JSON
+  reviewed_by: JSON
+  decision_reason: String
+  created_at: Date
+  updated_at: Date
+}
+
+""""""
+type version_vp_patients {
+  id: ID
+  tenant_id: JSON
+  clinic_id: JSON
+
+  """ID пациента в системе клиники (если есть)."""
+  external_id: String
+
+  """Инициалы/код пациента, чтобы не хранить ФИО."""
+  initials: String
+
+  """Год рождения (опционально)."""
+  birth_year: Int
+  notes: String
+  consent: Boolean
+  created_at: Date
+}
+
+""""""
+type version_vp_share_links {
+  id: ID
+  tenant_id: JSON
+  token: String
+
+  """Напр. instruction_sets / vp_3d_scenes / vp_cases"""
+  resource_type: String
+
+  """ID ресурса (строкой для универсальности)."""
+  resource_id: String
+
+  """JSON: разрешения доступа."""
+  permissions: JSON
+  expires_at: Date
+  created_at: Date
+}
+
+""""""
+type version_vp_tenants {
+  id: ID
+
+  """Короткий идентификатор для URL/поиска. Латиница/цифры/дефис."""
+  slug: String
+  name: String
+
+  """Тип организации (для включения модулей)."""
+  type: String
+  status: String
+
+  """Тариф/план (пока без биллинга)."""
+  plan: String
+
+  """JSON-настройки тенанта (брендинг, фичи, лимиты)."""
+  settings: JSON
+  created_at: Date
+  updated_at: Date
+}
+
+""""""
+type version_vp_user_profiles {
+  id: JSON
+  user_id: JSON
+  user_type: String
+  status: String
+  phone: String
+
+  """например: ru-RU"""
+  locale: String
+
+  """например: Europe/Vienna"""
+  timezone: String
+  notes: String
+  dentist_license: String
+  dentist_specialty: String
+  dentist_clinic_name: String
+  dentist_clinic_address: String
+  dentist_clinic_phone: String
+  dentist_bio: String
+
+  """владелец/админ/менеджер"""
+  clinic_role: String
+  clinic_position: String
+  car_make: String
+  car_model: String
+  car_year: Int
+  car_plate: String
+  car_vin_last4: String
+  car_emergency_contact: String
+  car_insurance_phone: String
+  biz_name: String
+
+  """автосервис/дилер/страховая/эвакуатор"""
+  biz_type: String
+  biz_tax_id: String
+  biz_website: String
+  biz_support_phone: String
+  biz_address: String
+
+  """ТЦ/склад/завод/офис/ЖК"""
+  loc_name: String
+  loc_type: String
+  loc_address: String
+  loc_city: String
+  loc_country: String
+  loc_contact_person: String
+  partner_brand: String
+
+  """например: мебель, техника, мед, авто"""
+  partner_categories: String
+  partner_website: String
+  partner_about: String
+  created_at: Date
+  updated_at: Date
+}
+
+type vp_3d_scenes {
+  id: ID!
+
+  """Название сцены/модели"""
+  title: String!
+
+  """Тип сцены/кейса (управляет UI и логикой просмотра)"""
+  kind: String
+
+  """Краткое описание"""
+  description: String
+
+  """Показывать/использовать сцену"""
+  is_active: Boolean
+
+  """Требовать пароль перед показом"""
+  requires_password: Boolean!
+
+  """Хеш пароля (bcrypt/argon2). Пароль не хранить в чистом виде."""
+  password_hash: String
+
+  """Подсказка к паролю (опционально)"""
+  password_hint: String
+
+  """Дата/время, после которых доступ запрещён (опционально)"""
+  expires_at: Date
+  expires_at_func: datetime_functions
+  model_file(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  poster_file(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+
+  """Настройки viewer (камера, аннотации, точки интереса и т.п.)"""
+  viewer_config: JSON
+  viewer_config_func: count_functions
+
+  """Создано"""
+  created_at: Date
+  created_at_func: datetime_functions
+
+  """Обновлено"""
+  updated_at: Date
+  updated_at_func: datetime_functions
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  case_scan_id(filter: vp_case_scans_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_case_scans
+}
+
+type vp_3d_scenes_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_3d_scenes_aggregated_count
+  countDistinct: vp_3d_scenes_aggregated_count
+  avg: vp_3d_scenes_aggregated_fields
+  sum: vp_3d_scenes_aggregated_fields
+  avgDistinct: vp_3d_scenes_aggregated_fields
+  sumDistinct: vp_3d_scenes_aggregated_fields
+  min: vp_3d_scenes_aggregated_fields
+  max: vp_3d_scenes_aggregated_fields
+}
+
+type vp_3d_scenes_aggregated_count {
+  id: Int
+
+  """Название сцены/модели"""
+  title: Int
+
+  """Тип сцены/кейса (управляет UI и логикой просмотра)"""
+  kind: Int
+
+  """Краткое описание"""
+  description: Int
+
+  """Показывать/использовать сцену"""
+  is_active: Int
+
+  """Требовать пароль перед показом"""
+  requires_password: Int
+
+  """Хеш пароля (bcrypt/argon2). Пароль не хранить в чистом виде."""
+  password_hash: Int
+
+  """Подсказка к паролю (опционально)"""
+  password_hint: Int
+
+  """Дата/время, после которых доступ запрещён (опционально)"""
+  expires_at: Int
+
+  """
+  Основной 3D файл (рекомендуется GLB/GLTF). Можно ZIP для набора файлов.
+  """
+  model_file: Int
+
+  """Превью/постер (опционально)"""
+  poster_file: Int
+
+  """Настройки viewer (камера, аннотации, точки интереса и т.п.)"""
+  viewer_config: Int
+
+  """Создано"""
+  created_at: Int
+
+  """Обновлено"""
+  updated_at: Int
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Int
+
+  """Если сцена создана из стоматологического скана/кейса."""
+  case_scan_id: Int
+}
+
+type vp_3d_scenes_aggregated_fields {
+  id: Float
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Float
+
+  """Если сцена создана из стоматологического скана/кейса."""
+  case_scan_id: Float
+}
+
+type vp_3d_scenes_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_3d_scenes
+}
+
+type vp_allowlist_domains {
+  id: ID!
+
+  """Example: clinic.com (без @)"""
+  domain: String!
+  is_active: Boolean
+
+  """Для аудита/отладки, обычно 'allowlist'"""
+  auto_approve_method: String
+  notes: String
+  sort: Int
+  created_at: Date
+  created_at_func: datetime_functions
+}
+
+type vp_allowlist_domains_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_allowlist_domains_aggregated_count
+  countDistinct: vp_allowlist_domains_aggregated_count
+  avg: vp_allowlist_domains_aggregated_fields
+  sum: vp_allowlist_domains_aggregated_fields
+  avgDistinct: vp_allowlist_domains_aggregated_fields
+  sumDistinct: vp_allowlist_domains_aggregated_fields
+  min: vp_allowlist_domains_aggregated_fields
+  max: vp_allowlist_domains_aggregated_fields
+}
+
+type vp_allowlist_domains_aggregated_count {
+  id: Int
+
+  """Example: clinic.com (без @)"""
+  domain: Int
+  is_active: Int
+
+  """Для аудита/отладки, обычно 'allowlist'"""
+  auto_approve_method: Int
+  notes: Int
+  sort: Int
+  created_at: Int
+}
+
+type vp_allowlist_domains_aggregated_fields {
+  id: Float
+  sort: Float
+}
+
+type vp_allowlist_domains_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_allowlist_domains
+}
+
+type vp_cards {
+  id: ID!
+  title: String
+  position: String
+  avatar_url(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  description: String
+  color: String
+  links: String
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+}
+
+type vp_cards_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_cards_aggregated_count
+  countDistinct: vp_cards_aggregated_count
+  avg: vp_cards_aggregated_fields
+  sum: vp_cards_aggregated_fields
+  avgDistinct: vp_cards_aggregated_fields
+  sumDistinct: vp_cards_aggregated_fields
+  min: vp_cards_aggregated_fields
+  max: vp_cards_aggregated_fields
+}
+
+type vp_cards_aggregated_count {
+  id: Int
+  title: Int
+  position: Int
+  avatar_url: Int
+  description: Int
+  color: Int
+  links: Int
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Int
+}
+
+type vp_cards_aggregated_fields {
+  id: Float
+
+  """Тенант-владелец записи (для SaaS)."""
+  tenant_id: Float
+}
+
+type vp_cards_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_cards
+}
+
+type vp_case_scans {
+  id: ID!
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  case_id(filter: vp_cases_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_cases
+  kind: String
+
+  """STL/PLY/OBJ/GLB и т.п."""
+  source_format: String
+  source_file(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  converted_file(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+  preview_image(filter: directus_files_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_files
+
+  """JSON: измерения/единицы/комментарии."""
+  metadata: JSON
+  metadata_func: count_functions
+  conversion_status: String
+  conversion_error: String
+  created_at: Date
+  created_at_func: datetime_functions
+}
+
+type vp_case_scans_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_case_scans_aggregated_count
+  countDistinct: vp_case_scans_aggregated_count
+  avg: vp_case_scans_aggregated_fields
+  sum: vp_case_scans_aggregated_fields
+  avgDistinct: vp_case_scans_aggregated_fields
+  sumDistinct: vp_case_scans_aggregated_fields
+  min: vp_case_scans_aggregated_fields
+  max: vp_case_scans_aggregated_fields
+}
+
+type vp_case_scans_aggregated_count {
+  id: Int
+  tenant_id: Int
+  case_id: Int
+  kind: Int
+
+  """STL/PLY/OBJ/GLB и т.п."""
+  source_format: Int
+
+  """Оригинальный файл (как загрузили)."""
+  source_file: Int
+
+  """Сконвертированный GLB для web/viewer."""
+  converted_file: Int
+
+  """PNG/JPG превью (опционально)."""
+  preview_image: Int
+
+  """JSON: измерения/единицы/комментарии."""
+  metadata: Int
+  conversion_status: Int
+  conversion_error: Int
+  created_at: Int
+}
+
+type vp_case_scans_aggregated_fields {
+  id: Float
+  tenant_id: Float
+  case_id: Float
+}
+
+type vp_case_scans_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_case_scans
+}
+
+type vp_cases {
+  id: ID!
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  clinic_id(filter: vp_clinics_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_clinics
+  patient_id(filter: vp_patients_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_patients
+
+  """Код кейса (может использоваться в QR/ссылках)."""
+  case_code: String!
+  title: String!
+  status: String
+  description: String
+  created_at: Date
+  created_at_func: datetime_functions
+  updated_at: Date
+  updated_at_func: datetime_functions
+}
+
+type vp_cases_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_cases_aggregated_count
+  countDistinct: vp_cases_aggregated_count
+  avg: vp_cases_aggregated_fields
+  sum: vp_cases_aggregated_fields
+  avgDistinct: vp_cases_aggregated_fields
+  sumDistinct: vp_cases_aggregated_fields
+  min: vp_cases_aggregated_fields
+  max: vp_cases_aggregated_fields
+}
+
+type vp_cases_aggregated_count {
+  id: Int
+  tenant_id: Int
+  clinic_id: Int
+  patient_id: Int
+
+  """Код кейса (может использоваться в QR/ссылках)."""
+  case_code: Int
+  title: Int
+  status: Int
+  description: Int
+  created_at: Int
+  updated_at: Int
+}
+
+type vp_cases_aggregated_fields {
+  id: Float
+  tenant_id: Float
+  clinic_id: Float
+  patient_id: Float
+}
+
+type vp_cases_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_cases
+}
+
+type vp_clinics {
+  id: ID!
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  name: String!
+  city: String
+  address: String
+  phone: String
+  website: String
+  timezone: String
+
+  """JSON (логотип, цвета, подпись)."""
+  branding: JSON
+  branding_func: count_functions
+  created_at: Date
+  created_at_func: datetime_functions
+}
+
+type vp_clinics_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_clinics_aggregated_count
+  countDistinct: vp_clinics_aggregated_count
+  avg: vp_clinics_aggregated_fields
+  sum: vp_clinics_aggregated_fields
+  avgDistinct: vp_clinics_aggregated_fields
+  sumDistinct: vp_clinics_aggregated_fields
+  min: vp_clinics_aggregated_fields
+  max: vp_clinics_aggregated_fields
+}
+
+type vp_clinics_aggregated_count {
+  id: Int
+  tenant_id: Int
+  name: Int
+  city: Int
+  address: Int
+  phone: Int
+  website: Int
+  timezone: Int
+
+  """JSON (логотип, цвета, подпись)."""
+  branding: Int
+  created_at: Int
+}
+
+type vp_clinics_aggregated_fields {
+  id: Float
+  tenant_id: Float
+}
+
+type vp_clinics_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_clinics
+}
+
+type vp_invites {
+  id: ID!
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  email: String!
+  role: String
+
+  """Случайный токен инвайта."""
+  token: String!
+  expires_at: Date
+  expires_at_func: datetime_functions
+  accepted_at: Date
+  accepted_at_func: datetime_functions
+  created_by(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  created_at: Date
+  created_at_func: datetime_functions
+}
+
+type vp_invites_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_invites_aggregated_count
+  countDistinct: vp_invites_aggregated_count
+  avg: vp_invites_aggregated_fields
+  sum: vp_invites_aggregated_fields
+  avgDistinct: vp_invites_aggregated_fields
+  sumDistinct: vp_invites_aggregated_fields
+  min: vp_invites_aggregated_fields
+  max: vp_invites_aggregated_fields
+}
+
+type vp_invites_aggregated_count {
+  id: Int
+  tenant_id: Int
+  email: Int
+  role: Int
+
+  """Случайный токен инвайта."""
+  token: Int
+  expires_at: Int
+  accepted_at: Int
+  created_by: Int
+  created_at: Int
+}
+
+type vp_invites_aggregated_fields {
+  id: Float
+  tenant_id: Float
+}
+
+type vp_invites_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_invites
+}
+
+type vp_memberships {
+  id: ID!
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  user_id(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  role: String
+  status: String
+  created_at: Date
+  created_at_func: datetime_functions
+}
+
+type vp_memberships_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_memberships_aggregated_count
+  countDistinct: vp_memberships_aggregated_count
+  avg: vp_memberships_aggregated_fields
+  sum: vp_memberships_aggregated_fields
+  avgDistinct: vp_memberships_aggregated_fields
+  sumDistinct: vp_memberships_aggregated_fields
+  min: vp_memberships_aggregated_fields
+  max: vp_memberships_aggregated_fields
+}
+
+type vp_memberships_aggregated_count {
+  id: Int
+  tenant_id: Int
+  user_id: Int
+  role: Int
+  status: Int
+  created_at: Int
+}
+
+type vp_memberships_aggregated_fields {
+  id: Float
+  tenant_id: Float
+}
+
+type vp_memberships_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_memberships
+}
+
+type vp_onboarding_requests {
+  id: ID!
+  email: String!
+  phone: String
+  first_name: String
+  last_name: String
+  user_type: String!
+  status: String
+  auto_approve_method: String
+
+  """если используем авто‑утверждение по инвайту"""
+  invite_code: String
+
+  """для клиники/бизнеса/локации/партнёра"""
+  requested_tenant_name: String
+
+  """если нужен конкретный slug"""
+  requested_tenant_slug: String
+
+  """Свободный текст/ссылки/описание подтверждения"""
+  evidence_note: String
+  source_ip: String
+  user_agent: String
+  created_user_id(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  created_profile_id(filter: vp_user_profiles_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_user_profiles
+  reviewed_by(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  decision_reason: String
+  created_at: Date
+  created_at_func: datetime_functions
+  updated_at: Date
+  updated_at_func: datetime_functions
+}
+
+type vp_onboarding_requests_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_onboarding_requests_aggregated_count
+  countDistinct: vp_onboarding_requests_aggregated_count
+  avg: vp_onboarding_requests_aggregated_fields
+  sum: vp_onboarding_requests_aggregated_fields
+  avgDistinct: vp_onboarding_requests_aggregated_fields
+  sumDistinct: vp_onboarding_requests_aggregated_fields
+  min: vp_onboarding_requests_aggregated_fields
+  max: vp_onboarding_requests_aggregated_fields
+}
+
+type vp_onboarding_requests_aggregated_count {
+  id: Int
+  email: Int
+  phone: Int
+  first_name: Int
+  last_name: Int
+  user_type: Int
+  status: Int
+  auto_approve_method: Int
+
+  """если используем авто‑утверждение по инвайту"""
+  invite_code: Int
+
+  """для клиники/бизнеса/локации/партнёра"""
+  requested_tenant_name: Int
+
+  """если нужен конкретный slug"""
+  requested_tenant_slug: Int
+
+  """Свободный текст/ссылки/описание подтверждения"""
+  evidence_note: Int
+  source_ip: Int
+  user_agent: Int
+  created_user_id: Int
+  created_profile_id: Int
+  reviewed_by: Int
+  decision_reason: Int
+  created_at: Int
+  updated_at: Int
+}
+
+type vp_onboarding_requests_aggregated_fields {
+  id: Float
+  created_profile_id: Float
+}
+
+type vp_onboarding_requests_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_onboarding_requests
+}
+
+type vp_patients {
+  id: ID!
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  clinic_id(filter: vp_clinics_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_clinics
+
+  """ID пациента в системе клиники (если есть)."""
+  external_id: String
+
+  """Инициалы/код пациента, чтобы не хранить ФИО."""
+  initials: String
+
+  """Год рождения (опционально)."""
+  birth_year: Int
+  notes: String
+  consent: Boolean
+  created_at: Date
+  created_at_func: datetime_functions
+}
+
+type vp_patients_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_patients_aggregated_count
+  countDistinct: vp_patients_aggregated_count
+  avg: vp_patients_aggregated_fields
+  sum: vp_patients_aggregated_fields
+  avgDistinct: vp_patients_aggregated_fields
+  sumDistinct: vp_patients_aggregated_fields
+  min: vp_patients_aggregated_fields
+  max: vp_patients_aggregated_fields
+}
+
+type vp_patients_aggregated_count {
+  id: Int
+  tenant_id: Int
+  clinic_id: Int
+
+  """ID пациента в системе клиники (если есть)."""
+  external_id: Int
+
+  """Инициалы/код пациента, чтобы не хранить ФИО."""
+  initials: Int
+
+  """Год рождения (опционально)."""
+  birth_year: Int
+  notes: Int
+  consent: Int
+  created_at: Int
+}
+
+type vp_patients_aggregated_fields {
+  id: Float
+  tenant_id: Float
+  clinic_id: Float
+
+  """Год рождения (опционально)."""
+  birth_year: Float
+}
+
+type vp_patients_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_patients
+}
+
+type vp_share_links {
+  id: ID!
+  tenant_id(filter: vp_tenants_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): vp_tenants
+  token: String!
+
+  """Напр. instruction_sets / vp_3d_scenes / vp_cases"""
+  resource_type: String!
+
+  """ID ресурса (строкой для универсальности)."""
+  resource_id: String!
+
+  """JSON: разрешения доступа."""
+  permissions: JSON
+  permissions_func: count_functions
+  expires_at: Date
+  expires_at_func: datetime_functions
+  created_at: Date
+  created_at_func: datetime_functions
+}
+
+type vp_share_links_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_share_links_aggregated_count
+  countDistinct: vp_share_links_aggregated_count
+  avg: vp_share_links_aggregated_fields
+  sum: vp_share_links_aggregated_fields
+  avgDistinct: vp_share_links_aggregated_fields
+  sumDistinct: vp_share_links_aggregated_fields
+  min: vp_share_links_aggregated_fields
+  max: vp_share_links_aggregated_fields
+}
+
+type vp_share_links_aggregated_count {
+  id: Int
+  tenant_id: Int
+  token: Int
+
+  """Напр. instruction_sets / vp_3d_scenes / vp_cases"""
+  resource_type: Int
+
+  """ID ресурса (строкой для универсальности)."""
+  resource_id: Int
+
+  """JSON: разрешения доступа."""
+  permissions: Int
+  expires_at: Int
+  created_at: Int
+}
+
+type vp_share_links_aggregated_fields {
+  id: Float
+  tenant_id: Float
+}
+
+type vp_share_links_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_share_links
+}
+
+type vp_tenants {
+  id: ID!
+
+  """Короткий идентификатор для URL/поиска. Латиница/цифры/дефис."""
+  slug: String!
+  name: String!
+
+  """Тип организации (для включения модулей)."""
+  type: String!
+  status: String
+
+  """Тариф/план (пока без биллинга)."""
+  plan: String
+
+  """JSON-настройки тенанта (брендинг, фичи, лимиты)."""
+  settings: JSON
+  settings_func: count_functions
+  created_at: Date
+  created_at_func: datetime_functions
+  updated_at: Date
+  updated_at_func: datetime_functions
+}
+
+type vp_tenants_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_tenants_aggregated_count
+  countDistinct: vp_tenants_aggregated_count
+  avg: vp_tenants_aggregated_fields
+  sum: vp_tenants_aggregated_fields
+  avgDistinct: vp_tenants_aggregated_fields
+  sumDistinct: vp_tenants_aggregated_fields
+  min: vp_tenants_aggregated_fields
+  max: vp_tenants_aggregated_fields
+}
+
+type vp_tenants_aggregated_count {
+  id: Int
+
+  """Короткий идентификатор для URL/поиска. Латиница/цифры/дефис."""
+  slug: Int
+  name: Int
+
+  """Тип организации (для включения модулей)."""
+  type: Int
+  status: Int
+
+  """Тариф/план (пока без биллинга)."""
+  plan: Int
+
+  """JSON-настройки тенанта (брендинг, фичи, лимиты)."""
+  settings: Int
+  created_at: Int
+  updated_at: Int
+}
+
+type vp_tenants_aggregated_fields {
+  id: Float
+}
+
+type vp_tenants_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_tenants
+}
+
+type vp_user_profiles {
+  id(filter: vp_onboarding_requests_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [vp_onboarding_requests]
+  user_id(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_type: String
+  status: String
+  phone: String
+
+  """например: ru-RU"""
+  locale: String
+
+  """например: Europe/Vienna"""
+  timezone: String
+  notes: String
+  dentist_license: String
+  dentist_specialty: String
+  dentist_clinic_name: String
+  dentist_clinic_address: String
+  dentist_clinic_phone: String
+  dentist_bio: String
+
+  """владелец/админ/менеджер"""
+  clinic_role: String
+  clinic_position: String
+  car_make: String
+  car_model: String
+  car_year: Int
+  car_plate: String
+  car_vin_last4: String
+  car_emergency_contact: String
+  car_insurance_phone: String
+  biz_name: String
+
+  """автосервис/дилер/страховая/эвакуатор"""
+  biz_type: String
+  biz_tax_id: String
+  biz_website: String
+  biz_support_phone: String
+  biz_address: String
+
+  """ТЦ/склад/завод/офис/ЖК"""
+  loc_name: String
+  loc_type: String
+  loc_address: String
+  loc_city: String
+  loc_country: String
+  loc_contact_person: String
+  partner_brand: String
+
+  """например: мебель, техника, мед, авто"""
+  partner_categories: String
+  partner_website: String
+  partner_about: String
+  created_at: Date
+  created_at_func: datetime_functions
+  updated_at: Date
+  updated_at_func: datetime_functions
+}
+
+type vp_user_profiles_aggregated {
+  group: JSON
+  countAll: Int
+  count: vp_user_profiles_aggregated_count
+  countDistinct: vp_user_profiles_aggregated_count
+  avg: vp_user_profiles_aggregated_fields
+  sum: vp_user_profiles_aggregated_fields
+  avgDistinct: vp_user_profiles_aggregated_fields
+  sumDistinct: vp_user_profiles_aggregated_fields
+  min: vp_user_profiles_aggregated_fields
+  max: vp_user_profiles_aggregated_fields
+}
+
+type vp_user_profiles_aggregated_count {
+  id: Int
+  user_id: Int
+  user_type: Int
+  status: Int
+  phone: Int
+
+  """например: ru-RU"""
+  locale: Int
+
+  """например: Europe/Vienna"""
+  timezone: Int
+  notes: Int
+  dentist_license: Int
+  dentist_specialty: Int
+  dentist_clinic_name: Int
+  dentist_clinic_address: Int
+  dentist_clinic_phone: Int
+  dentist_bio: Int
+
+  """владелец/админ/менеджер"""
+  clinic_role: Int
+  clinic_position: Int
+  car_make: Int
+  car_model: Int
+  car_year: Int
+  car_plate: Int
+  car_vin_last4: Int
+  car_emergency_contact: Int
+  car_insurance_phone: Int
+  biz_name: Int
+
+  """автосервис/дилер/страховая/эвакуатор"""
+  biz_type: Int
+  biz_tax_id: Int
+  biz_website: Int
+  biz_support_phone: Int
+  biz_address: Int
+
+  """ТЦ/склад/завод/офис/ЖК"""
+  loc_name: Int
+  loc_type: Int
+  loc_address: Int
+  loc_city: Int
+  loc_country: Int
+  loc_contact_person: Int
+  partner_brand: Int
+
+  """например: мебель, техника, мед, авто"""
+  partner_categories: Int
+  partner_website: Int
+  partner_about: Int
+  created_at: Int
+  updated_at: Int
+}
+
+type vp_user_profiles_aggregated_fields {
+  id: Float
+  car_year: Float
+}
+
+type vp_user_profiles_mutated {
+  key: ID!
+  event: EventEnum
+  data: vp_user_profiles
+}
+
+input big_int_filter_operators {
+  _eq: GraphQLBigInt
+  _neq: GraphQLBigInt
+  _in: [GraphQLBigInt]
+  _nin: [GraphQLBigInt]
+  _gt: GraphQLBigInt
+  _gte: GraphQLBigInt
+  _lt: GraphQLBigInt
+  _lte: GraphQLBigInt
+  _null: Boolean
+  _nnull: Boolean
+  _between: [GraphQLBigInt]
+  _nbetween: [GraphQLBigInt]
+}
+
+input boolean_filter_operators {
+  _eq: Boolean
+  _neq: Boolean
+  _null: Boolean
+  _nnull: Boolean
+}
+
+input count_function_filter_operators {
+  count: number_filter_operators
+}
+
+input create_directus_access_input {
+  id: ID
+  role: create_directus_roles_input
+  user: create_directus_users_input
+  policy: create_directus_policies_input
+  sort: Int
+}
+
+input create_directus_files_input {
+  id: ID
+  storage: String!
+  filename_disk: String
+  filename_download: String!
+  title: String
+  type: String
+  folder: create_directus_folders_input
+  uploaded_by: create_directus_users_input
+  created_on: Date
+  modified_by: create_directus_users_input
+  modified_on: Date
+  charset: String
+  filesize: GraphQLBigInt
+  width: Int
+  height: Int
+  duration: Int
+  embed: String
+  description: String
+  location: String
+  tags: JSON
+  metadata: JSON
+  focal_point_x: Int
+  focal_point_y: Int
+  tus_id: String
+  tus_data: JSON
+  uploaded_on: Date
+}
+
+input create_directus_folders_input {
+  id: ID
+  name: String!
+  parent: create_directus_folders_input
+}
+
+input create_directus_permissions_input {
+  id: ID
+  collection: String!
+  action: String!
+  permissions: JSON
+  validation: JSON
+  presets: JSON
+  fields: [String]
+  policy: create_directus_policies_input
+}
+
+input create_directus_policies_input {
+  id: ID
+  name: String!
+  icon: String
+  description: String
+  ip_access: [String]
+
+  """$t:field_options.directus_policies.enforce_tfa"""
+  enforce_tfa: Boolean!
+  admin_access: Boolean!
+  app_access: Boolean!
+  permissions: [create_directus_permissions_input]
+  users: [create_directus_access_input]
+  roles: [create_directus_access_input]
+}
+
+input create_directus_roles_input {
+  id: ID
+  name: String!
+  icon: String
+  description: String
+  parent: create_directus_roles_input
+  app_access: Boolean
+  admin_access: Boolean!
+  children: [create_directus_roles_input]
+  policies: [create_directus_access_input]
+  users: [create_directus_users_input]
+}
+
+input create_directus_sync_id_map_input {
+  id: ID
+  table: String!
+  sync_id: String!
+  local_id: String!
+  created_at: Date
+}
+
+input create_directus_users_input {
+  id: ID
+  first_name: String
+  last_name: String
+  email: String
+  password: Hash
+  location: String
+  title: String
+  description: String
+  tags: JSON
+  avatar: create_directus_files_input
+  language: String
+  tfa_secret: Hash
+  status: String
+  role: create_directus_roles_input
+  token: Hash
+  last_access: Date
+  last_page: String
+  provider: String
+  external_identifier: String
+  auth_data: JSON
+  email_notifications: Boolean
+  appearance: String
+  theme_dark: String
+  theme_light: String
+  theme_light_overrides: JSON
+  theme_dark_overrides: JSON
+  text_direction: String
+  policies: [create_directus_access_input]
+}
+
+input create_instruction_assets_input {
+  id: ID
+  instruction_id: create_instruction_sets_input
+  title: String
+  kind: String!
+  file: create_directus_files_input
+  meta: JSON
+  tenant_id: create_vp_tenants_input
+}
+
+input create_instruction_sets_input {
+  id: ID
+  title: String!
+  brand: String
+  model: String
+  level: String!
+
+  """например: ru-RU"""
+  language: String
+  source_file: create_directus_files_input
+  source_url: String
+  notes: String
+  is_published: Boolean!
+  tenant_id: create_vp_tenants_input
+  assets: [create_instruction_assets_input]
+  steps: [create_instruction_steps_input]
+}
+
+input create_instruction_steps_input {
+  id: ID
+  instruction_id: create_instruction_sets_input
+  step_no: Int!
+  title: String
+  body: String
+  image_file: create_directus_files_input
+
+  """Массив кликабельных областей на изображении"""
+  hotspots: JSON
+  tenant_id: create_vp_tenants_input
+}
+
+input create_products_input {
+  id: ID
+  title: String!
+  brand: String
+  model: String
+
+  """Артикул / внутренний код (по желанию)"""
+  sku: String
+
+  """Ссылка на 3D/инструкцию/страницу"""
+  instruction_url: String
+  description: String
+  instruction_id: create_instruction_sets_input
+  tenant_id: create_vp_tenants_input
+  qr_codes: [create_qr_codes_input]
+}
+
+input create_qr_codes_input {
+  id: ID
+
+  """Например: VP-TEST-001"""
+  code: String!
+  type: String
+
+  """Опционально: заголовок (если не product)"""
+  title: String
+
+  """Override: если нужно переопределить ссылку продукта"""
+  instruction_url: String
+  is_active: Boolean
+  notes: String
+  location_title: String
+  location_payload: JSON
+  service_payload: JSON
+  product_id: create_products_input
+
+  """Фактический URL, который кодируется в QR (заполняется автоматически)"""
+  qr_payload_url: String
+  qr_file: create_directus_files_input
+  qr_file_png: create_directus_files_input
+  instruction_id: create_instruction_sets_input
+  scene_id: create_vp_3d_scenes_input
+  tenant_id: create_vp_tenants_input
+}
+
+input create_vp_3d_scenes_input {
+  id: ID
+
+  """Название сцены/модели"""
+  title: String!
+
+  """Тип сцены/кейса (управляет UI и логикой просмотра)"""
+  kind: String
+
+  """Краткое описание"""
+  description: String
+
+  """Показывать/использовать сцену"""
+  is_active: Boolean
+
+  """Требовать пароль перед показом"""
+  requires_password: Boolean!
+
+  """Хеш пароля (bcrypt/argon2). Пароль не хранить в чистом виде."""
+  password_hash: String
+
+  """Подсказка к паролю (опционально)"""
+  password_hint: String
+
+  """Дата/время, после которых доступ запрещён (опционально)"""
+  expires_at: Date
+  model_file: create_directus_files_input
+  poster_file: create_directus_files_input
+
+  """Настройки viewer (камера, аннотации, точки интереса и т.п.)"""
+  viewer_config: JSON
+
+  """Создано"""
+  created_at: Date
+
+  """Обновлено"""
+  updated_at: Date
+  tenant_id: create_vp_tenants_input
+  case_scan_id: create_vp_case_scans_input
+}
+
+input create_vp_allowlist_domains_input {
+  id: ID
+
+  """Example: clinic.com (без @)"""
+  domain: String!
+  is_active: Boolean
+
+  """Для аудита/отладки, обычно 'allowlist'"""
+  auto_approve_method: String
+  notes: String
+  sort: Int
+  created_at: Date
+}
+
+input create_vp_cards_input {
+  id: ID
+  title: String
+  position: String
+  avatar_url: create_directus_files_input
+  description: String
+  color: String
+  links: String
+  tenant_id: create_vp_tenants_input
+}
+
+input create_vp_case_scans_input {
+  id: ID
+  tenant_id: create_vp_tenants_input
+  case_id: create_vp_cases_input
+  kind: String
+
+  """STL/PLY/OBJ/GLB и т.п."""
+  source_format: String
+  source_file: create_directus_files_input
+  converted_file: create_directus_files_input
+  preview_image: create_directus_files_input
+
+  """JSON: измерения/единицы/комментарии."""
+  metadata: JSON
+  conversion_status: String
+  conversion_error: String
+  created_at: Date
+}
+
+input create_vp_cases_input {
+  id: ID
+  tenant_id: create_vp_tenants_input
+  clinic_id: create_vp_clinics_input
+  patient_id: create_vp_patients_input
+
+  """Код кейса (может использоваться в QR/ссылках)."""
+  case_code: String!
+  title: String!
+  status: String
+  description: String
+  created_at: Date
+  updated_at: Date
+}
+
+input create_vp_clinics_input {
+  id: ID
+  tenant_id: create_vp_tenants_input
+  name: String!
+  city: String
+  address: String
+  phone: String
+  website: String
+  timezone: String
+
+  """JSON (логотип, цвета, подпись)."""
+  branding: JSON
+  created_at: Date
+}
+
+input create_vp_invites_input {
+  id: ID
+  tenant_id: create_vp_tenants_input
+  email: String!
+  role: String
+
+  """Случайный токен инвайта."""
+  token: String!
+  expires_at: Date
+  accepted_at: Date
+  created_by: create_directus_users_input
+  created_at: Date
+}
+
+input create_vp_memberships_input {
+  id: ID
+  tenant_id: create_vp_tenants_input
+  user_id: create_directus_users_input
+  role: String
+  status: String
+  created_at: Date
+}
+
+input create_vp_onboarding_requests_input {
+  id: ID
+  email: String!
+  phone: String
+  first_name: String
+  last_name: String
+  user_type: String!
+  status: String
+  auto_approve_method: String
+
+  """если используем авто‑утверждение по инвайту"""
+  invite_code: String
+
+  """для клиники/бизнеса/локации/партнёра"""
+  requested_tenant_name: String
+
+  """если нужен конкретный slug"""
+  requested_tenant_slug: String
+
+  """Свободный текст/ссылки/описание подтверждения"""
+  evidence_note: String
+  source_ip: String
+  user_agent: String
+  created_user_id: create_directus_users_input
+  created_profile_id: create_vp_user_profiles_input
+  reviewed_by: create_directus_users_input
+  decision_reason: String
+  created_at: Date
+  updated_at: Date
+}
+
+input create_vp_patients_input {
+  id: ID
+  tenant_id: create_vp_tenants_input
+  clinic_id: create_vp_clinics_input
+
+  """ID пациента в системе клиники (если есть)."""
+  external_id: String
+
+  """Инициалы/код пациента, чтобы не хранить ФИО."""
+  initials: String
+
+  """Год рождения (опционально)."""
+  birth_year: Int
+  notes: String
+  consent: Boolean
+  created_at: Date
+}
+
+input create_vp_share_links_input {
+  id: ID
+  tenant_id: create_vp_tenants_input
+  token: String!
+
+  """Напр. instruction_sets / vp_3d_scenes / vp_cases"""
+  resource_type: String!
+
+  """ID ресурса (строкой для универсальности)."""
+  resource_id: String!
+
+  """JSON: разрешения доступа."""
+  permissions: JSON
+  expires_at: Date
+  created_at: Date
+}
+
+input create_vp_tenants_input {
+  id: ID
+
+  """Короткий идентификатор для URL/поиска. Латиница/цифры/дефис."""
+  slug: String!
+  name: String!
+
+  """Тип организации (для включения модулей)."""
+  type: String!
+  status: String
+
+  """Тариф/план (пока без биллинга)."""
+  plan: String
+
+  """JSON-настройки тенанта (брендинг, фичи, лимиты)."""
+  settings: JSON
+  created_at: Date
+  updated_at: Date
+}
+
+input create_vp_user_profiles_input {
+  id: [create_vp_onboarding_requests_input]
+  user_id: create_directus_users_input
+  user_type: String
+  status: String
+  phone: String
+
+  """например: ru-RU"""
+  locale: String
+
+  """например: Europe/Vienna"""
+  timezone: String
+  notes: String
+  dentist_license: String
+  dentist_specialty: String
+  dentist_clinic_name: String
+  dentist_clinic_address: String
+  dentist_clinic_phone: String
+  dentist_bio: String
+
+  """владелец/админ/менеджер"""
+  clinic_role: String
+  clinic_position: String
+  car_make: String
+  car_model: String
+  car_year: Int
+  car_plate: String
+  car_vin_last4: String
+  car_emergency_contact: String
+  car_insurance_phone: String
+  biz_name: String
+
+  """автосервис/дилер/страховая/эвакуатор"""
+  biz_type: String
+  biz_tax_id: String
+  biz_website: String
+  biz_support_phone: String
+  biz_address: String
+
+  """ТЦ/склад/завод/офис/ЖК"""
+  loc_name: String
+  loc_type: String
+  loc_address: String
+  loc_city: String
+  loc_country: String
+  loc_contact_person: String
+  partner_brand: String
+
+  """например: мебель, техника, мед, авто"""
+  partner_categories: String
+  partner_website: String
+  partner_about: String
+  created_at: Date
+  updated_at: Date
+}
+
+input date_filter_operators {
+  _eq: String
+  _neq: String
+  _gt: String
+  _gte: String
+  _lt: String
+  _lte: String
+  _null: Boolean
+  _nnull: Boolean
+  _in: [String]
+  _nin: [String]
+  _between: [GraphQLStringOrFloat]
+  _nbetween: [GraphQLStringOrFloat]
+}
+
+input datetime_function_filter_operators {
+  year: number_filter_operators
+  month: number_filter_operators
+  week: number_filter_operators
+  day: number_filter_operators
+  weekday: number_filter_operators
+  hour: number_filter_operators
+  minute: number_filter_operators
+  second: number_filter_operators
+}
+
+input directus_access_filter {
+  id: id_filter_operators
+  role: directus_roles_filter
+  user: directus_users_filter
+  policy: directus_policies_filter
+  sort: number_filter_operators
+  _and: [directus_access_filter]
+  _or: [directus_access_filter]
+}
+
+""""""
+input directus_access_quantifier_filter {
+  id: id_filter_operators
+  role: directus_roles_filter
+  user: directus_users_filter
+  policy: directus_policies_filter
+  sort: number_filter_operators
+  _and: [directus_access_filter]
+  _or: [directus_access_filter]
+  _some: directus_access_filter
+  _none: directus_access_filter
+}
+
+input directus_activity_filter {
+  id: number_filter_operators
+  action: string_filter_operators
+  user: directus_users_filter
+  timestamp: date_filter_operators
+  timestamp_func: datetime_function_filter_operators
+  ip: string_filter_operators
+  user_agent: string_filter_operators
+  collection: string_filter_operators
+  item: string_filter_operators
+  origin: string_filter_operators
+  revisions: directus_revisions_quantifier_filter
+  revisions_func: count_function_filter_operators
+  _and: [directus_activity_filter]
+  _or: [directus_activity_filter]
+}
+
+input directus_dashboards_filter {
+  id: id_filter_operators
+  name: string_filter_operators
+  icon: string_filter_operators
+  note: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  color: string_filter_operators
+  panels: directus_panels_quantifier_filter
+  panels_func: count_function_filter_operators
+  _and: [directus_dashboards_filter]
+  _or: [directus_dashboards_filter]
+}
+
+input directus_deployment_projects_filter {
+  id: id_filter_operators
+  deployment: directus_deployments_filter
+  external_id: string_filter_operators
+  name: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  runs: directus_deployment_runs_quantifier_filter
+  runs_func: count_function_filter_operators
+  _and: [directus_deployment_projects_filter]
+  _or: [directus_deployment_projects_filter]
+}
+
+""""""
+input directus_deployment_projects_quantifier_filter {
+  id: id_filter_operators
+  deployment: directus_deployments_filter
+  external_id: string_filter_operators
+  name: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  runs: directus_deployment_runs_quantifier_filter
+  runs_func: count_function_filter_operators
+  _and: [directus_deployment_projects_filter]
+  _or: [directus_deployment_projects_filter]
+  _some: directus_deployment_projects_filter
+  _none: directus_deployment_projects_filter
+}
+
+input directus_deployment_runs_filter {
+  id: id_filter_operators
+  project: directus_deployment_projects_filter
+  external_id: string_filter_operators
+  target: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  _and: [directus_deployment_runs_filter]
+  _or: [directus_deployment_runs_filter]
+}
+
+""""""
+input directus_deployment_runs_quantifier_filter {
+  id: id_filter_operators
+  project: directus_deployment_projects_filter
+  external_id: string_filter_operators
+  target: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  _and: [directus_deployment_runs_filter]
+  _or: [directus_deployment_runs_filter]
+  _some: directus_deployment_runs_filter
+  _none: directus_deployment_runs_filter
+}
+
+input directus_deployments_filter {
+  id: id_filter_operators
+  provider: string_filter_operators
+  credentials: string_filter_operators
+  options: string_filter_operators
+  options_func: count_function_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  projects: directus_deployment_projects_quantifier_filter
+  projects_func: count_function_filter_operators
+  _and: [directus_deployments_filter]
+  _or: [directus_deployments_filter]
+}
+
+input directus_files_filter {
+  id: id_filter_operators
+  storage: string_filter_operators
+  filename_disk: string_filter_operators
+  filename_download: string_filter_operators
+  title: string_filter_operators
+  type: string_filter_operators
+  folder: directus_folders_filter
+  uploaded_by: directus_users_filter
+  created_on: date_filter_operators
+  created_on_func: datetime_function_filter_operators
+  modified_by: directus_users_filter
+  modified_on: date_filter_operators
+  modified_on_func: datetime_function_filter_operators
+  charset: string_filter_operators
+  filesize: big_int_filter_operators
+  width: number_filter_operators
+  height: number_filter_operators
+  duration: number_filter_operators
+  embed: string_filter_operators
+  description: string_filter_operators
+  location: string_filter_operators
+  tags: string_filter_operators
+  tags_func: count_function_filter_operators
+  metadata: string_filter_operators
+  metadata_func: count_function_filter_operators
+  focal_point_x: number_filter_operators
+  focal_point_y: number_filter_operators
+  tus_id: string_filter_operators
+  tus_data: string_filter_operators
+  tus_data_func: count_function_filter_operators
+  uploaded_on: date_filter_operators
+  uploaded_on_func: datetime_function_filter_operators
+  _and: [directus_files_filter]
+  _or: [directus_files_filter]
+}
+
+input directus_flows_filter {
+  id: id_filter_operators
+  name: string_filter_operators
+  icon: string_filter_operators
+  color: string_filter_operators
+  description: string_filter_operators
+  status: string_filter_operators
+  trigger: string_filter_operators
+  accountability: string_filter_operators
+  options: string_filter_operators
+  options_func: count_function_filter_operators
+  operation: directus_operations_filter
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  operations: directus_operations_quantifier_filter
+  operations_func: count_function_filter_operators
+  _and: [directus_flows_filter]
+  _or: [directus_flows_filter]
+}
+
+input directus_folders_filter {
+  id: id_filter_operators
+  name: string_filter_operators
+  parent: directus_folders_filter
+  _and: [directus_folders_filter]
+  _or: [directus_folders_filter]
+}
+
+input directus_operations_filter {
+  id: id_filter_operators
+  name: string_filter_operators
+  key: string_filter_operators
+  type: string_filter_operators
+  position_x: number_filter_operators
+  position_y: number_filter_operators
+  options: string_filter_operators
+  options_func: count_function_filter_operators
+  resolve: directus_operations_filter
+  reject: directus_operations_filter
+  flow: directus_flows_filter
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  _and: [directus_operations_filter]
+  _or: [directus_operations_filter]
+}
+
+""""""
+input directus_operations_quantifier_filter {
+  id: id_filter_operators
+  name: string_filter_operators
+  key: string_filter_operators
+  type: string_filter_operators
+  position_x: number_filter_operators
+  position_y: number_filter_operators
+  options: string_filter_operators
+  options_func: count_function_filter_operators
+  resolve: directus_operations_filter
+  reject: directus_operations_filter
+  flow: directus_flows_filter
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  _and: [directus_operations_filter]
+  _or: [directus_operations_filter]
+  _some: directus_operations_filter
+  _none: directus_operations_filter
+}
+
+input directus_panels_filter {
+  id: id_filter_operators
+  dashboard: directus_dashboards_filter
+  name: string_filter_operators
+  icon: string_filter_operators
+  color: string_filter_operators
+  show_header: boolean_filter_operators
+  note: string_filter_operators
+  type: string_filter_operators
+  position_x: number_filter_operators
+  position_y: number_filter_operators
+  width: number_filter_operators
+  height: number_filter_operators
+  options: string_filter_operators
+  options_func: count_function_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  _and: [directus_panels_filter]
+  _or: [directus_panels_filter]
+}
+
+""""""
+input directus_panels_quantifier_filter {
+  id: id_filter_operators
+  dashboard: directus_dashboards_filter
+  name: string_filter_operators
+  icon: string_filter_operators
+  color: string_filter_operators
+  show_header: boolean_filter_operators
+  note: string_filter_operators
+  type: string_filter_operators
+  position_x: number_filter_operators
+  position_y: number_filter_operators
+  width: number_filter_operators
+  height: number_filter_operators
+  options: string_filter_operators
+  options_func: count_function_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  _and: [directus_panels_filter]
+  _or: [directus_panels_filter]
+  _some: directus_panels_filter
+  _none: directus_panels_filter
+}
+
+input directus_permissions_filter {
+  id: number_filter_operators
+  collection: string_filter_operators
+  action: string_filter_operators
+  permissions: string_filter_operators
+  permissions_func: count_function_filter_operators
+  validation: string_filter_operators
+  validation_func: count_function_filter_operators
+  presets: string_filter_operators
+  presets_func: count_function_filter_operators
+  fields: string_filter_operators
+  policy: directus_policies_filter
+  _and: [directus_permissions_filter]
+  _or: [directus_permissions_filter]
+}
+
+""""""
+input directus_permissions_quantifier_filter {
+  id: number_filter_operators
+  collection: string_filter_operators
+  action: string_filter_operators
+  permissions: string_filter_operators
+  permissions_func: count_function_filter_operators
+  validation: string_filter_operators
+  validation_func: count_function_filter_operators
+  presets: string_filter_operators
+  presets_func: count_function_filter_operators
+  fields: string_filter_operators
+  policy: directus_policies_filter
+  _and: [directus_permissions_filter]
+  _or: [directus_permissions_filter]
+  _some: directus_permissions_filter
+  _none: directus_permissions_filter
+}
+
+input directus_policies_filter {
+  id: id_filter_operators
+  name: string_filter_operators
+  icon: string_filter_operators
+  description: string_filter_operators
+  ip_access: string_filter_operators
+  enforce_tfa: boolean_filter_operators
+  admin_access: boolean_filter_operators
+  app_access: boolean_filter_operators
+  permissions: directus_permissions_quantifier_filter
+  permissions_func: count_function_filter_operators
+  users: directus_access_quantifier_filter
+  users_func: count_function_filter_operators
+  roles: directus_access_quantifier_filter
+  roles_func: count_function_filter_operators
+  _and: [directus_policies_filter]
+  _or: [directus_policies_filter]
+}
+
+input directus_revisions_filter {
+  id: number_filter_operators
+  activity: directus_activity_filter
+  collection: string_filter_operators
+  item: string_filter_operators
+  data: string_filter_operators
+  data_func: count_function_filter_operators
+  delta: string_filter_operators
+  delta_func: count_function_filter_operators
+  parent: directus_revisions_filter
+  version: directus_versions_filter
+  _and: [directus_revisions_filter]
+  _or: [directus_revisions_filter]
+}
+
+""""""
+input directus_revisions_quantifier_filter {
+  id: number_filter_operators
+  activity: directus_activity_filter
+  collection: string_filter_operators
+  item: string_filter_operators
+  data: string_filter_operators
+  data_func: count_function_filter_operators
+  delta: string_filter_operators
+  delta_func: count_function_filter_operators
+  parent: directus_revisions_filter
+  version: directus_versions_filter
+  _and: [directus_revisions_filter]
+  _or: [directus_revisions_filter]
+  _some: directus_revisions_filter
+  _none: directus_revisions_filter
+}
+
+input directus_roles_filter {
+  id: id_filter_operators
+  name: string_filter_operators
+  icon: string_filter_operators
+  description: string_filter_operators
+  parent: directus_roles_filter
+  app_access: boolean_filter_operators
+  admin_access: boolean_filter_operators
+  children: directus_roles_quantifier_filter
+  children_func: count_function_filter_operators
+  policies: directus_access_quantifier_filter
+  policies_func: count_function_filter_operators
+  users: directus_users_quantifier_filter
+  users_func: count_function_filter_operators
+  _and: [directus_roles_filter]
+  _or: [directus_roles_filter]
+}
+
+""""""
+input directus_roles_quantifier_filter {
+  id: id_filter_operators
+  name: string_filter_operators
+  icon: string_filter_operators
+  description: string_filter_operators
+  parent: directus_roles_filter
+  app_access: boolean_filter_operators
+  admin_access: boolean_filter_operators
+  children: directus_roles_quantifier_filter
+  children_func: count_function_filter_operators
+  policies: directus_access_quantifier_filter
+  policies_func: count_function_filter_operators
+  users: directus_users_quantifier_filter
+  users_func: count_function_filter_operators
+  _and: [directus_roles_filter]
+  _or: [directus_roles_filter]
+  _some: directus_roles_filter
+  _none: directus_roles_filter
+}
+
+input directus_sync_id_map_filter {
+  id: number_filter_operators
+  table: string_filter_operators
+  sync_id: string_filter_operators
+  local_id: string_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  _and: [directus_sync_id_map_filter]
+  _or: [directus_sync_id_map_filter]
+}
+
+input directus_users_filter {
+  id: id_filter_operators
+  first_name: string_filter_operators
+  last_name: string_filter_operators
+  email: string_filter_operators
+  password: hash_filter_operators
+  location: string_filter_operators
+  title: string_filter_operators
+  description: string_filter_operators
+  tags: string_filter_operators
+  tags_func: count_function_filter_operators
+  avatar: directus_files_filter
+  language: string_filter_operators
+  tfa_secret: hash_filter_operators
+  status: string_filter_operators
+  role: directus_roles_filter
+  token: hash_filter_operators
+  last_access: date_filter_operators
+  last_access_func: datetime_function_filter_operators
+  last_page: string_filter_operators
+  provider: string_filter_operators
+  external_identifier: string_filter_operators
+  auth_data: string_filter_operators
+  auth_data_func: count_function_filter_operators
+  email_notifications: boolean_filter_operators
+  appearance: string_filter_operators
+  theme_dark: string_filter_operators
+  theme_light: string_filter_operators
+  theme_light_overrides: string_filter_operators
+  theme_light_overrides_func: count_function_filter_operators
+  theme_dark_overrides: string_filter_operators
+  theme_dark_overrides_func: count_function_filter_operators
+  text_direction: string_filter_operators
+  policies: directus_access_quantifier_filter
+  policies_func: count_function_filter_operators
+  _and: [directus_users_filter]
+  _or: [directus_users_filter]
+}
+
+""""""
+input directus_users_quantifier_filter {
+  id: id_filter_operators
+  first_name: string_filter_operators
+  last_name: string_filter_operators
+  email: string_filter_operators
+  password: hash_filter_operators
+  location: string_filter_operators
+  title: string_filter_operators
+  description: string_filter_operators
+  tags: string_filter_operators
+  tags_func: count_function_filter_operators
+  avatar: directus_files_filter
+  language: string_filter_operators
+  tfa_secret: hash_filter_operators
+  status: string_filter_operators
+  role: directus_roles_filter
+  token: hash_filter_operators
+  last_access: date_filter_operators
+  last_access_func: datetime_function_filter_operators
+  last_page: string_filter_operators
+  provider: string_filter_operators
+  external_identifier: string_filter_operators
+  auth_data: string_filter_operators
+  auth_data_func: count_function_filter_operators
+  email_notifications: boolean_filter_operators
+  appearance: string_filter_operators
+  theme_dark: string_filter_operators
+  theme_light: string_filter_operators
+  theme_light_overrides: string_filter_operators
+  theme_light_overrides_func: count_function_filter_operators
+  theme_dark_overrides: string_filter_operators
+  theme_dark_overrides_func: count_function_filter_operators
+  text_direction: string_filter_operators
+  policies: directus_access_quantifier_filter
+  policies_func: count_function_filter_operators
+  _and: [directus_users_filter]
+  _or: [directus_users_filter]
+  _some: directus_users_filter
+  _none: directus_users_filter
+}
+
+input directus_versions_filter {
+  id: id_filter_operators
+  key: string_filter_operators
+  name: string_filter_operators
+  collection: string_filter_operators
+  item: string_filter_operators
+  hash: string_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  user_updated: directus_users_filter
+  delta: string_filter_operators
+  delta_func: count_function_filter_operators
+  _and: [directus_versions_filter]
+  _or: [directus_versions_filter]
+}
+
+input hash_filter_operators {
+  _null: Boolean
+  _nnull: Boolean
+  _empty: Boolean
+  _nempty: Boolean
+}
+
+input id_filter_operators {
+  _eq: ID
+  _neq: ID
+  _contains: ID
+  _icontains: ID
+  _ncontains: ID
+  _starts_with: ID
+  _nstarts_with: ID
+  _istarts_with: ID
+  _nistarts_with: ID
+  _ends_with: ID
+  _nends_with: ID
+  _iends_with: ID
+  _niends_with: ID
+  _in: [ID]
+  _nin: [ID]
+  _null: Boolean
+  _nnull: Boolean
+  _empty: Boolean
+  _nempty: Boolean
+}
+
+input instruction_assets_filter {
+  id: number_filter_operators
+  instruction_id: instruction_sets_filter
+  title: string_filter_operators
+  kind: string_filter_operators
+  file: directus_files_filter
+  meta: string_filter_operators
+  meta_func: count_function_filter_operators
+  tenant_id: vp_tenants_filter
+  _and: [instruction_assets_filter]
+  _or: [instruction_assets_filter]
+}
+
+""""""
+input instruction_assets_quantifier_filter {
+  id: number_filter_operators
+  instruction_id: instruction_sets_filter
+  title: string_filter_operators
+  kind: string_filter_operators
+  file: directus_files_filter
+  meta: string_filter_operators
+  meta_func: count_function_filter_operators
+  tenant_id: vp_tenants_filter
+  _and: [instruction_assets_filter]
+  _or: [instruction_assets_filter]
+  _some: instruction_assets_filter
+  _none: instruction_assets_filter
+}
+
+input instruction_sets_filter {
+  id: number_filter_operators
+  title: string_filter_operators
+  brand: string_filter_operators
+  model: string_filter_operators
+  level: string_filter_operators
+  language: string_filter_operators
+  source_file: directus_files_filter
+  source_url: string_filter_operators
+  notes: string_filter_operators
+  is_published: boolean_filter_operators
+  tenant_id: vp_tenants_filter
+  _and: [instruction_sets_filter]
+  _or: [instruction_sets_filter]
+  assets: instruction_assets_quantifier_filter
+  steps: instruction_steps_quantifier_filter
+}
+
+input instruction_steps_filter {
+  id: number_filter_operators
+  instruction_id: instruction_sets_filter
+  step_no: number_filter_operators
+  title: string_filter_operators
+  body: string_filter_operators
+  image_file: directus_files_filter
+  hotspots: string_filter_operators
+  hotspots_func: count_function_filter_operators
+  tenant_id: vp_tenants_filter
+  _and: [instruction_steps_filter]
+  _or: [instruction_steps_filter]
+}
+
+""""""
+input instruction_steps_quantifier_filter {
+  id: number_filter_operators
+  instruction_id: instruction_sets_filter
+  step_no: number_filter_operators
+  title: string_filter_operators
+  body: string_filter_operators
+  image_file: directus_files_filter
+  hotspots: string_filter_operators
+  hotspots_func: count_function_filter_operators
+  tenant_id: vp_tenants_filter
+  _and: [instruction_steps_filter]
+  _or: [instruction_steps_filter]
+  _some: instruction_steps_filter
+  _none: instruction_steps_filter
+}
+
+input number_filter_operators {
+  _eq: GraphQLStringOrFloat
+  _neq: GraphQLStringOrFloat
+  _in: [GraphQLStringOrFloat]
+  _nin: [GraphQLStringOrFloat]
+  _gt: GraphQLStringOrFloat
+  _gte: GraphQLStringOrFloat
+  _lt: GraphQLStringOrFloat
+  _lte: GraphQLStringOrFloat
+  _null: Boolean
+  _nnull: Boolean
+  _between: [GraphQLStringOrFloat]
+  _nbetween: [GraphQLStringOrFloat]
+}
+
+input products_filter {
+  id: number_filter_operators
+  title: string_filter_operators
+  brand: string_filter_operators
+  model: string_filter_operators
+  sku: string_filter_operators
+  instruction_url: string_filter_operators
+  description: string_filter_operators
+  instruction_id: instruction_sets_filter
+  tenant_id: vp_tenants_filter
+  _and: [products_filter]
+  _or: [products_filter]
+  qr_codes: qr_codes_quantifier_filter
+}
+
+input qr_codes_filter {
+  id: number_filter_operators
+  code: string_filter_operators
+  type: string_filter_operators
+  title: string_filter_operators
+  instruction_url: string_filter_operators
+  is_active: boolean_filter_operators
+  notes: string_filter_operators
+  location_title: string_filter_operators
+  location_payload: string_filter_operators
+  location_payload_func: count_function_filter_operators
+  service_payload: string_filter_operators
+  service_payload_func: count_function_filter_operators
+  product_id: products_filter
+  qr_payload_url: string_filter_operators
+  qr_file: directus_files_filter
+  qr_file_png: directus_files_filter
+  instruction_id: instruction_sets_filter
+  scene_id: vp_3d_scenes_filter
+  tenant_id: vp_tenants_filter
+  _and: [qr_codes_filter]
+  _or: [qr_codes_filter]
+}
+
+""""""
+input qr_codes_quantifier_filter {
+  id: number_filter_operators
+  code: string_filter_operators
+  type: string_filter_operators
+  title: string_filter_operators
+  instruction_url: string_filter_operators
+  is_active: boolean_filter_operators
+  notes: string_filter_operators
+  location_title: string_filter_operators
+  location_payload: string_filter_operators
+  location_payload_func: count_function_filter_operators
+  service_payload: string_filter_operators
+  service_payload_func: count_function_filter_operators
+  product_id: products_filter
+  qr_payload_url: string_filter_operators
+  qr_file: directus_files_filter
+  qr_file_png: directus_files_filter
+  instruction_id: instruction_sets_filter
+  scene_id: vp_3d_scenes_filter
+  tenant_id: vp_tenants_filter
+  _and: [qr_codes_filter]
+  _or: [qr_codes_filter]
+  _some: qr_codes_filter
+  _none: qr_codes_filter
+}
+
+input string_filter_operators {
+  _eq: String
+  _neq: String
+  _contains: String
+  _icontains: String
+  _ncontains: String
+  _starts_with: String
+  _nstarts_with: String
+  _istarts_with: String
+  _nistarts_with: String
+  _ends_with: String
+  _nends_with: String
+  _iends_with: String
+  _niends_with: String
+  _in: [String]
+  _nin: [String]
+  _null: Boolean
+  _nnull: Boolean
+  _empty: Boolean
+  _nempty: Boolean
+}
+
+input update_directus_access_input {
+  id: ID
+  role: update_directus_roles_input
+  user: update_directus_users_input
+  policy: update_directus_policies_input
+  sort: Int
+}
+
+input update_directus_files_input {
+  id: ID
+  storage: String
+  filename_disk: String
+  filename_download: String
+  title: String
+  type: String
+  folder: update_directus_folders_input
+  uploaded_by: update_directus_users_input
+  created_on: Date
+  modified_by: update_directus_users_input
+  modified_on: Date
+  charset: String
+  filesize: GraphQLBigInt
+  width: Int
+  height: Int
+  duration: Int
+  embed: String
+  description: String
+  location: String
+  tags: JSON
+  metadata: JSON
+  focal_point_x: Int
+  focal_point_y: Int
+  tus_id: String
+  tus_data: JSON
+  uploaded_on: Date
+}
+
+input update_directus_folders_input {
+  id: ID
+  name: String
+  parent: update_directus_folders_input
+}
+
+input update_directus_permissions_input {
+  id: ID
+  collection: String
+  action: String
+  permissions: JSON
+  validation: JSON
+  presets: JSON
+  fields: [String]
+  policy: update_directus_policies_input
+}
+
+input update_directus_policies_input {
+  id: ID
+  name: String
+  icon: String
+  description: String
+  ip_access: [String]
+
+  """$t:field_options.directus_policies.enforce_tfa"""
+  enforce_tfa: Boolean
+  admin_access: Boolean
+  app_access: Boolean
+  permissions: [update_directus_permissions_input]
+  users: [update_directus_access_input]
+  roles: [update_directus_access_input]
+}
+
+input update_directus_roles_input {
+  id: ID
+  name: String
+  icon: String
+  description: String
+  parent: update_directus_roles_input
+  app_access: Boolean
+  admin_access: Boolean
+  children: [update_directus_roles_input]
+  policies: [update_directus_access_input]
+  users: [update_directus_users_input]
+}
+
+input update_directus_sync_id_map_input {
+  id: ID
+  table: String
+  sync_id: String
+  local_id: String
+  created_at: Date
+}
+
+input update_directus_users_input {
+  id: ID
+  first_name: String
+  last_name: String
+  email: String
+  password: Hash
+  location: String
+  title: String
+  description: String
+  tags: JSON
+  avatar: update_directus_files_input
+  language: String
+  tfa_secret: Hash
+  status: String
+  role: update_directus_roles_input
+  token: Hash
+  last_access: Date
+  last_page: String
+  provider: String
+  external_identifier: String
+  auth_data: JSON
+  email_notifications: Boolean
+  appearance: String
+  theme_dark: String
+  theme_light: String
+  theme_light_overrides: JSON
+  theme_dark_overrides: JSON
+  text_direction: String
+  policies: [update_directus_access_input]
+}
+
+input update_instruction_assets_input {
+  id: ID
+  instruction_id: update_instruction_sets_input
+  title: String
+  kind: String
+  file: update_directus_files_input
+  meta: JSON
+  tenant_id: update_vp_tenants_input
+}
+
+input update_instruction_sets_input {
+  id: ID
+  title: String
+  brand: String
+  model: String
+  level: String
+
+  """например: ru-RU"""
+  language: String
+  source_file: update_directus_files_input
+  source_url: String
+  notes: String
+  is_published: Boolean
+  tenant_id: update_vp_tenants_input
+  assets: [update_instruction_assets_input]
+  steps: [update_instruction_steps_input]
+}
+
+input update_instruction_steps_input {
+  id: ID
+  instruction_id: update_instruction_sets_input
+  step_no: Int
+  title: String
+  body: String
+  image_file: update_directus_files_input
+
+  """Массив кликабельных областей на изображении"""
+  hotspots: JSON
+  tenant_id: update_vp_tenants_input
+}
+
+input update_products_input {
+  id: ID
+  title: String
+  brand: String
+  model: String
+
+  """Артикул / внутренний код (по желанию)"""
+  sku: String
+
+  """Ссылка на 3D/инструкцию/страницу"""
+  instruction_url: String
+  description: String
+  instruction_id: update_instruction_sets_input
+  tenant_id: update_vp_tenants_input
+  qr_codes: [update_qr_codes_input]
+}
+
+input update_qr_codes_input {
+  id: ID
+
+  """Например: VP-TEST-001"""
+  code: String
+  type: String
+
+  """Опционально: заголовок (если не product)"""
+  title: String
+
+  """Override: если нужно переопределить ссылку продукта"""
+  instruction_url: String
+  is_active: Boolean
+  notes: String
+  location_title: String
+  location_payload: JSON
+  service_payload: JSON
+  product_id: update_products_input
+
+  """Фактический URL, который кодируется в QR (заполняется автоматически)"""
+  qr_payload_url: String
+  qr_file: update_directus_files_input
+  qr_file_png: update_directus_files_input
+  instruction_id: update_instruction_sets_input
+  scene_id: update_vp_3d_scenes_input
+  tenant_id: update_vp_tenants_input
+}
+
+input update_vp_3d_scenes_input {
+  id: ID
+
+  """Название сцены/модели"""
+  title: String
+
+  """Тип сцены/кейса (управляет UI и логикой просмотра)"""
+  kind: String
+
+  """Краткое описание"""
+  description: String
+
+  """Показывать/использовать сцену"""
+  is_active: Boolean
+
+  """Требовать пароль перед показом"""
+  requires_password: Boolean
+
+  """Хеш пароля (bcrypt/argon2). Пароль не хранить в чистом виде."""
+  password_hash: String
+
+  """Подсказка к паролю (опционально)"""
+  password_hint: String
+
+  """Дата/время, после которых доступ запрещён (опционально)"""
+  expires_at: Date
+  model_file: update_directus_files_input
+  poster_file: update_directus_files_input
+
+  """Настройки viewer (камера, аннотации, точки интереса и т.п.)"""
+  viewer_config: JSON
+
+  """Создано"""
+  created_at: Date
+
+  """Обновлено"""
+  updated_at: Date
+  tenant_id: update_vp_tenants_input
+  case_scan_id: update_vp_case_scans_input
+}
+
+input update_vp_allowlist_domains_input {
+  id: ID
+
+  """Example: clinic.com (без @)"""
+  domain: String
+  is_active: Boolean
+
+  """Для аудита/отладки, обычно 'allowlist'"""
+  auto_approve_method: String
+  notes: String
+  sort: Int
+  created_at: Date
+}
+
+input update_vp_cards_input {
+  id: ID
+  title: String
+  position: String
+  avatar_url: update_directus_files_input
+  description: String
+  color: String
+  links: String
+  tenant_id: update_vp_tenants_input
+}
+
+input update_vp_case_scans_input {
+  id: ID
+  tenant_id: update_vp_tenants_input
+  case_id: update_vp_cases_input
+  kind: String
+
+  """STL/PLY/OBJ/GLB и т.п."""
+  source_format: String
+  source_file: update_directus_files_input
+  converted_file: update_directus_files_input
+  preview_image: update_directus_files_input
+
+  """JSON: измерения/единицы/комментарии."""
+  metadata: JSON
+  conversion_status: String
+  conversion_error: String
+  created_at: Date
+}
+
+input update_vp_cases_input {
+  id: ID
+  tenant_id: update_vp_tenants_input
+  clinic_id: update_vp_clinics_input
+  patient_id: update_vp_patients_input
+
+  """Код кейса (может использоваться в QR/ссылках)."""
+  case_code: String
+  title: String
+  status: String
+  description: String
+  created_at: Date
+  updated_at: Date
+}
+
+input update_vp_clinics_input {
+  id: ID
+  tenant_id: update_vp_tenants_input
+  name: String
+  city: String
+  address: String
+  phone: String
+  website: String
+  timezone: String
+
+  """JSON (логотип, цвета, подпись)."""
+  branding: JSON
+  created_at: Date
+}
+
+input update_vp_invites_input {
+  id: ID
+  tenant_id: update_vp_tenants_input
+  email: String
+  role: String
+
+  """Случайный токен инвайта."""
+  token: String
+  expires_at: Date
+  accepted_at: Date
+  created_by: update_directus_users_input
+  created_at: Date
+}
+
+input update_vp_memberships_input {
+  id: ID
+  tenant_id: update_vp_tenants_input
+  user_id: update_directus_users_input
+  role: String
+  status: String
+  created_at: Date
+}
+
+input update_vp_onboarding_requests_input {
+  id: ID
+  email: String
+  phone: String
+  first_name: String
+  last_name: String
+  user_type: String
+  status: String
+  auto_approve_method: String
+
+  """если используем авто‑утверждение по инвайту"""
+  invite_code: String
+
+  """для клиники/бизнеса/локации/партнёра"""
+  requested_tenant_name: String
+
+  """если нужен конкретный slug"""
+  requested_tenant_slug: String
+
+  """Свободный текст/ссылки/описание подтверждения"""
+  evidence_note: String
+  source_ip: String
+  user_agent: String
+  created_user_id: update_directus_users_input
+  created_profile_id: update_vp_user_profiles_input
+  reviewed_by: update_directus_users_input
+  decision_reason: String
+  created_at: Date
+  updated_at: Date
+}
+
+input update_vp_patients_input {
+  id: ID
+  tenant_id: update_vp_tenants_input
+  clinic_id: update_vp_clinics_input
+
+  """ID пациента в системе клиники (если есть)."""
+  external_id: String
+
+  """Инициалы/код пациента, чтобы не хранить ФИО."""
+  initials: String
+
+  """Год рождения (опционально)."""
+  birth_year: Int
+  notes: String
+  consent: Boolean
+  created_at: Date
+}
+
+input update_vp_share_links_input {
+  id: ID
+  tenant_id: update_vp_tenants_input
+  token: String
+
+  """Напр. instruction_sets / vp_3d_scenes / vp_cases"""
+  resource_type: String
+
+  """ID ресурса (строкой для универсальности)."""
+  resource_id: String
+
+  """JSON: разрешения доступа."""
+  permissions: JSON
+  expires_at: Date
+  created_at: Date
+}
+
+input update_vp_tenants_input {
+  id: ID
+
+  """Короткий идентификатор для URL/поиска. Латиница/цифры/дефис."""
+  slug: String
+  name: String
+
+  """Тип организации (для включения модулей)."""
+  type: String
+  status: String
+
+  """Тариф/план (пока без биллинга)."""
+  plan: String
+
+  """JSON-настройки тенанта (брендинг, фичи, лимиты)."""
+  settings: JSON
+  created_at: Date
+  updated_at: Date
+}
+
+input update_vp_user_profiles_input {
+  id: [update_vp_onboarding_requests_input]
+  user_id: update_directus_users_input
+  user_type: String
+  status: String
+  phone: String
+
+  """например: ru-RU"""
+  locale: String
+
+  """например: Europe/Vienna"""
+  timezone: String
+  notes: String
+  dentist_license: String
+  dentist_specialty: String
+  dentist_clinic_name: String
+  dentist_clinic_address: String
+  dentist_clinic_phone: String
+  dentist_bio: String
+
+  """владелец/админ/менеджер"""
+  clinic_role: String
+  clinic_position: String
+  car_make: String
+  car_model: String
+  car_year: Int
+  car_plate: String
+  car_vin_last4: String
+  car_emergency_contact: String
+  car_insurance_phone: String
+  biz_name: String
+
+  """автосервис/дилер/страховая/эвакуатор"""
+  biz_type: String
+  biz_tax_id: String
+  biz_website: String
+  biz_support_phone: String
+  biz_address: String
+
+  """ТЦ/склад/завод/офис/ЖК"""
+  loc_name: String
+  loc_type: String
+  loc_address: String
+  loc_city: String
+  loc_country: String
+  loc_contact_person: String
+  partner_brand: String
+
+  """например: мебель, техника, мед, авто"""
+  partner_categories: String
+  partner_website: String
+  partner_about: String
+  created_at: Date
+  updated_at: Date
+}
+
+input vp_3d_scenes_filter {
+  id: number_filter_operators
+  title: string_filter_operators
+  kind: string_filter_operators
+  description: string_filter_operators
+  is_active: boolean_filter_operators
+  requires_password: boolean_filter_operators
+  password_hash: string_filter_operators
+  password_hint: string_filter_operators
+  expires_at: date_filter_operators
+  expires_at_func: datetime_function_filter_operators
+  model_file: directus_files_filter
+  poster_file: directus_files_filter
+  viewer_config: string_filter_operators
+  viewer_config_func: count_function_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  tenant_id: vp_tenants_filter
+  case_scan_id: vp_case_scans_filter
+  _and: [vp_3d_scenes_filter]
+  _or: [vp_3d_scenes_filter]
+}
+
+input vp_allowlist_domains_filter {
+  id: number_filter_operators
+  domain: string_filter_operators
+  is_active: boolean_filter_operators
+  auto_approve_method: string_filter_operators
+  notes: string_filter_operators
+  sort: number_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  _and: [vp_allowlist_domains_filter]
+  _or: [vp_allowlist_domains_filter]
+}
+
+input vp_cards_filter {
+  id: number_filter_operators
+  title: string_filter_operators
+  position: string_filter_operators
+  avatar_url: directus_files_filter
+  description: string_filter_operators
+  color: string_filter_operators
+  links: string_filter_operators
+  tenant_id: vp_tenants_filter
+  _and: [vp_cards_filter]
+  _or: [vp_cards_filter]
+}
+
+input vp_case_scans_filter {
+  id: number_filter_operators
+  tenant_id: vp_tenants_filter
+  case_id: vp_cases_filter
+  kind: string_filter_operators
+  source_format: string_filter_operators
+  source_file: directus_files_filter
+  converted_file: directus_files_filter
+  preview_image: directus_files_filter
+  metadata: string_filter_operators
+  metadata_func: count_function_filter_operators
+  conversion_status: string_filter_operators
+  conversion_error: string_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  _and: [vp_case_scans_filter]
+  _or: [vp_case_scans_filter]
+}
+
+input vp_cases_filter {
+  id: number_filter_operators
+  tenant_id: vp_tenants_filter
+  clinic_id: vp_clinics_filter
+  patient_id: vp_patients_filter
+  case_code: string_filter_operators
+  title: string_filter_operators
+  status: string_filter_operators
+  description: string_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  _and: [vp_cases_filter]
+  _or: [vp_cases_filter]
+}
+
+input vp_clinics_filter {
+  id: number_filter_operators
+  tenant_id: vp_tenants_filter
+  name: string_filter_operators
+  city: string_filter_operators
+  address: string_filter_operators
+  phone: string_filter_operators
+  website: string_filter_operators
+  timezone: string_filter_operators
+  branding: string_filter_operators
+  branding_func: count_function_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  _and: [vp_clinics_filter]
+  _or: [vp_clinics_filter]
+}
+
+input vp_invites_filter {
+  id: number_filter_operators
+  tenant_id: vp_tenants_filter
+  email: string_filter_operators
+  role: string_filter_operators
+  token: string_filter_operators
+  expires_at: date_filter_operators
+  expires_at_func: datetime_function_filter_operators
+  accepted_at: date_filter_operators
+  accepted_at_func: datetime_function_filter_operators
+  created_by: directus_users_filter
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  _and: [vp_invites_filter]
+  _or: [vp_invites_filter]
+}
+
+input vp_memberships_filter {
+  id: number_filter_operators
+  tenant_id: vp_tenants_filter
+  user_id: directus_users_filter
+  role: string_filter_operators
+  status: string_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  _and: [vp_memberships_filter]
+  _or: [vp_memberships_filter]
+}
+
+input vp_onboarding_requests_filter {
+  id: number_filter_operators
+  email: string_filter_operators
+  phone: string_filter_operators
+  first_name: string_filter_operators
+  last_name: string_filter_operators
+  user_type: string_filter_operators
+  status: string_filter_operators
+  auto_approve_method: string_filter_operators
+  invite_code: string_filter_operators
+  requested_tenant_name: string_filter_operators
+  requested_tenant_slug: string_filter_operators
+  evidence_note: string_filter_operators
+  source_ip: string_filter_operators
+  user_agent: string_filter_operators
+  created_user_id: directus_users_filter
+  created_profile_id: vp_user_profiles_filter
+  reviewed_by: directus_users_filter
+  decision_reason: string_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  _and: [vp_onboarding_requests_filter]
+  _or: [vp_onboarding_requests_filter]
+}
+
+""""""
+input vp_onboarding_requests_quantifier_filter {
+  id: number_filter_operators
+  email: string_filter_operators
+  phone: string_filter_operators
+  first_name: string_filter_operators
+  last_name: string_filter_operators
+  user_type: string_filter_operators
+  status: string_filter_operators
+  auto_approve_method: string_filter_operators
+  invite_code: string_filter_operators
+  requested_tenant_name: string_filter_operators
+  requested_tenant_slug: string_filter_operators
+  evidence_note: string_filter_operators
+  source_ip: string_filter_operators
+  user_agent: string_filter_operators
+  created_user_id: directus_users_filter
+  created_profile_id: vp_user_profiles_filter
+  reviewed_by: directus_users_filter
+  decision_reason: string_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  _and: [vp_onboarding_requests_filter]
+  _or: [vp_onboarding_requests_filter]
+  _some: vp_onboarding_requests_filter
+  _none: vp_onboarding_requests_filter
+}
+
+input vp_patients_filter {
+  id: number_filter_operators
+  tenant_id: vp_tenants_filter
+  clinic_id: vp_clinics_filter
+  external_id: string_filter_operators
+  initials: string_filter_operators
+  birth_year: number_filter_operators
+  notes: string_filter_operators
+  consent: boolean_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  _and: [vp_patients_filter]
+  _or: [vp_patients_filter]
+}
+
+input vp_share_links_filter {
+  id: number_filter_operators
+  tenant_id: vp_tenants_filter
+  token: string_filter_operators
+  resource_type: string_filter_operators
+  resource_id: string_filter_operators
+  permissions: string_filter_operators
+  permissions_func: count_function_filter_operators
+  expires_at: date_filter_operators
+  expires_at_func: datetime_function_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  _and: [vp_share_links_filter]
+  _or: [vp_share_links_filter]
+}
+
+input vp_tenants_filter {
+  id: number_filter_operators
+  slug: string_filter_operators
+  name: string_filter_operators
+  type: string_filter_operators
+  status: string_filter_operators
+  plan: string_filter_operators
+  settings: string_filter_operators
+  settings_func: count_function_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  _and: [vp_tenants_filter]
+  _or: [vp_tenants_filter]
+}
+
+input vp_user_profiles_filter {
+  id: vp_onboarding_requests_quantifier_filter
+  user_id: directus_users_filter
+  user_type: string_filter_operators
+  status: string_filter_operators
+  phone: string_filter_operators
+  locale: string_filter_operators
+  timezone: string_filter_operators
+  notes: string_filter_operators
+  dentist_license: string_filter_operators
+  dentist_specialty: string_filter_operators
+  dentist_clinic_name: string_filter_operators
+  dentist_clinic_address: string_filter_operators
+  dentist_clinic_phone: string_filter_operators
+  dentist_bio: string_filter_operators
+  clinic_role: string_filter_operators
+  clinic_position: string_filter_operators
+  car_make: string_filter_operators
+  car_model: string_filter_operators
+  car_year: number_filter_operators
+  car_plate: string_filter_operators
+  car_vin_last4: string_filter_operators
+  car_emergency_contact: string_filter_operators
+  car_insurance_phone: string_filter_operators
+  biz_name: string_filter_operators
+  biz_type: string_filter_operators
+  biz_tax_id: string_filter_operators
+  biz_website: string_filter_operators
+  biz_support_phone: string_filter_operators
+  biz_address: string_filter_operators
+  loc_name: string_filter_operators
+  loc_type: string_filter_operators
+  loc_address: string_filter_operators
+  loc_city: string_filter_operators
+  loc_country: string_filter_operators
+  loc_contact_person: string_filter_operators
+  partner_brand: string_filter_operators
+  partner_categories: string_filter_operators
+  partner_website: string_filter_operators
+  partner_about: string_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  _and: [vp_user_profiles_filter]
+  _or: [vp_user_profiles_filter]
+}

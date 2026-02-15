@@ -1,0 +1,28 @@
+{
+  "collection": "vp_clinics",
+  "meta": {
+    "accountability": "all",
+    "archive_app_filter": true,
+    "archive_field": null,
+    "archive_value": null,
+    "collapse": "open",
+    "collection": "vp_clinics",
+    "color": null,
+    "display_template": null,
+    "group": null,
+    "hidden": false,
+    "icon": "local_hospital",
+    "item_duplication_fields": null,
+    "note": "Профили клиник (филиалы) внутри тенанта",
+    "preview_url": null,
+    "singleton": false,
+    "sort": 70,
+    "sort_field": null,
+    "translations": null,
+    "unarchive_value": null,
+    "versioning": false
+  },
+  "schema": {
+    "name": "vp_clinics"
+  }
+}

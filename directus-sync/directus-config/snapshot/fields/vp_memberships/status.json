@@ -1,0 +1,59 @@
+{
+  "collection": "vp_memberships",
+  "field": "status",
+  "type": "string",
+  "meta": {
+    "collection": "vp_memberships",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "status",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "Активен",
+          "value": "active"
+        },
+        {
+          "text": "Приглашён",
+          "value": "invited"
+        },
+        {
+          "text": "Отключён",
+          "value": "disabled"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": true,
+    "searchable": true,
+    "sort": 40,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "status",
+    "table": "vp_memberships",
+    "data_type": "character varying",
+    "default_value": "''active'",
+    "max_length": 16,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

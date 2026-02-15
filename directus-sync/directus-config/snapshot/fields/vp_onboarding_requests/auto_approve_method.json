@@ -1,0 +1,67 @@
+{
+  "collection": "vp_onboarding_requests",
+  "field": "auto_approve_method",
+  "type": "string",
+  "meta": {
+    "collection": "vp_onboarding_requests",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "auto_approve_method",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": null,
+    "options": {
+      "choices": [
+        {
+          "text": "Нет",
+          "value": "none"
+        },
+        {
+          "text": "Инвайт‑код",
+          "value": "invite_code"
+        },
+        {
+          "text": "Email‑домен",
+          "value": "email_domain"
+        },
+        {
+          "text": "Подтверждение QR",
+          "value": "qr_proof"
+        },
+        {
+          "text": "Ручная проверка",
+          "value": "manual"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": true,
+    "searchable": true,
+    "sort": 16,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "auto_approve_method",
+    "table": "vp_onboarding_requests",
+    "data_type": "character varying",
+    "default_value": "none",
+    "max_length": 32,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_indexed": true,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}

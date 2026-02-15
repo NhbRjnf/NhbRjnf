@@ -1,0 +1,28 @@
+{
+  "collection": "vp_allowlist_domains",
+  "meta": {
+    "accountability": "all",
+    "archive_app_filter": true,
+    "archive_field": "is_active",
+    "archive_value": "false",
+    "collapse": "open",
+    "collection": "vp_allowlist_domains",
+    "color": null,
+    "display_template": "{{domain}}",
+    "group": null,
+    "hidden": false,
+    "icon": "domain",
+    "item_duplication_fields": null,
+    "note": "Allowlist email domains for auto-approve onboarding",
+    "preview_url": null,
+    "singleton": false,
+    "sort": null,
+    "sort_field": "sort",
+    "translations": null,
+    "unarchive_value": "true",
+    "versioning": false
+  },
+  "schema": {
+    "name": "vp_allowlist_domains"
+  }
+}

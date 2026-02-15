@@ -1,0 +1,25 @@
+{
+  "collection": "qr_codes",
+  "field": "product_id",
+  "related_collection": "products",
+  "meta": {
+    "junction_field": null,
+    "many_collection": "qr_codes",
+    "many_field": "product_id",
+    "one_allowed_collections": null,
+    "one_collection": "products",
+    "one_collection_field": null,
+    "one_deselect_action": "nullify",
+    "one_field": "qr_codes",
+    "sort_field": null
+  },
+  "schema": {
+    "table": "qr_codes",
+    "column": "product_id",
+    "foreign_key_table": "products",
+    "foreign_key_column": "id",
+    "constraint_name": "qr_codes_product_id_foreign",
+    "on_update": "NO ACTION",
+    "on_delete": "SET NULL"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "collection": "vp_3d_scenes",
+  "field": "case_scan_id",
+  "type": "integer",
+  "meta": {
+    "collection": "vp_3d_scenes",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "case_scan_id",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown-m2o",
+    "note": "Если сцена создана из стоматологического скана/кейса.",
+    "options": {
+      "template": "{{id}} — {{kind}} ({{conversion_status}})"
+    },
+    "readonly": false,
+    "required": false,
+    "searchable": true,
+    "sort": 34,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "case_scan_id",
+    "table": "vp_3d_scenes",
+    "data_type": "integer",
+    "default_value": null,
+    "max_length": null,
+    "numeric_precision": 32,
+    "numeric_scale": 0,
+    "is_nullable": true,
+    "is_unique": false,
+    "is_indexed": false,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": "vp_case_scans",
+    "foreign_key_column": "id"
+  }
+}

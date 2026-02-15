@@ -1,0 +1,28 @@
+{
+  "collection": "vp_3d_scenes",
+  "meta": {
+    "accountability": "all",
+    "archive_app_filter": true,
+    "archive_field": null,
+    "archive_value": null,
+    "collapse": "open",
+    "collection": "vp_3d_scenes",
+    "color": null,
+    "display_template": "{{title}}",
+    "group": null,
+    "hidden": false,
+    "icon": "view_in_ar",
+    "item_duplication_fields": null,
+    "note": "3D сцены/модели для страницы /3d (навигация, стоматология и т.д.)",
+    "preview_url": null,
+    "singleton": false,
+    "sort": 30,
+    "sort_field": null,
+    "translations": null,
+    "unarchive_value": null,
+    "versioning": false
+  },
+  "schema": {
+    "name": "vp_3d_scenes"
+  }
+}

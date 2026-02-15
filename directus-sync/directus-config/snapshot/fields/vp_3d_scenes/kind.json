@@ -1,0 +1,59 @@
+{
+  "collection": "vp_3d_scenes",
+  "field": "kind",
+  "type": "string",
+  "meta": {
+    "collection": "vp_3d_scenes",
+    "conditions": null,
+    "display": null,
+    "display_options": null,
+    "field": "kind",
+    "group": null,
+    "hidden": false,
+    "interface": "select-dropdown",
+    "note": "Тип сцены/кейса (управляет UI и логикой просмотра)",
+    "options": {
+      "choices": [
+        {
+          "text": "Навигация ТЦ (3D)",
+          "value": "navigation"
+        },
+        {
+          "text": "Стоматология (челюсть)",
+          "value": "dental"
+        },
+        {
+          "text": "Другое 3D",
+          "value": "generic"
+        }
+      ]
+    },
+    "readonly": false,
+    "required": true,
+    "searchable": true,
+    "sort": 3,
+    "special": null,
+    "translations": null,
+    "validation": null,
+    "validation_message": null,
+    "width": "full"
+  },
+  "schema": {
+    "name": "kind",
+    "table": "vp_3d_scenes",
+    "data_type": "character varying",
+    "default_value": "generic",
+    "max_length": 50,
+    "numeric_precision": null,
+    "numeric_scale": null,
+    "is_nullable": false,
+    "is_unique": false,
+    "is_indexed": true,
+    "is_primary_key": false,
+    "is_generated": false,
+    "generation_expression": null,
+    "has_auto_increment": false,
+    "foreign_key_table": null,
+    "foreign_key_column": null
+  }
+}
