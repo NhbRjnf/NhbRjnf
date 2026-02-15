@@ -1,1 +1,114 @@
-[]
+[
+  {
+    "bookmark": "Onboarding — Rejected",
+    "role": null,
+    "collection": "vp_onboarding_requests",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "fields": [
+          "status",
+          "email",
+          "user_type",
+          "decision_reason",
+          "reviewed_by",
+          "updated_at"
+        ],
+        "sort": [
+          "-updated_at"
+        ]
+      }
+    },
+    "layout_options": {
+      "tableSpacing": "cozy",
+      "stickyHeader": true
+    },
+    "refresh_interval": null,
+    "filter": {
+      "status": {
+        "_eq": "rejected"
+      }
+    },
+    "icon": "bookmark",
+    "color": null,
+    "_syncId": "479af541-c0d8-4832-9684-7e746296ae6c"
+  },
+  {
+    "bookmark": "Onboarding — Approved",
+    "role": null,
+    "collection": "vp_onboarding_requests",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "fields": [
+          "status",
+          "email",
+          "user_type",
+          "requested_tenant_name",
+          "created_user_id",
+          "created_profile_id",
+          "reviewed_by",
+          "updated_at"
+        ],
+        "sort": [
+          "-updated_at"
+        ]
+      }
+    },
+    "layout_options": {
+      "tableSpacing": "cozy",
+      "stickyHeader": true
+    },
+    "refresh_interval": null,
+    "filter": {
+      "status": {
+        "_eq": "approved"
+      }
+    },
+    "icon": "bookmark",
+    "color": null,
+    "_syncId": "646bab1e-253e-47fe-b1ee-bfb2ef342237"
+  },
+  {
+    "bookmark": "Onboarding — Pending",
+    "role": null,
+    "collection": "vp_onboarding_requests",
+    "search": null,
+    "layout": "tabular",
+    "layout_query": {
+      "tabular": {
+        "fields": [
+          "status",
+          "email",
+          "phone",
+          "first_name",
+          "last_name",
+          "user_type",
+          "requested_tenant_name",
+          "requested_tenant_slug",
+          "auto_approve_method",
+          "invite_code",
+          "created_at"
+        ],
+        "sort": [
+          "-created_at"
+        ]
+      }
+    },
+    "layout_options": {
+      "tableSpacing": "cozy",
+      "stickyHeader": true
+    },
+    "refresh_interval": null,
+    "filter": {
+      "status": {
+        "_eq": "pending"
+      }
+    },
+    "icon": "bookmark",
+    "color": null,
+    "_syncId": "b47d25a5-1fd8-4abf-a489-7ba0529ea65f"
+  }
+]
