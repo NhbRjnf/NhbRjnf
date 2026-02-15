@@ -2688,9 +2688,7 @@
         }
       ]
     },
-    "presets": {
-      "reviewed_by": ""
-    },
+    "presets": {},
     "fields": [
       "status",
       "reviewed_by",
