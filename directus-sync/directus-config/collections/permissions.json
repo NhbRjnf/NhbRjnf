@@ -2590,5 +2590,114 @@
     ],
     "policy": "8225b605-833d-420a-8448-9f2a7665e3aa",
     "_syncId": "684a0c23-f027-4bd2-90e8-86334d4fa367"
+  },
+  {
+    "collection": "vp_allowlist_domains",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": {},
+    "fields": null,
+    "policy": "af0f5145-6b2f-46f9-a05c-0549c8e50b48",
+    "_syncId": "ff5342d3-bed7-4cce-b2cb-f5776ffaeaf3"
+  },
+  {
+    "collection": "vp_allowlist_domains",
+    "action": "delete",
+    "permissions": {},
+    "validation": {},
+    "presets": {},
+    "fields": null,
+    "policy": "af0f5145-6b2f-46f9-a05c-0549c8e50b48",
+    "_syncId": "9bd15d44-9079-4503-95fd-48cefa989678"
+  },
+  {
+    "collection": "vp_allowlist_domains",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": {},
+    "fields": null,
+    "policy": "af0f5145-6b2f-46f9-a05c-0549c8e50b48",
+    "_syncId": "16c691ca-f72b-43e7-b8b0-a99a96cfd7cd"
+  },
+  {
+    "collection": "vp_allowlist_domains",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": {},
+    "fields": null,
+    "policy": "af0f5145-6b2f-46f9-a05c-0549c8e50b48",
+    "_syncId": "1df0cf3f-3f80-4380-8795-8a5ff78701e5"
+  },
+  {
+    "collection": "vp_invites",
+    "action": "create",
+    "permissions": {},
+    "validation": {},
+    "presets": {},
+    "fields": null,
+    "policy": "af0f5145-6b2f-46f9-a05c-0549c8e50b48",
+    "_syncId": "237f40cc-be00-492e-b7e8-7385b13c6153"
+  },
+  {
+    "collection": "vp_invites",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": {},
+    "fields": null,
+    "policy": "af0f5145-6b2f-46f9-a05c-0549c8e50b48",
+    "_syncId": "011a70ca-a3a7-4c12-ba15-fbf5fac804ce"
+  },
+  {
+    "collection": "vp_invites",
+    "action": "update",
+    "permissions": {},
+    "validation": {},
+    "presets": {},
+    "fields": null,
+    "policy": "af0f5145-6b2f-46f9-a05c-0549c8e50b48",
+    "_syncId": "48f53d78-2f2d-4e3d-b6c9-81207be11326"
+  },
+  {
+    "collection": "vp_onboarding_requests",
+    "action": "read",
+    "permissions": {},
+    "validation": {},
+    "presets": {},
+    "fields": null,
+    "policy": "af0f5145-6b2f-46f9-a05c-0549c8e50b48",
+    "_syncId": "b354c262-7b1a-4613-b5df-df5d50b25bb8"
+  },
+  {
+    "collection": "vp_onboarding_requests",
+    "action": "update",
+    "permissions": {},
+    "validation": {
+      "_and": [
+        {
+          "status": {
+            "_in": [
+              "pending",
+              "approved",
+              "rejected"
+            ]
+          }
+        }
+      ]
+    },
+    "presets": {
+      "reviewed_by": ""
+    },
+    "fields": [
+      "status",
+      "reviewed_by",
+      "decision_reason",
+      "updated_at"
+    ],
+    "policy": "af0f5145-6b2f-46f9-a05c-0549c8e50b48",
+    "_syncId": "43f04ddf-3087-4ca9-90e8-3916f8d4d78a"
   }
 ]
