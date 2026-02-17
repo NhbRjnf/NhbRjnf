@@ -59,9 +59,25 @@
     return node.innerHTML;
   }
 
+  function formatReviewed(item) {
+    if (!item.reviewed_at && !item.reviewed_by_email) {
+      return '';
+    }
+
+    const parts = [];
+    if (item.reviewed_by_email) {
+      parts.push(item.reviewed_by_email);
+    }
+    if (item.reviewed_at) {
+      parts.push(item.reviewed_at);
+    }
+
+    return parts.join(' · ');
+  }
+
   function renderRows(rows) {
     if (!rows.length) {
-      el.tableBody.innerHTML = '<tr><td colspan="9">No requests found.</td></tr>';
+      el.tableBody.innerHTML = '<tr><td colspan="10">No requests found.</td></tr>';
       return;
     }
 
@@ -77,6 +93,7 @@
           <td>${escapeHtml(item.phone || '')}</td>
           <td>${escapeHtml(fullName)}</td>
           <td>${escapeHtml(item.decision_reason || '')}</td>
+          <td>${escapeHtml(formatReviewed(item))}</td>
           <td>${rowActions(item)}</td>
         </tr>
       `;
@@ -112,7 +129,7 @@
 
     try {
       clearNotice();
-      el.tableBody.innerHTML = '<tr><td colspan="9">Loading...</td></tr>';
+      el.tableBody.innerHTML = '<tr><td colspan="10">Loading...</td></tr>';
 
       const json = await post(params);
       if (!json.success) {
@@ -124,7 +141,7 @@
       updatePagination();
     } catch (error) {
       showNotice(error.message, 'error');
-      el.tableBody.innerHTML = '<tr><td colspan="9">Failed to load requests.</td></tr>';
+      el.tableBody.innerHTML = '<tr><td colspan="10">Failed to load requests.</td></tr>';
     } finally {
       state.loading = false;
       updatePagination();
@@ -150,7 +167,7 @@
     params.append('nonce', VPOnboardingAdmin.nonce);
     params.append('id', String(id));
     params.append('decision', decision);
-    params.append('reason', reason);
+    params.append('reason', reason.trim());
 
     try {
       const json = await post(params);

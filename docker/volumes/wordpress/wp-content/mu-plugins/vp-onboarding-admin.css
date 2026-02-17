@@ -30,3 +30,8 @@
 .vp-onboarding-admin td .button {
   margin-right: 6px;
 }
+
+.vp-onboarding-admin #vp-onboarding-table td:nth-child(9) {
+  min-width: 220px;
+  font-size: 12px;
+}

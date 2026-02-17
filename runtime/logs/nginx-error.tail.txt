@@ -1,7 +1,0 @@
-2026/02/17 00:14:28 [crit] 276871#276871: *15342 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 00:14:35 [crit] 276871#276871: *15354 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 00:14:48 [crit] 276871#276871: *15369 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 00:48:18 [crit] 276871#276871: *15469 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 01:39:16 [crit] 276871#276871: *15652 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 04:03:26 [crit] 276871#276871: *15831 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 09:36:41 [crit] 276871#276871: *16676 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
