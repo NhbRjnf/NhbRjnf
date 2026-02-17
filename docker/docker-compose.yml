@@ -33,7 +33,7 @@ services:
       - vseponyatno_net
 
   directus:
-    image: directus/directus:11.15.2
+    image:  directus/directus:11.15.2
     container_name: vse_directus
     restart: unless-stopped
     env_file:

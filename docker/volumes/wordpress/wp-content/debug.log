@@ -1,0 +1,187 @@
+[22-Jan-2026 10:32:18 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 261
+[22-Jan-2026 10:41:50 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 261
+[22-Jan-2026 10:41:50 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 261
+[22-Jan-2026 10:47:48 UTC] PHP Fatal error:  Cannot redeclare vp_directus_token() (previously declared in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:24) in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 273
+[22-Jan-2026 10:47:48 UTC] PHP Fatal error:  Cannot redeclare vp_directus_token() (previously declared in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:24) in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 273
+[22-Jan-2026 10:55:00 UTC] PHP Fatal error:  Cannot redeclare vp_directus_token() (previously declared in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:24) in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 273
+[22-Jan-2026 10:59:36 UTC] PHP Deprecated:  Файл Тема без header.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон header.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 10:59:36 UTC] PHP Deprecated:  Файл Тема без footer.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон footer.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 11:01:40 UTC] PHP Deprecated:  Файл Тема без header.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон header.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 11:01:40 UTC] PHP Deprecated:  Файл Тема без footer.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон footer.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 11:31:22 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function vp_directus_token() in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:46
+Stack trace:
+#0 /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php(91): vp_directus_get('/items/qr_codes...')
+#1 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1292): vp_lookup_callback(Object(WP_REST_Request))
+#2 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/vp/v1/lookup', Array, NULL)
+#3 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#4 /var/www/html/wp-includes/rest-api.php(467): WP_REST_Server->serve_request('/vp/v1/lookup')
+#5 /var/www/html/wp-includes/class-wp-hook.php(341): rest_api_loaded(Object(WP))
+#6 /var/www/html/wp-includes/class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#7 /var/www/html/wp-includes/plugin.php(570): WP_Hook->do_action(Array)
+#8 /var/www/html/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#9 /var/www/html/wp-includes/class-wp.php(821): WP->parse_request('')
+#10 /var/www/html/wp-includes/functions.php(1343): WP->main('')
+#11 /var/www/html/wp-blog-header.php(16): wp()
+#12 /var/www/html/index.php(17): require('/var/www/html/w...')
+#13 {main}
+  thrown in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 46
+[22-Jan-2026 11:31:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function vp_directus_token() in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:46
+Stack trace:
+#0 /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php(221): vp_directus_get('/items/qr_codes...')
+#1 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1292): vp_instruction_callback(Object(WP_REST_Request))
+#2 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/vp/v1/instruct...', Array, NULL)
+#3 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#4 /var/www/html/wp-includes/rest-api.php(467): WP_REST_Server->serve_request('/vp/v1/instruct...')
+#5 /var/www/html/wp-includes/class-wp-hook.php(341): rest_api_loaded(Object(WP))
+#6 /var/www/html/wp-includes/class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#7 /var/www/html/wp-includes/plugin.php(570): WP_Hook->do_action(Array)
+#8 /var/www/html/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#9 /var/www/html/wp-includes/class-wp.php(821): WP->parse_request('')
+#10 /var/www/html/wp-includes/functions.php(1343): WP->main('')
+#11 /var/www/html/wp-blog-header.php(16): wp()
+#12 /var/www/html/index.php(17): require('/var/www/html/w...')
+#13 {main}
+  thrown in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 46
+[22-Jan-2026 11:55:20 UTC] PHP Deprecated:  Файл Тема без header.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон header.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 11:55:20 UTC] PHP Deprecated:  Файл Тема без footer.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон footer.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[22-Jan-2026 12:31:38 UTC] Automatic updates starting...
+[22-Jan-2026 12:31:39 UTC] Automatic updates complete.
+[23-Jan-2026 00:51:38 UTC] Automatic updates starting...
+[23-Jan-2026 00:51:39 UTC] Automatic updates complete.
+[23-Jan-2026 03:20:55 UTC] PHP Deprecated:  Файл Тема без header.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон header.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[23-Jan-2026 03:20:55 UTC] PHP Deprecated:  Файл Тема без footer.php с версии 3.0.0 <strong>считается устаревшим</strong>. Альтернативы не предусмотрено. Пожалуйста, включите шаблон footer.php в вашу тему. in /var/www/html/wp-includes/functions.php on line 6131
+[26-Jan-2026 07:02:02 UTC] Automatic updates starting...
+[26-Jan-2026 07:02:03 UTC] Automatic updates complete.
+[26-Jan-2026 12:46:58 UTC] Automatic updates starting...
+[26-Jan-2026 12:46:59 UTC] Automatic updates complete.
+[27-Jan-2026 00:36:42 UTC] Automatic updates starting...
+[27-Jan-2026 00:36:43 UTC] Automatic updates complete.
+[03-Feb-2026 08:45:28 UTC] Automatic updates starting...
+[03-Feb-2026 08:45:29 UTC] Automatic updates complete.
+[03-Feb-2026 08:45:33 UTC] PHP Notice:  _wp_delete_all_temp_backups(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[03-Feb-2026 13:06:13 UTC] Automatic updates starting...
+[03-Feb-2026 13:06:14 UTC] Automatic updates complete.
+[04-Feb-2026 03:11:13 UTC] Automatic updates starting...
+[04-Feb-2026 03:11:14 UTC] Automatic updates complete.
+[04-Feb-2026 03:11:14 UTC] PHP Notice:  maintenance_mode(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[04-Feb-2026 03:11:14 UTC] PHP Warning:  chmod(): Operation not permitted in /var/www/html/wp-admin/includes/class-wp-filesystem-direct.php on line 173
+[04-Feb-2026 12:06:50 UTC] PHP Notice:  _wp_delete_all_temp_backups(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[04-Feb-2026 12:37:40 UTC] Automatic updates starting...
+[04-Feb-2026 12:37:41 UTC] Automatic updates complete.
+[05-Feb-2026 00:49:42 UTC] Automatic updates starting...
+[05-Feb-2026 00:49:43 UTC] Automatic updates complete.
+[05-Feb-2026 12:52:42 UTC] Automatic updates starting...
+[05-Feb-2026 12:52:43 UTC] Automatic updates complete.
+[06-Feb-2026 02:03:41 UTC] Automatic updates starting...
+[06-Feb-2026 02:03:42 UTC] Automatic updates complete.
+[06-Feb-2026 12:34:09 UTC] Automatic updates starting...
+[06-Feb-2026 12:34:10 UTC] Automatic updates complete.
+[07-Feb-2026 00:41:55 UTC] Automatic updates starting...
+[07-Feb-2026 00:41:55 UTC] Automatic updates complete.
+[07-Feb-2026 13:51:36 UTC] Automatic updates starting...
+[07-Feb-2026 13:51:37 UTC] Automatic updates complete.
+[08-Feb-2026 01:05:42 UTC] Automatic updates starting...
+[08-Feb-2026 01:05:43 UTC] Automatic updates complete.
+[08-Feb-2026 13:05:30 UTC] Automatic updates starting...
+[08-Feb-2026 13:05:31 UTC] Automatic updates complete.
+[09-Feb-2026 00:32:51 UTC] Automatic updates starting...
+[09-Feb-2026 00:32:52 UTC] Automatic updates complete.
+[09-Feb-2026 13:13:38 UTC] Automatic updates starting...
+[09-Feb-2026 13:13:39 UTC] Automatic updates complete.
+[10-Feb-2026 00:44:29 UTC] Automatic updates starting...
+[10-Feb-2026 00:44:30 UTC] Automatic updates complete.
+[10-Feb-2026 06:34:30 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:35:14 UTC] PHP Warning:  mysqli_real_connect(): (HY000/2002): Connection refused in /var/www/html/wp-includes/class-wpdb.php on line 1994
+[10-Feb-2026 06:35:44 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:35:45 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:35:46 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:35:47 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:35:49 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:36:03 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:36:10 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:36:13 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:36:13 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:36:15 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:36:16 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:36:17 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:36:17 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:36:39 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 06:56:54 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 07:02:38 UTC] PHP Parse error:  syntax error, unexpected token "<<" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 244
+[10-Feb-2026 07:20:17 UTC] PHP Fatal error:  Cannot redeclare vp_instruction_fallback_response() (previously declared in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php:213) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 266
+[10-Feb-2026 13:22:59 UTC] Automatic updates starting...
+[10-Feb-2026 13:23:00 UTC] Automatic updates complete.
+[11-Feb-2026 00:32:12 UTC] Automatic updates starting...
+[11-Feb-2026 00:32:13 UTC] Automatic updates complete.
+[11-Feb-2026 11:34:05 UTC] PHP Notice:  _wp_delete_all_temp_backups(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[11-Feb-2026 12:32:09 UTC] Automatic updates starting...
+[11-Feb-2026 12:32:10 UTC] Automatic updates complete.
+[11-Feb-2026 12:40:19 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:42:49 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:43:29 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:44:41 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:44:43 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:44:44 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:44:45 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:44:45 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:44:52 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:44:53 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:44:56 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:44:57 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:45:27 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:51:03 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:51:14 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:55:36 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:56:36 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 12:58:36 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 13:00:52 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 13:01:46 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 13:02:36 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 13:03:08 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 13:04:21 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 13:05:02 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 13:05:23 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 13:06:39 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[11-Feb-2026 13:07:42 UTC] PHP Parse error:  syntax error, unexpected token "@", expecting ")" in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 235
+[12-Feb-2026 01:54:21 UTC] Automatic updates starting...
+[12-Feb-2026 01:54:22 UTC] Automatic updates complete.
+[12-Feb-2026 07:34:31 UTC] PHP Parse error:  Unclosed '{' on line 239 in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 242
+[12-Feb-2026 07:35:04 UTC] PHP Parse error:  Unclosed '{' on line 239 in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 242
+[12-Feb-2026 07:35:45 UTC] PHP Parse error:  Unclosed '{' on line 239 in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 242
+[12-Feb-2026 07:36:36 UTC] PHP Parse error:  Unclosed '{' on line 239 in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 242
+[12-Feb-2026 07:36:46 UTC] PHP Parse error:  Unclosed '{' on line 239 in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 242
+[12-Feb-2026 07:36:47 UTC] PHP Parse error:  Unclosed '{' on line 239 in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 242
+[12-Feb-2026 07:36:54 UTC] PHP Parse error:  Unclosed '{' on line 239 in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 242
+[12-Feb-2026 07:36:54 UTC] PHP Parse error:  Unclosed '{' on line 239 in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 242
+[12-Feb-2026 07:37:43 UTC] PHP Parse error:  Unclosed '{' on line 239 in /var/www/html/wp-content/themes/twentytwentyfour/functions.php on line 242
+[12-Feb-2026 12:37:50 UTC] Automatic updates starting...
+[12-Feb-2026 12:37:51 UTC] Automatic updates complete.
+[13-Feb-2026 00:43:20 UTC] Automatic updates starting...
+[13-Feb-2026 00:43:21 UTC] Automatic updates complete.
+[13-Feb-2026 12:37:01 UTC] Automatic updates starting...
+[13-Feb-2026 12:37:02 UTC] Automatic updates complete.
+[14-Feb-2026 00:35:12 UTC] Automatic updates starting...
+[14-Feb-2026 00:35:13 UTC] Automatic updates complete.
+[14-Feb-2026 13:02:59 UTC] Automatic updates starting...
+[14-Feb-2026 13:03:00 UTC] Automatic updates complete.
+[15-Feb-2026 00:39:43 UTC] Automatic updates starting...
+[15-Feb-2026 00:39:44 UTC] Automatic updates complete.
+[15-Feb-2026 12:43:23 UTC] Automatic updates starting...
+[15-Feb-2026 12:43:24 UTC] Automatic updates complete.
+[16-Feb-2026 00:32:44 UTC] Automatic updates starting...
+[16-Feb-2026 00:32:45 UTC] Automatic updates complete.
+[16-Feb-2026 13:01:44 UTC] Automatic updates starting...
+[16-Feb-2026 13:01:44 UTC] Automatic updates complete.
+[17-Feb-2026 00:32:29 UTC] Automatic updates starting...
+[17-Feb-2026 00:32:30 UTC] Automatic updates complete.
+[17-Feb-2026 08:33:41 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 08:58:39 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 08:58:39 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 08:58:39 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 09:28:25 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 09:37:26 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 10:00:17 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 10:25:41 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 10:46:15 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 10:47:29 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101
+[17-Feb-2026 10:47:29 UTC] PHP Fatal error:  Cannot redeclare vp_directus_request() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:52) in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 101

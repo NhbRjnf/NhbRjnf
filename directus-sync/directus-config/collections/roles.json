@@ -5,7 +5,7 @@
     "description": "$t:admin_description",
     "parent": null,
     "app_access": true,
-    "admin_access": false,
+    "admin_access": true,
     "_syncId": "_sync_default_admin_role"
   },
   {

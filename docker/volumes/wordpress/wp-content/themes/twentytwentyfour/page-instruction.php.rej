@@ -1,0 +1,149 @@
+--- docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-instruction.php
++++ docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-instruction.php
+@@ -14,51 +14,51 @@ get_header();
+         <div id="vp-inst-sub"></div>
+         <div class="vp-inst-chips" id="vp-inst-chips" aria-label="Параметры товара"></div>
+       </div>
+       <div class="vp-inst-hero-actions" aria-label="Действия">
+         <button class="vp-inst-btn vp-inst-btn--primary" id="vp-inst-open-btn" type="button">
+           Открыть инструкцию
+         </button>
+         <button class="vp-inst-btn" id="vp-inst-share-btn" type="button">Поделиться</button>
+         <button class="vp-inst-btn" id="vp-inst-copy-btn" type="button">Скопировать код</button>
+         <a class="vp-inst-btn vp-inst-btn--ghost" id="vp-inst-back-btn" href="/scan">Назад к сканеру</a>
+       </div>
+     </div>
+   </div>
+ 
+   <div id="vp-inst-loading" class="vp-inst-loading">
+     <div class="vp-inst-skeleton vp-inst-skeleton--hero"></div>
+     <div class="vp-inst-grid">
+       <section class="vp-inst-card vp-inst-skeleton-card"></section>
+       <section class="vp-inst-card vp-inst-skeleton-card"></section>
+       <section class="vp-inst-card vp-inst-card--full vp-inst-skeleton-card"></section>
+     </div>
+   </div>
+   <div id="vp-inst-error" style="display:none; color: #b00020;"></div>
+   <div id="vp-inst-warning" class="vp-inst-warning" style="display:none;"></div>
+ 
+-  <div id="vp-inst-grid" class="vp-inst-grid" style="display:none;">
++  <div id="vp-inst-grid" class="vp-inst-grid" style="display:none;">
+     <section class="vp-inst-card" id="vp-inst-product">
+       <div class="vp-inst-card-head">
+         <span class="vp-inst-anchor"></span>
+         <h2>Товар</h2>
+       </div>
+       <dl class="vp-inst-meta">
+         <div>
+           <dt>Бренд</dt>
+           <dd id="vp-inst-brand">—</dd>
+         </div>
+         <div>
+           <dt>Модель</dt>
+           <dd id="vp-inst-model">—</dd>
+         </div>
+         <div>
+           <dt>SKU</dt>
+           <dd id="vp-inst-sku">—</dd>
+         </div>
+       </dl>
+     </section>
+ 
+     <section class="vp-inst-card" id="vp-inst-description">
+       <div class="vp-inst-card-head">
+         <span class="vp-inst-anchor"></span>
+         <h2>Описание</h2>
+@@ -83,53 +83,63 @@ get_header();
+           </div>
+           <div>
+             <div class="vp-inst-nav-label">Ориентиры</div>
+             <div class="vp-inst-nav-value" id="vp-inst-nav-landmarks">—</div>
+           </div>
+         </div>
+         <div class="vp-inst-nav-media" id="vp-inst-nav-media"></div>
+         <div class="vp-inst-nav-actions" id="vp-inst-nav-actions"></div>
+         <div class="vp-inst-nav-steps" id="vp-inst-nav-steps"></div>
+         <div class="vp-inst-nav-fallback" id="vp-inst-nav-fallback" style="display:none;">
+           <div class="vp-inst-nav-fallback-text">Навигационные данные пока недоступны.</div>
+           <button class="vp-inst-btn vp-inst-btn--ghost" id="vp-inst-nav-report" type="button">
+             Сообщить о проблеме
+           </button>
+         </div>
+       </div>
+     </section>
+ 
+     <section class="vp-inst-card vp-inst-card--full" id="vp-inst-instruction">
+       <div class="vp-inst-card-head">
+         <span class="vp-inst-anchor"></span>
+         <h2>Инструкция</h2>
+       </div>
+       <ol id="vp-inst-steps" class="vp-inst-steps" style="display:none;"></ol>
+     </section>
+-  </div>
+-
+-  <div class="vp-inst-sticky" id="vp-inst-sticky" aria-label="Быстрые действия">
++  </div>
++
++  <div class="vp-3d-fab" data-vp-fab data-page-type="instruction" aria-label="Контекстное меню">
++    <button class="vp-fab-toggle" type="button" data-vp-fab-toggle aria-expanded="false" aria-controls="vp-fab-panel-instruction">⋯</button>
++    <div class="vp-fab-panel" id="vp-fab-panel-instruction" data-vp-fab-panel>
++      <button type="button" class="vp-fab-action" data-vp-action="openInstruction" data-vp-pages="instruction">Открыть инструкцию</button>
++      <button type="button" class="vp-fab-action" data-vp-action="share" data-vp-pages="instruction,3d,scan">Поделиться</button>
++      <button type="button" class="vp-fab-action" data-vp-action="copyCode" data-vp-pages="instruction,3d,scan">Скопировать код</button>
++      <button type="button" class="vp-fab-action" data-vp-action="backToScan" data-vp-pages="instruction,3d,scan">Назад к сканеру</button>
++    </div>
++  </div>
++
++  <div class="vp-inst-sticky" id="vp-inst-sticky" aria-label="Быстрые действия">
+     <button class="vp-inst-btn vp-inst-btn--primary" id="vp-inst-open-btn-sticky" type="button">
+       Открыть
+     </button>
+     <button class="vp-inst-btn" id="vp-inst-share-btn-sticky" type="button">Поделиться</button>
+     <button class="vp-inst-btn" id="vp-inst-copy-btn-sticky" type="button">Код</button>
+     <a class="vp-inst-btn vp-inst-btn--ghost" id="vp-inst-back-btn-sticky" href="/scan">Сканер</a>
+   </div>
+ </main>
+ 
+ <script>
+ (function () {
+   const params = new URLSearchParams(location.search);
+   const code = params.get('code');
+ 
+   const elLoading = document.getElementById('vp-inst-loading');
+   const elError = document.getElementById('vp-inst-error');
+   const elWarning = document.getElementById('vp-inst-warning');
+   const elGrid = document.getElementById('vp-inst-grid');
+   const elSteps = document.getElementById('vp-inst-steps');
+   const elSub = document.getElementById('vp-inst-sub');
+   const elEyebrow = document.getElementById('vp-inst-eyebrow');
+   const elTypeBadge = document.getElementById('vp-inst-type-badge');
+   const elChips = document.getElementById('vp-inst-chips');
+   const elBrand = document.getElementById('vp-inst-brand');
+   const elModel = document.getElementById('vp-inst-model');
+@@ -649,26 +659,26 @@ get_header();
+           allSteps[currentStepIndex].style.display = 'block';
+           updateProgress();
+           btnPrev.disabled = false;
+           if (currentStepIndex === totalSteps - 1) btnNext.disabled = true;
+           allSteps[currentStepIndex].scrollIntoView({ behavior: 'smooth' });
+         }
+       });
+ 
+       btnPrev.addEventListener('click', () => {
+         if (currentStepIndex > 0) {
+           allSteps[currentStepIndex].style.display = 'none';
+           currentStepIndex--;
+           allSteps[currentStepIndex].style.display = 'block';
+           updateProgress();
+           btnNext.disabled = false;
+           if (currentStepIndex === 0) btnPrev.disabled = true;
+           allSteps[currentStepIndex].scrollIntoView({ behavior: 'smooth' });
+         }
+       });
+     })
+     .catch(() => {
+       showError('Ошибка загрузки данных');
+     });
+ })();
+ </script>
+-<?php get_footer(); ?>+<?php get_footer(); ?>

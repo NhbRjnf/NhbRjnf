@@ -9,15 +9,7 @@
     "app_access": true,
     "roles": [
       {
-        "role": null,
-        "sort": 2
-      },
-      {
         "role": "_sync_default_admin_role",
-        "sort": null
-      },
-      {
-        "role": null,
         "sort": null
       }
     ],
@@ -33,20 +25,8 @@
     "app_access": true,
     "roles": [
       {
-        "role": null,
-        "sort": 1
-      },
-      {
-        "role": null,
-        "sort": 1
-      },
-      {
         "role": "6c22b786-4b39-4b0e-9c9a-0d45f2b89775",
         "sort": 1
-      },
-      {
-        "role": null,
-        "sort": 2
       }
     ],
     "_syncId": "8225b605-833d-420a-8448-9f2a7665e3aa"
