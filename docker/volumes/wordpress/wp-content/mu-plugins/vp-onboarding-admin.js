@@ -6,6 +6,9 @@
     loading: false,
   };
 
+  // Helps quickly verify a fresh asset is loaded after cache-bust.
+  console.debug('[VP Onboarding] admin.js loaded', VPOnboardingAdmin.assetVersion || 'unknown');
+
   const el = {
     notice: document.getElementById('vp-onboarding-notice'),
     status: document.getElementById('vp-status-filter'),
@@ -72,7 +75,7 @@
       parts.push(item.reviewed_at);
     }
 
-    return parts.join(' · ');
+    return parts.join(' • ');
   }
 
   function renderRows(rows) {
@@ -176,7 +179,8 @@
         throw new Error(json.data?.message || 'Action failed.');
       }
 
-      showNotice(json.data?.message || 'Updated.', 'success');
+      const suffix = json.data?.dry_run ? ' (dry-run)' : '';
+      showNotice((json.data?.message || 'Updated.') + suffix, 'success');
       fetchRows();
     } catch (error) {
       showNotice(error.message, 'error');
@@ -210,6 +214,10 @@
       decide(Number(rejectBtn.dataset.id), 'reject');
     }
   });
+
+  if (VPOnboardingAdmin.isDryRun) {
+    showNotice('Dry-run is enabled: Directus write operations are skipped.', 'success');
+  }
 
   fetchRows();
 })();

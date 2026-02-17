@@ -9,13 +9,13 @@
     echo "WHOAMI:"
     curl -sS -i -H "Authorization: Bearer $TOK" "$BASE/users/me" | head -n 120
   
-# time: 2026-02-17T12:07:09+00:00
+# time: 2026-02-17T12:34:48+00:00
 
 BASE=https://directus.xn--b1awacccnl0jqa.xn--p1ai
 WHOAMI:
 HTTP/1.1 200 OK
 Server: nginx/1.18.0 (Ubuntu)
-Date: Tue, 17 Feb 2026 12:07:09 GMT
+Date: Tue, 17 Feb 2026 12:34:49 GMT
 Content-Type: application/json; charset=utf-8
 Content-Length: 456
 Connection: keep-alive

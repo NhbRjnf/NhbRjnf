@@ -1,3 +1,4 @@
+```php
 <?php
 /**
  * Plugin Name: VP Onboarding Admin
@@ -35,19 +36,24 @@ function vp_onboarding_admin_enqueue_assets($hook) {
     }
 
     $base = content_url('mu-plugins');
+    $dir = WP_CONTENT_DIR . '/mu-plugins';
+    $css_path = $dir . '/vp-onboarding-admin.css';
+    $js_path = $dir . '/vp-onboarding-admin.js';
+    $css_ver = file_exists($css_path) ? (string) filemtime($css_path) : '1.1.0';
+    $js_ver = file_exists($js_path) ? (string) filemtime($js_path) : '1.1.0';
 
     wp_enqueue_style(
         'vp-onboarding-admin',
         $base . '/vp-onboarding-admin.css',
         [],
-        '1.1.0'
+        $css_ver
     );
 
     wp_enqueue_script(
         'vp-onboarding-admin',
         $base . '/vp-onboarding-admin.js',
         [],
-        '1.1.0',
+        $js_ver,
         true
     );
 
@@ -55,6 +61,8 @@ function vp_onboarding_admin_enqueue_assets($hook) {
         'ajaxUrl'      => admin_url('admin-ajax.php'),
         'nonce'        => wp_create_nonce('vp_onboarding_admin_nonce'),
         'defaultLimit' => 20,
+        'assetVersion' => $js_ver,
+        'isDryRun'     => vp_dx_dry_run_enabled(),
     ]);
 }
 
@@ -154,7 +162,7 @@ function vp_onboarding_admin_ajax_fetch_requests() {
     }
 
     $query = [
-        'fields' => 'id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id',
+        'fields' => 'id,email,phone,first_name,last_name,user_type,status,auto_approve_method,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id',
         'sort' => '-created_at',
         'limit' => $limit,
         'offset' => $offset,
@@ -186,27 +194,31 @@ function vp_onboarding_admin_ajax_decide_request() {
     $decision = isset($_POST['decision']) ? sanitize_text_field(wp_unslash($_POST['decision'])) : '';
     $reason = isset($_POST['reason']) ? sanitize_text_field(wp_unslash($_POST['reason'])) : '';
 
-    if ($id <= 0) {
-        wp_send_json_error(['message' => 'Invalid request ID.'], 400);
+    if (!$id) {
+        wp_send_json_error(['message' => 'Invalid id'], 400);
     }
 
     if (!in_array($decision, ['approve', 'reject'], true)) {
-        wp_send_json_error(['message' => 'Invalid decision.'], 400);
-    }
-
-    if ($decision === 'reject' && $reason === '') {
-        wp_send_json_error(['message' => 'Reason is required for rejection.'], 400);
+        wp_send_json_error(['message' => 'Invalid decision'], 400);
     }
 
     $request = vp_dx_get_onboarding_request($id);
     if (is_wp_error($request)) {
-        wp_send_json_error([
-            'message' => $request->get_error_message(),
-            'details' => $request->get_error_data(),
-        ], 500);
+        wp_send_json_error(['message' => $request->get_error_message(), 'details' => $request->get_error_data()], 500);
+    }
+
+    if (!isset($request['status'])) {
+        wp_send_json_error(['message' => 'Directus response missing status'], 500);
+    }
+
+    if (!in_array($request['status'], ['pending', 'needs_review'], true)) {
+        wp_send_json_error(['message' => 'Request already decided'], 409);
     }
 
     $current_user = wp_get_current_user();
+    if (!$current_user || !$current_user->exists()) {
+        wp_send_json_error(['message' => 'No current user'], 403);
+    }
 
     if ($decision === 'approve') {
         $result = vp_dx_approve_request($request, $current_user);
@@ -268,6 +280,7 @@ function vp_dx_approve_request($request, $current_user) {
         'item' => $patched['data'] ?? null,
         'user' => $user_result,
         'profile' => $profile_result,
+        'dry_run' => !empty($patched['meta']['dry_run']),
     ];
 }
 
@@ -282,6 +295,7 @@ function vp_dx_reject_request($request, $current_user, $reason) {
     return [
         'message' => sprintf('Request #%d rejected.', (int) $request['id']),
         'item' => $patched['data'] ?? null,
+        'dry_run' => !empty($patched['meta']['dry_run']),
     ];
 }
 
@@ -298,7 +312,7 @@ function vp_dx_build_audit_payload($status, $current_user, $reason) {
 
 function vp_dx_get_onboarding_request($id) {
     $response = vp_dx_request('GET', '/items/vp_onboarding_requests/' . absint($id), [
-        'fields' => 'id,email,phone,first_name,last_name,user_type,requested_tenant_slug,status,created_user_id,created_profile_id',
+        'fields' => 'id,email,phone,first_name,last_name,user_type,auto_approve_method,requested_tenant_slug,status,created_user_id,created_profile_id',
     ]);
 
     if (is_wp_error($response)) {
@@ -328,25 +342,21 @@ function vp_dx_get_or_create_user($request) {
         return $existing;
     }
 
-    if (!empty($existing['data'][0]['id'])) {
+    if (!empty($existing['data']) && is_array($existing['data']) && !empty($existing['data'][0]['id'])) {
+        $user_id = (string) $existing['data'][0]['id'];
         return [
-            'id' => $existing['data'][0]['id'],
+            'id' => $user_id,
             'created' => false,
         ];
     }
 
-    $role_id = vp_dx_get_role_id_for_user_type($request['user_type'] ?? '');
-    if (is_wp_error($role_id)) {
-        return $role_id;
-    }
-
+    $role = vp_dx_default_directus_role_id();
+    $password = wp_generate_password(24, true, true);
     $payload = [
         'email' => $email,
-        'password' => wp_generate_password(20, true, true),
+        'password' => $password,
+        'role' => $role,
         'status' => 'active',
-        'role' => $role_id,
-        'first_name' => sanitize_text_field($request['first_name'] ?? ''),
-        'last_name' => sanitize_text_field($request['last_name'] ?? ''),
     ];
 
     $created = vp_dx_request('POST', '/users', [], $payload);
@@ -355,121 +365,82 @@ function vp_dx_get_or_create_user($request) {
     }
 
     if (empty($created['data']['id'])) {
-        return new WP_Error('vp_user_create_invalid', 'Directus user create response is missing ID.', $created);
+        return new WP_Error('vp_user_create_failed', 'Directus user create did not return id.');
     }
 
     return [
-        'id' => $created['data']['id'],
+        'id' => (string) $created['data']['id'],
         'created' => true,
+        'password' => $password,
     ];
 }
 
-function vp_dx_get_or_create_profile($request, $directus_user_id) {
-    if (!empty($request['created_profile_id'])) {
-        return [
-            'id' => $request['created_profile_id'],
-            'created' => false,
-        ];
+function vp_dx_get_or_create_profile($request, $user_id) {
+    $user_id = (string) $user_id;
+    if ($user_id === '') {
+        return new WP_Error('vp_missing_user_id', 'Cannot create profile without user id.');
     }
 
-    $existing = vp_dx_request('GET', '/items/vp_user_profiles', [
-        'filter[user_id][_eq]' => $directus_user_id,
+    $existing = vp_dx_request('GET', '/items/vp_profiles', [
+        'filter[user_id][_eq]' => $user_id,
         'limit' => 1,
-        'fields' => 'id,user_id,user_type,phone',
+        'fields' => 'id,user_id',
     ]);
 
     if (is_wp_error($existing)) {
         return $existing;
     }
 
-    if (!empty($existing['data'][0]['id'])) {
+    if (!empty($existing['data']) && is_array($existing['data']) && !empty($existing['data'][0]['id'])) {
         return [
-            'id' => $existing['data'][0]['id'],
+            'id' => (string) $existing['data'][0]['id'],
             'created' => false,
         ];
     }
 
+    $first_name = isset($request['first_name']) ? sanitize_text_field($request['first_name']) : '';
+    $last_name = isset($request['last_name']) ? sanitize_text_field($request['last_name']) : '';
+    $phone = isset($request['phone']) ? sanitize_text_field($request['phone']) : '';
+    $user_type = isset($request['user_type']) ? sanitize_text_field($request['user_type']) : '';
+
     $payload = [
-        'user_id' => $directus_user_id,
-        'user_type' => sanitize_text_field($request['user_type'] ?? ''),
-        'phone' => sanitize_text_field($request['phone'] ?? ''),
-        'status' => 'active',
+        'user_id' => $user_id,
+        'first_name' => $first_name,
+        'last_name' => $last_name,
+        'phone' => $phone,
+        'user_type' => $user_type,
     ];
 
-    if (!empty($request['requested_tenant_slug'])) {
-        $payload['notes'] = 'Requested tenant: ' . sanitize_text_field($request['requested_tenant_slug']);
-    }
-
-    $created = vp_dx_request('POST', '/items/vp_user_profiles', [], $payload);
+    $created = vp_dx_request('POST', '/items/vp_profiles', [], $payload);
     if (is_wp_error($created)) {
         return $created;
     }
 
     if (empty($created['data']['id'])) {
-        return new WP_Error('vp_profile_create_invalid', 'Directus profile create response is missing ID.', $created);
+        return new WP_Error('vp_profile_create_failed', 'Directus profile create did not return id.');
     }
 
     return [
-        'id' => $created['data']['id'],
+        'id' => (string) $created['data']['id'],
         'created' => true,
     ];
 }
 
-function vp_dx_get_role_id_for_user_type($user_type) {
-    $user_type = sanitize_key($user_type);
-
-    $name_map = [
-        'dentist' => 'vp_dentist_doctor',
-        'doctor' => 'vp_dentist_doctor',
-        'clinic_admin' => 'vp_clinic_admin',
-        'car_owner' => 'vp_car_owner',
-        'auto_business' => 'vp_auto_business',
-        'location_admin' => 'vp_location_admin',
-        'content_partner' => 'vp_content_partner',
-    ];
-
-    $role_name = $name_map[$user_type] ?? null;
-    if (!$role_name) {
-        return new WP_Error('vp_role_map_missing', sprintf('No role mapping for user_type "%s".', $user_type));
-    }
-
-    $cache_key = 'vp_dx_roles_map_v1';
-    $roles_map = get_transient($cache_key);
-
-    if (!is_array($roles_map) || empty($roles_map)) {
-        $roles_response = vp_dx_request('GET', '/roles', [
-            'fields' => 'id,name',
-            'limit' => 200,
-        ]);
-
-        if (is_wp_error($roles_response)) {
-            return $roles_response;
-        }
-
-        $roles_map = [];
-        foreach (($roles_response['data'] ?? []) as $role) {
-            if (!empty($role['name']) && !empty($role['id'])) {
-                $roles_map[$role['name']] = $role['id'];
-            }
-        }
-
-        set_transient($cache_key, $roles_map, 10 * MINUTE_IN_SECONDS);
-    }
-
-    if (empty($roles_map[$role_name])) {
-        return new WP_Error('vp_role_not_found', sprintf('Directus role "%s" not found.', $role_name));
-    }
-
-    return $roles_map[$role_name];
+function vp_dx_default_directus_role_id() {
+    $role_id = getenv('VP_DIRECTUS_DEFAULT_ROLE_ID');
+    return $role_id ? trim($role_id) : '';
 }
 
 function vp_onboarding_admin_directus_base_url() {
-    $url = getenv('DIRECTUS_PUBLIC_URL');
-    if (!$url) {
-        $url = getenv('DIRECTUS_BASE_URL');
+    $base = getenv('DIRECTUS_BASE_URL');
+    if ($base) {
+        return rtrim(trim($base), '/');
     }
-
-    return $url ? rtrim($url, '/') : '';
+    $base = getenv('DIRECTUS_PUBLIC_URL');
+    if ($base) {
+        return rtrim(trim($base), '/');
+    }
+    return '';
 }
 
 function vp_onboarding_admin_directus_token() {
@@ -504,6 +475,9 @@ function vp_dx_request($method, $path, $query = [], $body = null) {
             ],
             'meta' => [
                 'dry_run' => true,
+                'method' => $method,
+                'path' => $path,
+                'payload' => $body,
             ],
         ];
     }
@@ -525,7 +499,7 @@ function vp_dx_request($method, $path, $query = [], $body = null) {
     $response = wp_remote_request($url, $args);
 
     if (is_wp_error($response)) {
-        error_log('VP Onboarding Admin Directus transport error: ' . $response->get_error_message());
+        error_log('VP Onboarding Admin Directus transport error: endpoint=' . $path . '; error=' . $response->get_error_message());
         return new WP_Error('vp_directus_transport_error', 'Directus request failed.', $response->get_error_data());
     }
 
@@ -538,10 +512,11 @@ function vp_dx_request($method, $path, $query = [], $body = null) {
     }
 
     if ($http_code < 200 || $http_code >= 300) {
-        error_log('VP Onboarding Admin Directus HTTP error [' . $http_code . '] ' . $method . ' ' . $path . ': ' . $raw_body);
+        $dx_message = vp_dx_extract_error_message($decoded, $raw_body);
+        error_log('VP Onboarding Admin Directus error: endpoint=' . $method . ' ' . $path . '; http_code=' . $http_code . '; message=' . $dx_message);
         return new WP_Error(
             'vp_directus_http_error',
-            'Directus returned an error while processing the request.',
+            'Directus returned an error while processing the request: ' . $dx_message,
             [
                 'http_code' => $http_code,
                 'body' => $decoded ?: $raw_body,
@@ -556,3 +531,20 @@ function vp_dx_request($method, $path, $query = [], $body = null) {
 function vp_onboarding_admin_directus_request($method, $path, $body = null, $query = []) {
     return vp_dx_request($method, $path, $query, $body);
 }
+
+function vp_dx_extract_error_message($decoded, $raw_body) {
+    if (is_array($decoded) && !empty($decoded['errors'][0]['message'])) {
+        return sanitize_text_field((string) $decoded['errors'][0]['message']);
+    }
+
+    if (is_array($decoded) && !empty($decoded['error']['message'])) {
+        return sanitize_text_field((string) $decoded['error']['message']);
+    }
+
+    if (is_string($raw_body) && $raw_body !== '') {
+        return sanitize_text_field(wp_strip_all_tags($raw_body));
+    }
+
+    return 'Unknown Directus error';
+}
+```

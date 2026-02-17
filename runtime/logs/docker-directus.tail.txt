@@ -1,20 +1,6 @@
 # cmd: docker logs --tail 32 vse_directus
-# time: 2026-02-17T12:06:48+00:00
+# time: 2026-02-17T12:34:28+00:00
 
-[13:34:00] HEAD / 302 1ms
-[13:34:21] GET / 302 5ms
-[13:34:32] HEAD / 302 1ms
-[13:34:38] HEAD / 302 1ms
-[13:34:50] GET / 302 1ms
-[13:34:51] GET / 302 1ms
-[13:36:48] GET /users/me?fields=id 304 17ms
-[13:37:24] GET /users/me?fields=id 304 13ms
-[13:44:02] GET /admin 200 2ms
-[13:44:02] GET /admin/assets/runtime-core.esm-bundler-C5MyH5Ph.js 200 8ms
-[13:44:02] GET /admin/assets/runtime-dom.esm-bundler-DoRdk9oh.js 200 8ms
-[13:44:02] GET /admin/assets/pinia.C_xFyXxM.entry.js 200 4ms
-[13:44:02] GET /admin/assets/index-ZGSrnW68.css 200 25ms
-[13:44:02] GET /admin/assets/index-DmchuNNN.js 200 23ms
 [13:44:02] GET /admin/assets/index.CKybLqFg.entry.js 200 103ms
 [13:44:02] GET /admin/assets/vue-router.hmDQfpqn.entry.js 200 2ms
 [13:44:02] GET /admin/assets/vue-i18n.CtBHPlhC.entry.js 200 4ms
@@ -33,3 +19,17 @@
 [13:59:54] GET /items/vp_onboarding_requests?fields=id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id&sort=-created_at&limit=20&offset=0&meta=filter_count&filter=%7B%22status%22:%7B%22_in%22:%5B%22pending%22,%22needs_review%22%5D%7D%7D 200 20ms
 [14:00:10] GET /items/vp_onboarding_requests?fields=id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id&sort=-created_at&limit=20&offset=0&meta=filter_count&filter=%7B%22status%22:%7B%22_in%22:%5B%22pending%22,%22needs_review%22%5D%7D%7D 200 26ms
 [14:00:26] GET /items/vp_onboarding_requests?fields=id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id&sort=-created_at&limit=20&offset=0&meta=filter_count&filter=%7B%22status%22:%7B%22_in%22:%5B%22pending%22,%22needs_review%22%5D%7D%7D 200 20ms
+[14:07:08] GET /users/me 200 28ms
+[14:07:08] GET /schema/snapshot 403 11ms
+[14:07:08] GET /collections 200 17ms
+[14:07:09] GET /fields 200 78ms
+[14:07:09] GET /relations 200 16ms
+[14:07:09] GET /roles 200 49ms
+[14:07:09] GET /permissions?limit=-1 403 11ms
+[14:07:09] GET /policies?limit=-1 403 10ms
+[14:07:09] GET /flows?limit=-1 200 10ms
+[14:07:09] GET /operations?limit=-1 403 7ms
+[14:07:09] GET /users/me 200 14ms
+[14:07:09] GET /server/health 200 12ms
+[14:08:25] GET /users/me?fields=id 304 10ms
+[14:08:29] GET /users/me?fields=id 304 9ms
