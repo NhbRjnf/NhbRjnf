@@ -12,81 +12,6 @@ docker/.env
 *.pem
 *.key
 
-# --- DOCKER RUNTIME / VOLUMES ---
-docker/volumes/*
-docker/volumes/**
-!docker/volumes/directus_extensions/
-!docker/volumes/directus_extensions/directus-extension-vp-qr-generator/
-!docker/volumes/directus_extensions/directus-extension-vp-qr-generator/**
-# allow keeping structure with placeholders (optional)
-!docker/volumes/**/.gitkeep
-
-# --- WORDPRESS VOLUME ---
-docker/volumes/wordpress/*
-!docker/volumes/wordpress/
-# ignore twentytwentyfour heavy assets (fonts/images/vendor)
-docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/
-
-
-# Разрешаем вход в wp-content
-!docker/volumes/wordpress/wp-content/
-docker/volumes/wordpress/wp-content/*
-!docker/volumes/wordpress/wp-content/mu-plugins/
-!docker/volumes/wordpress/wp-content/mu-plugins/**
-
-# Разрешаем вход в нужную тему
-!docker/volumes/wordpress/wp-content/themes/
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/
-# --- Allow custom theme overrides ---
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/header.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/footer.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-scan.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-instruction.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/instruction.css
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/functions.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.css
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.js
-!docker/volumes/wordpress/wp-content/mu-plugins/vp-dentist-cabinet.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-dentist-login.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-dentist.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/vp-dentist.css
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/vp-dentist.js
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/functions.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-login.php
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/theme.json"
-
-
-# Разрешаем assets
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/
-!docker/volumes/wordpress/wp-content/themes/twentytwentyfour/assets/**
-
-# PWA файлы (если лежат в корне wordpress volume)
-!docker/volumes/wordpress/manifest.json
-!docker/volumes/wordpress/service-worker.js
-
-# --- WORDPRESS RUNTIME ---
-docker/volumes/wordpress/wp-content/uploads/
-docker/volumes/wordpress/wp-content/cache/
-docker/volumes/wordpress/wp-config.php
-
-# PWA (если лежат в корне wordpress volume)
-!docker/volumes/wordpress/manifest.json
-!docker/volumes/wordpress/service-worker.js
-
-# --- WORDPRESS RUNTIME ---
-docker/volumes/wordpress/wp-content/uploads/
-docker/volumes/wordpress/wp-content/cache/
-docker/volumes/wordpress/wp-config.php
-
-# --- DIRECTUS ---
-docker/volumes/directus_uploads/
-# docker/volumes/directus_extensions/*
-
-# --- DATABASES ---
-docker/volumes/postgres/
-docker/volumes/mariadb/
-
 # --- LOGS ---
 logs/
 *.log
@@ -96,27 +21,55 @@ logs/
 *.swp
 *.swo
 
-# --- DOCUMENTATION / CODEX ---
-# markdown docs должны попадать в git
-# (ничего не игнорируем специально)
+# --- DATABASES (docker volumes) ---
+docker/volumes/postgres/
+docker/volumes/mariadb/
+
+# --- DOCKER RUNTIME / VOLUMES ---
+# По умолчанию игнорим все volumes
+docker/volumes/**
+# Но разрешаем код и конфиг, который реально правим и который нужен CODEX
+
+# --- DIRECTUS ---
+# Extensions (наш код) — в git
+!docker/volumes/directus_extensions/
+!docker/volumes/directus_extensions/**
+# Uploads (медиа) — не в git
+docker/volumes/directus_uploads/
+
+# --- WORDPRESS ---
+# Разрешаем структуру WP
+!docker/volumes/wordpress/
+!docker/volumes/wordpress/**
+
+# Но runtime штуки WP не коммитим:
+docker/volumes/wordpress/wp-content/uploads/
+docker/volumes/wordpress/wp-content/cache/
+docker/volumes/wordpress/wp-config.php
+
+# Разрешаем кодовую часть WP целиком (без перечисления файлов)
+!docker/volumes/wordpress/wp-content/
+!docker/volumes/wordpress/wp-content/mu-plugins/
+!docker/volumes/wordpress/wp-content/mu-plugins/**
+!docker/volumes/wordpress/wp-content/themes/
+!docker/volumes/wordpress/wp-content/themes/**
+!docker/volumes/wordpress/wp-content/plugins/
+!docker/volumes/wordpress/wp-content/plugins/**
+
+# PWA файлы (если лежат в корне wordpress volume)
+!docker/volumes/wordpress/manifest.json
+!docker/volumes/wordpress/service-worker.js
 
 # --- SECURITY ---
 SECURITY.md
 
 # --- RUNTIME LOG SNAPSHOTS (safe to commit) ---
-# по умолчанию runtime игнорим
 runtime/
-
-# ВАЖНО: чтобы разрешить вложенные файлы, нужно разигнорить сам runtime/
 !runtime/
-
-# разрешаем снапшоты
 !runtime/logs/
 !runtime/logs/**
 !runtime/directus/
 !runtime/directus/**
-
-# запрещаем реальные большие/сырые логи
 runtime/logs/*.raw
 runtime/logs/*.full
 runtime/logs/*.gz
