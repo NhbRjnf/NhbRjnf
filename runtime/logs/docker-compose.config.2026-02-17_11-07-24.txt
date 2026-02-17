@@ -1,5 +1,5 @@
 # cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose config
-# time: 2026-02-14T19:42:24+00:00
+# time: 2026-02-17T11:07:24+00:00
 
 name: docker
 services:
@@ -11,7 +11,7 @@ services:
         required: true
     environment:
       ADMIN_EMAIL: [REDACTED_EMAIL]
-      ADMIN_PASSWORD: '!!!LdfRjnf'
+      ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
       DB_CLIENT: pg
       DB_DATABASE: vseponyatno
       DB_HOST: postgres
@@ -19,8 +19,8 @@ services:
       DB_PORT: "5432"
       DB_USER: vse_user
       DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
-      DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
-      DIRECTUS_API_TOKEN: XBb93GNWfZ1qTCtI8QRyz8PSdVN2LVcz
+      DIRECTUS_ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
+      DIRECTUS_API_TOKEN: 9OcGSiPpgrzTVzWMj7QJ7J1BzePJ3fLm
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -33,6 +33,7 @@ services:
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       
       TZ: Europe/Riga
+      VP_SERVICE_USER_TOKEN: 9OcGSiPpgrzTVzWMj7QJ7J1BzePJ3fLm
       WP_DB_HOST: mariadb
       WP_DB_NAME: wp_vseponyatno
       WP_DB_PASSWORD: '!!!LdfRjnf'
@@ -60,8 +61,8 @@ services:
     container_name: vse_mariadb
     environment:
       DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
-      DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
-      DIRECTUS_API_TOKEN: XBb93GNWfZ1qTCtI8QRyz8PSdVN2LVcz
+      DIRECTUS_ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
+      DIRECTUS_API_TOKEN: 9OcGSiPpgrzTVzWMj7QJ7J1BzePJ3fLm
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -76,6 +77,7 @@ services:
       POSTGRES_USER: vse_user
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       TZ: Europe/Riga
+      VP_SERVICE_USER_TOKEN: 9OcGSiPpgrzTVzWMj7QJ7J1BzePJ3fLm
       WP_DB_HOST: mariadb
       WP_DB_NAME: wp_vseponyatno
       WP_DB_PASSWORD: '!!!LdfRjnf'
@@ -93,8 +95,8 @@ services:
     container_name: vse_postgres
     environment:
       DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
-      DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
-      DIRECTUS_API_TOKEN: XBb93GNWfZ1qTCtI8QRyz8PSdVN2LVcz
+      DIRECTUS_ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
+      DIRECTUS_API_TOKEN: 9OcGSiPpgrzTVzWMj7QJ7J1BzePJ3fLm
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -105,6 +107,7 @@ services:
       POSTGRES_USER: vse_user
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       TZ: Europe/Riga
+      VP_SERVICE_USER_TOKEN: 9OcGSiPpgrzTVzWMj7QJ7J1BzePJ3fLm
       WP_DB_HOST: mariadb
       WP_DB_NAME: wp_vseponyatno
       WP_DB_PASSWORD: '!!!LdfRjnf'
@@ -126,8 +129,8 @@ services:
         required: true
     environment:
       DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
-      DIRECTUS_ADMIN_PASSWORD: '!!!LdfRjnf'
-      DIRECTUS_API_TOKEN: XBb93GNWfZ1qTCtI8QRyz8PSdVN2LVcz
+      DIRECTUS_ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
+      DIRECTUS_API_TOKEN: 9OcGSiPpgrzTVzWMj7QJ7J1BzePJ3fLm
       DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
       DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
@@ -138,6 +141,7 @@ services:
       POSTGRES_USER: vse_user
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       TZ: Europe/Riga
+      VP_SERVICE_USER_TOKEN: 9OcGSiPpgrzTVzWMj7QJ7J1BzePJ3fLm
       WORDPRESS_DB_HOST: mariadb
       WORDPRESS_DB_NAME: wp_vseponyatno
       WORDPRESS_DB_PASSWORD: '!!!LdfRjnf'

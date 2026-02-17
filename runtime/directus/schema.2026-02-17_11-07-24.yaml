@@ -2,6 +2,30 @@ version: 1
 directus: 11.15.2
 vendor: postgres
 collections:
+  - collection: directus_sync_id_map
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: directus_sync_id_map
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: null
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: directus_sync_id_map
   - collection: instruction_assets
     meta:
       accountability: all
@@ -146,6 +170,30 @@ collections:
       versioning: false
     schema:
       name: vp_3d_scenes
+  - collection: vp_allowlist_domains
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: is_active
+      archive_value: 'false'
+      collapse: open
+      collection: vp_allowlist_domains
+      color: null
+      display_template: '{{domain}}'
+      group: null
+      hidden: false
+      icon: domain
+      item_duplication_fields: null
+      note: Allowlist email domains for auto-approve onboarding
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: sort
+      translations: null
+      unarchive_value: 'true'
+      versioning: false
+    schema:
+      name: vp_allowlist_domains
   - collection: vp_cards
     meta:
       accountability: all
@@ -3202,6 +3250,286 @@ fields:
       has_auto_increment: false
       foreign_key_table: vp_case_scans
       foreign_key_column: id
+  - collection: vp_allowlist_domains
+    field: id
+    type: integer
+    meta:
+      collection: vp_allowlist_domains
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: vp_allowlist_domains
+      data_type: integer
+      default_value: nextval('vp_allowlist_domains_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_allowlist_domains
+    field: domain
+    type: string
+    meta:
+      collection: vp_allowlist_domains
+      conditions: null
+      display: null
+      display_options: null
+      field: domain
+      group: null
+      hidden: false
+      interface: input
+      note: 'Example: clinic.com (без @)'
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: domain
+      table: vp_allowlist_domains
+      data_type: character varying
+      default_value: null
+      max_length: 190
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_allowlist_domains
+    field: is_active
+    type: boolean
+    meta:
+      collection: vp_allowlist_domains
+      conditions: null
+      display: null
+      display_options: null
+      field: is_active
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_active
+      table: vp_allowlist_domains
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_allowlist_domains
+    field: auto_approve_method
+    type: string
+    meta:
+      collection: vp_allowlist_domains
+      conditions: null
+      display: null
+      display_options: null
+      field: auto_approve_method
+      group: null
+      hidden: false
+      interface: input
+      note: Для аудита/отладки, обычно 'allowlist'
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: auto_approve_method
+      table: vp_allowlist_domains
+      data_type: character varying
+      default_value: allowlist
+      max_length: 50
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_allowlist_domains
+    field: notes
+    type: text
+    meta:
+      collection: vp_allowlist_domains
+      conditions: null
+      display: null
+      display_options: null
+      field: notes
+      group: null
+      hidden: false
+      interface: textarea
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: notes
+      table: vp_allowlist_domains
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_allowlist_domains
+    field: sort
+    type: integer
+    meta:
+      collection: vp_allowlist_domains
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: sort
+      table: vp_allowlist_domains
+      data_type: integer
+      default_value: 1
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_allowlist_domains
+    field: created_at
+    type: timestamp
+    meta:
+      collection: vp_allowlist_domains
+      conditions: null
+      display: null
+      display_options: null
+      field: created_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: created_at
+      table: vp_allowlist_domains
+      data_type: timestamp with time zone
+      default_value: CURRENT_TIMESTAMP
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: vp_cards
     field: id
     type: integer
@@ -6295,6 +6623,166 @@ fields:
       data_type: timestamp with time zone
       default_value: CURRENT_TIMESTAMP
       max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_onboarding_requests
+    field: reviewed_at
+    type: dateTime
+    meta:
+      collection: vp_onboarding_requests
+      conditions: null
+      display: null
+      display_options: null
+      field: reviewed_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 202
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: reviewed_at
+      table: vp_onboarding_requests
+      data_type: timestamp without time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_onboarding_requests
+    field: reviewed_by_email
+    type: string
+    meta:
+      collection: vp_onboarding_requests
+      conditions: null
+      display: null
+      display_options: null
+      field: reviewed_by_email
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 61
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: reviewed_by_email
+      table: vp_onboarding_requests
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_onboarding_requests
+    field: reviewed_by_wp_id
+    type: integer
+    meta:
+      collection: vp_onboarding_requests
+      conditions: null
+      display: null
+      display_options: null
+      field: reviewed_by_wp_id
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 62
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: reviewed_by_wp_id
+      table: vp_onboarding_requests
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_onboarding_requests
+    field: reviewed_by_wp_login
+    type: string
+    meta:
+      collection: vp_onboarding_requests
+      conditions: null
+      display: null
+      display_options: null
+      field: reviewed_by_wp_login
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 63
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: reviewed_by_wp_login
+      table: vp_onboarding_requests
+      data_type: character varying
+      default_value: null
+      max_length: 255
       numeric_precision: null
       numeric_scale: null
       is_nullable: true

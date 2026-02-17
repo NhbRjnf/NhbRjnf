@@ -1,0 +1,16 @@
+# time: 2026-02-17T11:07:43+00:00
+# url: https://directus.xn--b1awacccnl0jqa.xn--p1ai/users/me
+
+HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)
+Date: Tue, 17 Feb 2026 11:07:44 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 456
+Connection: keep-alive
+Content-Security-Policy: script-src 'self' 'unsafe-eval';worker-src 'self' blob:;child-src 'self' blob:;img-src 'self' data: blob: https://raw.githubusercontent.com https://avatars.githubusercontent.com;media-src 'self';connect-src 'self' https://* wss://*;default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';object-src 'none';script-src-attr 'none';style-src 'self' https: 'unsafe-inline'
+X-Powered-By: Directus
+Cache-Control: no-cache
+Vary: Origin, Cache-Control
+ETag: W/"1c8-8MAzoNeXcRzzPe8+NYFsUKPbHMA"
+
+{"data":{"id":"1c40d2d0-0aa6-45db-8379-c3c91709b9ec","email":"[REDACTED_EMAIL]","role":"893a1b06-02e1-4327-a1a9-fce9c380863b","status":"active","first_name":"api_public","last_name":null,"last_page":"/users/1c40d2d0-0aa6-45db-8379-c3c91709b9ec","password":"**********","location":null,"title":null,"description":null,"tags":null,"provider":"default","avatar":null,"language":null,"appearance":null,"theme_light":null,"theme_dark":null,"tfa_secret":null}}
