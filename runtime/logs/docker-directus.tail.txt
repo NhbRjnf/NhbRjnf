@@ -1,0 +1,35 @@
+# cmd: docker logs --tail 32 vse_directus
+# time: 2026-02-17T12:06:48+00:00
+
+[13:34:00] HEAD / 302 1ms
+[13:34:21] GET / 302 5ms
+[13:34:32] HEAD / 302 1ms
+[13:34:38] HEAD / 302 1ms
+[13:34:50] GET / 302 1ms
+[13:34:51] GET / 302 1ms
+[13:36:48] GET /users/me?fields=id 304 17ms
+[13:37:24] GET /users/me?fields=id 304 13ms
+[13:44:02] GET /admin 200 2ms
+[13:44:02] GET /admin/assets/runtime-core.esm-bundler-C5MyH5Ph.js 200 8ms
+[13:44:02] GET /admin/assets/runtime-dom.esm-bundler-DoRdk9oh.js 200 8ms
+[13:44:02] GET /admin/assets/pinia.C_xFyXxM.entry.js 200 4ms
+[13:44:02] GET /admin/assets/index-ZGSrnW68.css 200 25ms
+[13:44:02] GET /admin/assets/index-DmchuNNN.js 200 23ms
+[13:44:02] GET /admin/assets/index.CKybLqFg.entry.js 200 103ms
+[13:44:02] GET /admin/assets/vue-router.hmDQfpqn.entry.js 200 2ms
+[13:44:02] GET /admin/assets/vue-i18n.CtBHPlhC.entry.js 200 4ms
+[13:44:04] GET /extensions/sources/index.js 200 15ms
+[13:44:04] GET /admin/assets/vue.yd4bVuvr.entry.js 200 3ms
+[13:44:04] GET /admin/assets/@directus_extensions-sdk.B9CMmLpD.entry.js 200 3ms
+[13:44:04] POST /auth/refresh 400 8ms
+[13:44:04] GET /auth?sessionOnly 200 7ms
+[13:44:04] GET /server/info 200 14ms
+[13:44:05] GET /admin/assets/Inter-Medium-IZr8HYrM.woff2 200 4ms
+[13:44:05] GET /admin/assets/Inter-Bold-d8J9BkrN.woff2 200 6ms
+[13:44:05] GET /admin/assets/Inter-SemiBold-1vGiIFm-.woff2 200 15ms
+[13:44:05] GET /admin/assets/material-symbols-ClwuWZXz.woff2?v=2 200 19ms
+[13:59:41] GET /items/vp_onboarding_requests?fields=id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id&sort=-created_at&limit=20&offset=0&meta=filter_count&filter=%7B%22status%22:%7B%22_in%22:%5B%22pending%22,%22needs_review%22%5D%7D%7D 200 24ms
+[13:59:47] GET /items/vp_onboarding_requests?fields=id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id&sort=-created_at&limit=20&offset=0&meta=filter_count&filter=%7B%22status%22:%7B%22_in%22:%5B%22pending%22,%22needs_review%22%5D%7D%7D 200 22ms
+[13:59:54] GET /items/vp_onboarding_requests?fields=id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id&sort=-created_at&limit=20&offset=0&meta=filter_count&filter=%7B%22status%22:%7B%22_in%22:%5B%22pending%22,%22needs_review%22%5D%7D%7D 200 20ms
+[14:00:10] GET /items/vp_onboarding_requests?fields=id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id&sort=-created_at&limit=20&offset=0&meta=filter_count&filter=%7B%22status%22:%7B%22_in%22:%5B%22pending%22,%22needs_review%22%5D%7D%7D 200 26ms
+[14:00:26] GET /items/vp_onboarding_requests?fields=id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,created_user_id,created_profile_id&sort=-created_at&limit=20&offset=0&meta=filter_count&filter=%7B%22status%22:%7B%22_in%22:%5B%22pending%22,%22needs_review%22%5D%7D%7D 200 20ms
