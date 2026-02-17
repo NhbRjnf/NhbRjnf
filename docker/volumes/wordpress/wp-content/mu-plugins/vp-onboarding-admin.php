@@ -38,8 +38,8 @@ function vp_onboarding_admin_enqueue_assets($hook) {
     $dir = WP_CONTENT_DIR . '/mu-plugins';
     $css_path = $dir . '/vp-onboarding-admin.css';
     $js_path = $dir . '/vp-onboarding-admin.js';
-    $css_ver = file_exists($css_path) ? (string) filemtime($css_path) : '1.1.0';
-    $js_ver = file_exists($js_path) ? (string) filemtime($js_path) : '1.1.0';
+    $css_ver = file_exists($css_path) ? (string) filemtime($css_path) : '1.2.0';
+    $js_ver = file_exists($js_path) ? (string) filemtime($js_path) : '1.2.0';
 
     wp_enqueue_style(
         'vp-onboarding-admin',
@@ -57,11 +57,11 @@ function vp_onboarding_admin_enqueue_assets($hook) {
     );
 
     wp_localize_script('vp-onboarding-admin', 'VPOnboardingAdmin', [
-        'ajaxUrl'      => admin_url('admin-ajax.php'),
-        'nonce'        => wp_create_nonce('vp_onboarding_admin_nonce'),
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('vp_onboarding_admin_nonce'),
         'defaultLimit' => 20,
         'assetVersion' => $js_ver,
-        'isDryRun'     => vp_dx_dry_run_enabled(),
+        'isDryRun' => vp_dx_dry_run_enabled(),
     ]);
 }
 
@@ -71,61 +71,82 @@ function vp_onboarding_admin_render_page() {
     }
     ?>
     <div class="wrap vp-onboarding-admin">
-        <h1>VP Onboarding</h1>
+        <h1 class="wp-heading-inline">VP Onboarding</h1>
+        <p class="description">Модерация onboarding-заявок из Directus.</p>
 
-        <div id="vp-onboarding-notice" class="notice" style="display:none;"></div>
+        <div id="vp-onboarding-notice" aria-live="polite" aria-atomic="true"></div>
 
-        <div class="vp-onboarding-filters">
-            <label>
-                Status
-                <select id="vp-status-filter" multiple size="4">
+        <section class="vp-onboarding-toolbar" aria-label="Фильтры заявок">
+            <label class="vp-filter-control" for="vp-status-filter">
+                <span class="vp-filter-label">Status</span>
+                <select id="vp-status-filter">
+                    <option value="">Все</option>
                     <option value="pending" selected>pending</option>
-                    <option value="needs_review" selected>needs_review</option>
+                    <option value="needs_review">needs_review</option>
                     <option value="approved">approved</option>
                     <option value="rejected">rejected</option>
                 </select>
             </label>
 
-            <label>
-                User type
-                <input type="text" id="vp-user-type-filter" placeholder="e.g. dentist">
+            <label class="vp-filter-control" for="vp-user-type-filter">
+                <span class="vp-filter-label">User type</span>
+                <input type="text" id="vp-user-type-filter" placeholder="например, dentist" autocomplete="off">
             </label>
 
-            <label>
-                Search email/phone
-                <input type="text" id="vp-search-filter" placeholder="email or phone">
+            <label class="vp-filter-control vp-filter-control--search" for="vp-search-filter">
+                <span class="vp-filter-label">Search</span>
+                <input type="search" id="vp-search-filter" placeholder="email, phone, name" autocomplete="off">
             </label>
 
-            <button class="button button-primary" id="vp-apply-filters">Apply filters</button>
+            <label class="vp-filter-control" for="vp-limit-select">
+                <span class="vp-filter-label">Rows per page</span>
+                <select id="vp-limit-select">
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </label>
+
+            <div class="vp-filter-actions">
+                <button class="button" id="vp-reset-filters" type="button">Сбросить</button>
+            </div>
+        </section>
+
+        <div class="vp-table-shell">
+            <div class="vp-table-loading" id="vp-table-loading" hidden>
+                <span class="spinner is-active"></span>
+                <span>Загрузка заявок…</span>
+            </div>
+
+            <table class="widefat striped" id="vp-onboarding-table">
+                <thead>
+                <tr>
+                    <th>Created</th>
+                    <th>Status</th>
+                    <th>User type</th>
+                    <th>Full name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Auto-approve</th>
+                    <th>Reviewed</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="9">Загрузка…</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-
-        <table class="widefat striped" id="vp-onboarding-table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Created</th>
-                <th>Status</th>
-                <th>User type</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Name</th>
-                <th>Reason</th>
-                <th>Reviewed</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td colspan="10">Loading...</td>
-            </tr>
-            </tbody>
-        </table>
 
         <div class="vp-onboarding-pagination">
-            <button class="button" id="vp-prev-page" disabled>Previous</button>
-            <span id="vp-page-info">Page 1</span>
-            <button class="button" id="vp-next-page">Next</button>
+            <button class="button" id="vp-prev-page" disabled type="button">Prev</button>
+            <span id="vp-page-info">Показано 0–0 из 0</span>
+            <button class="button" id="vp-next-page" disabled type="button">Next</button>
         </div>
+
+        <div id="vp-modal-root" class="vp-modal-root" hidden></div>
     </div>
     <?php
 }
@@ -134,20 +155,17 @@ function vp_onboarding_admin_ajax_fetch_requests() {
     vp_onboarding_admin_require_permissions();
     check_ajax_referer('vp_onboarding_admin_nonce', 'nonce');
 
-    $statuses = isset($_POST['statuses']) ? (array) wp_unslash($_POST['statuses']) : ['pending', 'needs_review'];
-    $statuses = array_values(array_filter(array_map('sanitize_text_field', $statuses)));
-    if (empty($statuses)) {
-        $statuses = ['pending', 'needs_review'];
-    }
-
+    $status = isset($_POST['status']) ? sanitize_text_field(wp_unslash($_POST['status'])) : '';
     $user_type = isset($_POST['user_type']) ? sanitize_text_field(wp_unslash($_POST['user_type'])) : '';
     $search = isset($_POST['search']) ? sanitize_text_field(wp_unslash($_POST['search'])) : '';
     $limit = isset($_POST['limit']) ? max(1, min(100, absint($_POST['limit']))) : 20;
     $offset = isset($_POST['offset']) ? max(0, absint($_POST['offset'])) : 0;
 
-    $filter = [
-        'status' => ['_in' => $statuses],
-    ];
+    $filter = [];
+
+    if ($status !== '') {
+        $filter['status'] = ['_eq' => $status];
+    }
 
     if ($user_type !== '') {
         $filter['user_type'] = ['_eq' => $user_type];
@@ -157,6 +175,8 @@ function vp_onboarding_admin_ajax_fetch_requests() {
         $filter['_or'] = [
             ['email' => ['_icontains' => $search]],
             ['phone' => ['_icontains' => $search]],
+            ['first_name' => ['_icontains' => $search]],
+            ['last_name' => ['_icontains' => $search]],
         ];
     }
 
@@ -166,8 +186,11 @@ function vp_onboarding_admin_ajax_fetch_requests() {
         'limit' => $limit,
         'offset' => $offset,
         'meta' => 'filter_count',
-        'filter' => wp_json_encode($filter),
     ];
+
+    if (!empty($filter)) {
+        $query['filter'] = wp_json_encode($filter);
+    }
 
     $response = vp_dx_request('GET', '/items/vp_onboarding_requests', $query);
     if (is_wp_error($response)) {
@@ -232,7 +255,9 @@ function vp_onboarding_admin_ajax_decide_request() {
         ], 500);
     }
 
-    wp_send_json_success($result);
+    wp_send_json_success([
+        'result' => $result,
+    ]);
 }
 
 function vp_onboarding_admin_require_permissions() {
@@ -546,4 +571,3 @@ function vp_dx_extract_error_message($decoded, $raw_body) {
 
     return 'Unknown Directus error';
 }
-
