@@ -1,4 +1,3 @@
-```php
 <?php
 /**
  * Plugin Name: VP Onboarding Admin
@@ -547,4 +546,4 @@ function vp_dx_extract_error_message($decoded, $raw_body) {
 
     return 'Unknown Directus error';
 }
-```
+
