@@ -1,179 +1,301 @@
 <?php
 /**
- * MU Plugin: VP Onboarding Admin (Direct REST to Directus)
+ * Plugin Name: VP Onboarding Admin
+ * Description: WP admin moderation UI for Directus onboarding requests.
  */
 
-if (!defined('ABSPATH')) exit;
-
-add_action('rest_api_init', function () {
-
-  register_rest_route('vp/v1', '/admin/onboarding', [
-    'methods'  => 'GET',
-    'permission_callback' => function () {
-      return is_user_logged_in() && current_user_can('manage_options');
-    },
-    'callback' => 'vp_onboarding_admin_list',
-  ]);
-
-  register_rest_route('vp/v1', '/admin/onboarding/(?P<id>\d+)/approve', [
-    'methods'  => 'POST',
-    'permission_callback' => function () {
-      return is_user_logged_in() && current_user_can('manage_options');
-    },
-    'callback' => 'vp_onboarding_admin_approve',
-  ]);
-
-  register_rest_route('vp/v1', '/admin/onboarding/(?P<id>\d+)/reject', [
-    'methods'  => 'POST',
-    'permission_callback' => function () {
-      return is_user_logged_in() && current_user_can('manage_options');
-    },
-    'callback' => 'vp_onboarding_admin_reject',
-  ]);
-});
-
-/** ===== Directus HTTP helper ===== */
-function vp_directus_base_url() {
-  // ≈сли у теб€ уже есть общий способ (env/константа) Ч подставь сюда.
-  return 'https://directus.xn--b1awacccnl0jqa.xn--p1ai';
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-function vp_directus_service_token() {
-  // Ћучше хранить в wp-config.php или env, но пока можно так же как у вас в vp-login.php сделано.
-  // ≈сли в проекте уже есть константа/опци€ Ч используй еЄ.
-  $token = getenv('DIRECTUS_TOKEN');
-  if ($token) return $token;
+add_action('admin_menu', 'vp_onboarding_admin_register_menu');
+add_action('admin_enqueue_scripts', 'vp_onboarding_admin_enqueue_assets');
+add_action('wp_ajax_vp_onboarding_fetch_requests', 'vp_onboarding_admin_ajax_fetch_requests');
+add_action('wp_ajax_vp_onboarding_decide_request', 'vp_onboarding_admin_ajax_decide_request');
 
-  // FALLBACK: можно временно хранить в опции WP (потом перенести)
-  $opt = get_option('vp_directus_service_token');
-  return $opt ?: '';
-}
-
-function vp_directus_request($method, $path, $body = null, $query = []) {
-  $base = rtrim(vp_directus_base_url(), '/');
-  $url  = $base . $path;
-
-  if (!empty($query)) {
-    $url .= (strpos($url, '?') === false ? '?' : '&') . http_build_query($query);
-  }
-
-  $token = vp_directus_service_token();
-  if (!$token) {
-    return new WP_Error('vp_no_directus_token', 'Directus token is missing', ['status' => 500]);
-  }
-
-  $args = [
-    'method'  => $method,
-    'timeout' => 25,
-    'headers' => [
-      'Authorization' => 'Bearer ' . $token,
-      'Content-Type'  => 'application/json',
-      'Accept'        => 'application/json',
-    ],
-  ];
-
-  if ($body !== null) {
-    $args['body'] = wp_json_encode($body);
-  }
-
-  $res = wp_remote_request($url, $args);
-  if (is_wp_error($res)) return $res;
-
-  $code = wp_remote_retrieve_response_code($res);
-  $raw  = wp_remote_retrieve_body($res);
-
-  $json = null;
-  if (is_string($raw) && $raw !== '') {
-    $json = json_decode($raw, true);
-  }
-
-  if ($code < 200 || $code >= 300) {
-    return new WP_Error(
-      'vp_directus_http_' . $code,
-      'Directus request failed',
-      ['status' => 502, 'http_code' => $code, 'response' => $json ?: $raw]
+function vp_onboarding_admin_register_menu() {
+    add_menu_page(
+        'VP Onboarding',
+        'VP Onboarding',
+        'manage_options',
+        'vp-onboarding-admin',
+        'vp_onboarding_admin_render_page',
+        'dashicons-yes-alt',
+        58
     );
-  }
-
-  return $json ?: [];
 }
 
-/** ===== Endpoints ===== */
+function vp_onboarding_admin_enqueue_assets($hook) {
+    if ($hook !== 'toplevel_page_vp-onboarding-admin') {
+        return;
+    }
 
-function vp_onboarding_admin_list(WP_REST_Request $req) {
-  $status = $req->get_param('status') ?: 'pending';
-  $limit  = intval($req->get_param('limit') ?: 50);
+    if (!current_user_can('manage_options')) {
+        return;
+    }
 
-  $query = [
-    'limit' => $limit,
-    'sort'  => '-created_at',
-    'fields'=> 'id,email,phone,first_name,last_name,user_type,status,auto_approve_method,invite_code,created_at,updated_at,reviewed_at,decision_reason,reviewed_by,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login',
-    'filter[status][_eq]' => $status,
-  ];
+    $base = content_url('mu-plugins');
 
-  $data = vp_directus_request('GET', '/items/vp_onboarding_requests', null, $query);
-  if (is_wp_error($data)) return $data;
+    wp_enqueue_style(
+        'vp-onboarding-admin',
+        $base . '/vp-onboarding-admin.css',
+        [],
+        '1.0.0'
+    );
 
-  return rest_ensure_response($data);
+    wp_enqueue_script(
+        'vp-onboarding-admin',
+        $base . '/vp-onboarding-admin.js',
+        [],
+        '1.0.0',
+        true
+    );
+
+    wp_localize_script('vp-onboarding-admin', 'VPOnboardingAdmin', [
+        'ajaxUrl'      => admin_url('admin-ajax.php'),
+        'nonce'        => wp_create_nonce('vp_onboarding_admin_nonce'),
+        'defaultLimit' => 20,
+    ]);
 }
 
-function vp_onboarding_admin_approve(WP_REST_Request $req) {
-  $id = intval($req['id']);
-  $user = wp_get_current_user();
+function vp_onboarding_admin_render_page() {
+    if (!current_user_can('manage_options')) {
+        wp_die(esc_html__('You do not have permission to access this page.', 'default'));
+    }
+    ?>
+    <div class="wrap vp-onboarding-admin">
+        <h1>VP Onboarding</h1>
 
-  $patch = [
-    'status'              => 'approved',
-    'reviewed_at'         => gmdate('c'),
-    'updated_at'          => gmdate('c'),
-    'decision_reason'     => null,
-    // reviewed_by оставл€ем как есть (uuid directus_users) Ч WP его не знает
-    'reviewed_by_email'   => $user->user_email,
-    'reviewed_by_wp_id'   => $user->ID,
-    'reviewed_by_wp_login'=> $user->user_login,
-  ];
+        <div id="vp-onboarding-notice" class="notice" style="display:none;"></div>
 
-  // ¬ажно: чтобы не одобр€ть повторно Ч можно сначала прочитать и проверить status
-  $current = vp_directus_request('GET', "/items/vp_onboarding_requests/$id", null, ['fields' => 'id,status']);
-  if (is_wp_error($current)) return $current;
+        <div class="vp-onboarding-filters">
+            <label>
+                Status
+                <select id="vp-status-filter" multiple size="4">
+                    <option value="pending" selected>pending</option>
+                    <option value="needs_review" selected>needs_review</option>
+                    <option value="approved">approved</option>
+                    <option value="rejected">rejected</option>
+                </select>
+            </label>
 
-  $curStatus = $current['data']['status'] ?? null;
-  if ($curStatus !== 'pending') {
-    return new WP_Error('vp_not_pending', 'Request is not pending', ['status' => 409, 'current_status' => $curStatus]);
-  }
+            <label>
+                User type
+                <input type="text" id="vp-user-type-filter" placeholder="e.g. dentist">
+            </label>
 
-  $res = vp_directus_request('PATCH', "/items/vp_onboarding_requests/$id", $patch);
-  if (is_wp_error($res)) return $res;
+            <label>
+                Search email/phone
+                <input type="text" id="vp-search-filter" placeholder="email or phone">
+            </label>
 
-  return rest_ensure_response($res);
+            <button class="button button-primary" id="vp-apply-filters">Apply filters</button>
+        </div>
+
+        <table class="widefat striped" id="vp-onboarding-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Created</th>
+                <th>Status</th>
+                <th>User type</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Name</th>
+                <th>Reason</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="9">Loading...</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="vp-onboarding-pagination">
+            <button class="button" id="vp-prev-page" disabled>Previous</button>
+            <span id="vp-page-info">Page 1</span>
+            <button class="button" id="vp-next-page">Next</button>
+        </div>
+    </div>
+    <?php
 }
 
-function vp_onboarding_admin_reject(WP_REST_Request $req) {
-  $id = intval($req['id']);
-  $user = wp_get_current_user();
+function vp_onboarding_admin_ajax_fetch_requests() {
+    vp_onboarding_admin_require_permissions();
+    check_ajax_referer('vp_onboarding_admin_nonce', 'nonce');
 
-  $reason = $req->get_json_params()['decision_reason'] ?? null;
-  if (!$reason) $reason = 'rejected';
+    $statuses = isset($_POST['statuses']) ? (array) wp_unslash($_POST['statuses']) : ['pending', 'needs_review'];
+    $statuses = array_values(array_filter(array_map('sanitize_text_field', $statuses)));
+    if (empty($statuses)) {
+        $statuses = ['pending', 'needs_review'];
+    }
 
-  $patch = [
-    'status'              => 'rejected',
-    'reviewed_at'         => gmdate('c'),
-    'updated_at'          => gmdate('c'),
-    'decision_reason'     => $reason,
-    'reviewed_by_email'   => $user->user_email,
-    'reviewed_by_wp_id'   => $user->ID,
-    'reviewed_by_wp_login'=> $user->user_login,
-  ];
+    $user_type = isset($_POST['user_type']) ? sanitize_text_field(wp_unslash($_POST['user_type'])) : '';
+    $search = isset($_POST['search']) ? sanitize_text_field(wp_unslash($_POST['search'])) : '';
+    $limit = isset($_POST['limit']) ? max(1, min(100, absint($_POST['limit']))) : 20;
+    $offset = isset($_POST['offset']) ? max(0, absint($_POST['offset'])) : 0;
 
-  $current = vp_directus_request('GET', "/items/vp_onboarding_requests/$id", null, ['fields' => 'id,status']);
-  if (is_wp_error($current)) return $current;
+    $filter = [
+        'status' => ['_in' => $statuses],
+    ];
 
-  $curStatus = $current['data']['status'] ?? null;
-  if ($curStatus !== 'pending') {
-    return new WP_Error('vp_not_pending', 'Request is not pending', ['status' => 409, 'current_status' => $curStatus]);
-  }
+    if ($user_type !== '') {
+        $filter['user_type'] = ['_eq' => $user_type];
+    }
 
-  $res = vp_directus_request('PATCH', "/items/vp_onboarding_requests/$id", $patch);
-  if (is_wp_error($res)) return $res;
+    if ($search !== '') {
+        $filter['_or'] = [
+            ['email' => ['_icontains' => $search]],
+            ['phone' => ['_icontains' => $search]],
+        ];
+    }
 
-  return rest_ensure_response($res);
+    $query = [
+        'fields' => 'id,email,phone,first_name,last_name,user_type,status,created_at,reviewed_at,decision_reason,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login',
+        'sort' => '-created_at',
+        'limit' => $limit,
+        'offset' => $offset,
+        'meta' => 'filter_count',
+        'filter' => wp_json_encode($filter),
+    ];
+
+    $response = vp_onboarding_admin_directus_request('GET', '/items/vp_onboarding_requests', null, $query);
+    if (is_wp_error($response)) {
+        wp_send_json_error([
+            'message' => $response->get_error_message(),
+            'details' => $response->get_error_data(),
+        ], 500);
+    }
+
+    wp_send_json_success([
+        'rows' => isset($response['data']) && is_array($response['data']) ? $response['data'] : [],
+        'filter_count' => isset($response['meta']['filter_count']) ? (int) $response['meta']['filter_count'] : 0,
+        'limit' => $limit,
+        'offset' => $offset,
+    ]);
+}
+
+function vp_onboarding_admin_ajax_decide_request() {
+    vp_onboarding_admin_require_permissions();
+    check_ajax_referer('vp_onboarding_admin_nonce', 'nonce');
+
+    $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
+    $decision = isset($_POST['decision']) ? sanitize_text_field(wp_unslash($_POST['decision'])) : '';
+    $reason = isset($_POST['reason']) ? sanitize_text_field(wp_unslash($_POST['reason'])) : '';
+
+    if ($id <= 0) {
+        wp_send_json_error(['message' => 'Invalid request ID.'], 400);
+    }
+
+    if (!in_array($decision, ['approve', 'reject'], true)) {
+        wp_send_json_error(['message' => 'Invalid decision.'], 400);
+    }
+
+    if ($decision === 'reject' && $reason === '') {
+        wp_send_json_error(['message' => 'Reason is required for rejection.'], 400);
+    }
+
+    $current_user = wp_get_current_user();
+    $payload = [
+        'status' => $decision === 'approve' ? 'approved' : 'rejected',
+        'reviewed_at' => gmdate('c'),
+        'reviewed_by_email' => $current_user->user_email,
+        'reviewed_by_wp_id' => (int) $current_user->ID,
+        'reviewed_by_wp_login' => $current_user->user_login,
+        'decision_reason' => $decision === 'approve' ? null : $reason,
+    ];
+
+    $response = vp_onboarding_admin_directus_request('PATCH', '/items/vp_onboarding_requests/' . $id, $payload);
+    if (is_wp_error($response)) {
+        wp_send_json_error([
+            'message' => $response->get_error_message(),
+            'details' => $response->get_error_data(),
+        ], 500);
+    }
+
+    wp_send_json_success([
+        'message' => sprintf('Request #%d %s.', $id, $decision === 'approve' ? 'approved' : 'rejected'),
+        'item' => $response['data'] ?? null,
+    ]);
+}
+
+function vp_onboarding_admin_require_permissions() {
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'Forbidden'], 403);
+    }
+}
+
+function vp_onboarding_admin_directus_base_url() {
+    $url = getenv('DIRECTUS_PUBLIC_URL');
+    if (!$url) {
+        $url = getenv('DIRECTUS_BASE_URL');
+    }
+
+    return $url ? rtrim($url, '/') : '';
+}
+
+function vp_onboarding_admin_directus_token() {
+    $token = getenv('VP_SERVICE_USER_TOKEN');
+    return $token ? trim($token) : '';
+}
+
+function vp_onboarding_admin_directus_request($method, $path, $body = null, $query = []) {
+    $base_url = vp_onboarding_admin_directus_base_url();
+    $token = vp_onboarding_admin_directus_token();
+
+    if ($base_url === '' || $token === '') {
+        error_log('VP Onboarding Admin: Directus env is missing. DIRECTUS_PUBLIC_URL/DIRECTUS_BASE_URL or VP_SERVICE_USER_TOKEN not set.');
+        return new WP_Error('vp_directus_env_missing', 'Directus configuration is missing.');
+    }
+
+    $url = $base_url . $path;
+    if (!empty($query)) {
+        $url = add_query_arg($query, $url);
+    }
+
+    $args = [
+        'method' => strtoupper($method),
+        'timeout' => 25,
+        'headers' => [
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ],
+    ];
+
+    if ($body !== null) {
+        $args['body'] = wp_json_encode($body);
+    }
+
+    $response = wp_remote_request($url, $args);
+
+    if (is_wp_error($response)) {
+        error_log('VP Onboarding Admin Directus transport error: ' . $response->get_error_message());
+        return new WP_Error('vp_directus_transport_error', 'Directus request failed.', $response->get_error_data());
+    }
+
+    $http_code = wp_remote_retrieve_response_code($response);
+    $raw_body = wp_remote_retrieve_body($response);
+    $decoded = null;
+
+    if (is_string($raw_body) && $raw_body !== '') {
+        $decoded = json_decode($raw_body, true);
+    }
+
+    if ($http_code < 200 || $http_code >= 300) {
+        error_log('VP Onboarding Admin Directus HTTP error [' . $http_code . ']: ' . $raw_body);
+        return new WP_Error(
+            'vp_directus_http_error',
+            'Directus returned an error while processing the request.',
+            [
+                'http_code' => $http_code,
+                'body' => $decoded ?: $raw_body,
+                'url' => $url,
+            ]
+        );
+    }
+
+    return is_array($decoded) ? $decoded : [];
 }

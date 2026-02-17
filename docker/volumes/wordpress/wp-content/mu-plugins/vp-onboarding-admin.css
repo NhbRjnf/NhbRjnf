@@ -1,0 +1,32 @@
+.vp-onboarding-admin .vp-onboarding-filters {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.vp-onboarding-admin .vp-onboarding-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vp-onboarding-admin #vp-status-filter {
+  min-width: 180px;
+}
+
+.vp-onboarding-admin .vp-onboarding-pagination {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vp-onboarding-admin .vp-muted {
+  color: #666;
+}
+
+.vp-onboarding-admin td .button {
+  margin-right: 6px;
+}
