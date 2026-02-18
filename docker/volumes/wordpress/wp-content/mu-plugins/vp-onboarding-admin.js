@@ -1,14 +1,16 @@
 (() => {
   'use strict';
 
-  function log(...args) {
+  function debug(...args) {
     // eslint-disable-next-line no-console
-    console.log('[VP Onboarding]', ...args);
+    console.debug('[VP Onboarding]', ...args);
   }
+
   function warn(...args) {
     // eslint-disable-next-line no-console
     console.warn('[VP Onboarding]', ...args);
   }
+
   function error(...args) {
     // eslint-disable-next-line no-console
     console.error('[VP Onboarding]', ...args);
@@ -19,7 +21,7 @@
   }
 
   function escHtml(s) {
-    return String(s)
+    return String(s ?? '')
       .replaceAll('&', '&amp;')
       .replaceAll('<', '&lt;')
       .replaceAll('>', '&gt;')
@@ -35,10 +37,18 @@
     };
   }
 
+  function isOnboardingPage() {
+    const params = new URLSearchParams(window.location.search || '');
+    const page = params.get('page');
+    const hasRoot = !!document.getElementById('vp-onboarding-root');
+    return page === 'vp-onboarding' || hasRoot;
+  }
+
   async function post(cfg, action, payload) {
     const fd = new URLSearchParams();
     fd.set('action', action);
     fd.set('nonce', cfg.nonce);
+
     Object.entries(payload || {}).forEach(([k, v]) => {
       if (v === undefined || v === null) return;
       fd.set(k, String(v));
@@ -51,8 +61,23 @@
       credentials: 'same-origin',
     });
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
+    let json = null;
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      json = await res.json();
+    } else {
+      const text = await res.text();
+      throw new Error(`HTTP ${res.status}: ${text.slice(0, 250) || 'non-json response'}`);
+    }
+
+    if (!res.ok) {
+      const serverMessage = json?.data?.message || json?.message || `HTTP ${res.status}`;
+      const err = new Error(serverMessage);
+      err.status = res.status;
+      err.response = json;
+      throw err;
+    }
+
     return json;
   }
 
@@ -78,6 +103,8 @@
               <option value="auto">auto</option>
               <option value="location">location</option>
               <option value="partner">partner</option>
+              <option value="moderator">moderator</option>
+              <option value="admin">admin</option>
             </select>
           </label>
 
@@ -89,7 +116,8 @@
           <label>
             Limit
             <select id="vp-limit">
-              <option value="25">25</option>
+              <option value="10">10</option>
+              <option value="25" selected>25</option>
               <option value="50">50</option>
               <option value="100">100</option>
             </select>
@@ -102,7 +130,7 @@
         </div>
       </div>
 
-      <div id="vp-notice" class="vp-onboarding-notice" style="display:none"></div>
+      <div id="vp-notice" class="vp-onboarding-notice" style="display:none" role="status" aria-live="polite"></div>
 
       <div class="vp-onboarding-table-wrap">
         <table class="widefat fixed striped vp-onboarding-table">
@@ -119,7 +147,9 @@
               <th style="width:220px">Actions</th>
             </tr>
           </thead>
-          <tbody id="vp-tbody"></tbody>
+          <tbody id="vp-tbody">
+            <tr><td colspan="9" style="padding:14px">Загрузка…</td></tr>
+          </tbody>
         </table>
       </div>
 
@@ -131,10 +161,10 @@
 
       <div id="vp-modal" class="vp-modal" aria-hidden="true">
         <div class="vp-modal__backdrop" data-close="1"></div>
-        <div class="vp-modal__dialog" role="dialog" aria-modal="true">
+        <div class="vp-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="vp-modal-title" tabindex="-1">
           <div class="vp-modal__header">
             <h2 id="vp-modal-title"></h2>
-            <button class="vp-modal__close" type="button" data-close="1">×</button>
+            <button class="vp-modal__close" type="button" data-close="1" aria-label="Close">×</button>
           </div>
           <div id="vp-modal-body" class="vp-modal__body"></div>
           <div id="vp-modal-actions" class="vp-modal__actions"></div>
@@ -157,26 +187,42 @@
     el.style.display = 'none';
   }
 
+  let lastModalTrigger = null;
+
   function openModal(title, bodyHtml, actionsHtml) {
+    const modal = qs('#vp-modal');
+    const dialog = qs('.vp-modal__dialog', modal);
+
     qs('#vp-modal-title').textContent = title;
     qs('#vp-modal-body').innerHTML = bodyHtml;
     qs('#vp-modal-actions').innerHTML = actionsHtml || '';
-    const m = qs('#vp-modal');
-    m.setAttribute('aria-hidden', 'false');
-    m.classList.add('is-open');
+
+    modal.removeAttribute('inert');
+    modal.setAttribute('aria-hidden', 'false');
+    modal.classList.add('is-open');
+
+    setTimeout(() => {
+      dialog?.focus();
+    }, 0);
   }
 
   function closeModal() {
-    const m = qs('#vp-modal');
-    m.setAttribute('aria-hidden', 'true');
-    m.classList.remove('is-open');
+    const modal = qs('#vp-modal');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.setAttribute('inert', '');
+    modal.classList.remove('is-open');
+
+    if (lastModalTrigger && typeof lastModalTrigger.focus === 'function') {
+      setTimeout(() => lastModalTrigger.focus(), 0);
+    }
   }
 
   function renderRows(items) {
     const tb = qs('#vp-tbody');
     if (!tb) return;
+
     if (!items || items.length === 0) {
-      tb.innerHTML = `<tr><td colspan="9" style="padding:14px">No items</td></tr>`;
+      tb.innerHTML = '<tr><td colspan="9" style="padding:14px">No items</td></tr>';
       return;
     }
 
@@ -198,51 +244,57 @@
           <td>${escHtml(created)}</td>
           <td>${escHtml(reviewed)}</td>
           <td class="vp-actions">
-            <button class="button button-small" data-act="details">Details</button>
-            <button class="button button-primary button-small" data-act="approve">Approve</button>
-            <button class="button button-secondary button-small" data-act="reject">Reject</button>
+            <button class="button button-small" data-act="details" type="button">Details</button>
+            <button class="button button-primary button-small" data-act="approve" type="button">Approve</button>
+            <button class="button button-secondary button-small" data-act="reject" type="button">Reject</button>
           </td>
         </tr>
       `;
     }).join('');
   }
 
-  function ensureOnboardingPage() {
-    // MU-плагины могут быть подключены где угодно, поэтому проверяем что корень существует
-    return !!document.getElementById('vp-onboarding-root');
+  function safeServerMessage(json, fallback) {
+    return json?.data?.message || json?.message || fallback;
+  }
+
+  function bootstrapError(root, message) {
+    if (!root) return;
+    root.innerHTML = `<div class="vp-onboarding-notice vp-onboarding-notice--error" role="alert">${escHtml(message)}</div>`;
   }
 
   function main() {
-    // 1) Конфиг
-    const cfg = window.VPOnboardingAdmin;
-    if (!cfg || !cfg.ajaxUrl || !cfg.nonce || !cfg.actions) {
-      error('VPOnboardingAdmin is missing. Inline config was not printed.');
-      return;
-    }
-
-    // 2) Страница
-    if (!ensureOnboardingPage()) {
-      warn('Not on onboarding page; skip init.');
+    if (!isOnboardingPage()) {
       return;
     }
 
     const root = qs('#vp-onboarding-root');
+    if (!root) {
+      warn('Onboarding page detected but #vp-onboarding-root not found.');
+      return;
+    }
+
+    const cfg = window.VPOnboardingAdmin;
+    if (!cfg || !cfg.ajaxUrl || !cfg.nonce || !cfg.actions) {
+      const msg = 'Ошибка инициализации: объект VPOnboardingAdmin не найден.';
+      error(msg);
+      bootstrapError(root, msg);
+      return;
+    }
+
     buildLayout(root);
 
     const elStatus = qs('#vp-status');
-    const elType   = qs('#vp-user-type');
+    const elType = qs('#vp-user-type');
     const elSearch = qs('#vp-search');
-    const elLimit  = qs('#vp-limit');
-    const elPrev   = qs('#vp-prev');
-    const elNext   = qs('#vp-next');
-    const elReset  = qs('#vp-reset');
+    const elLimit = qs('#vp-limit');
+    const elPrev = qs('#vp-prev');
+    const elNext = qs('#vp-next');
+    const elReset = qs('#vp-reset');
 
-    const missing = { elStatus, elType, elSearch, elLimit, elPrev, elNext, elReset };
-    for (const [k, v] of Object.entries(missing)) {
-      if (!v) {
-        warn('Missing DOM elements for binding', missing);
-        return;
-      }
+    if (!elStatus || !elType || !elSearch || !elLimit || !elPrev || !elNext || !elReset) {
+      error('Missing required UI elements for onboarding admin.');
+      bootstrapError(root, 'Ошибка отрисовки интерфейса onboarding.');
+      return;
     }
 
     let offset = 0;
@@ -264,26 +316,29 @@
 
       try {
         const json = await post(cfg, cfg.actions.list, payload);
-        if (reqId !== activeReq) return; // устаревший запрос
+        if (reqId !== activeReq) return;
 
         if (!json || !json.success) {
-          showNotice(json?.data?.message || 'List failed', 'error');
+          showNotice(safeServerMessage(json, 'List failed'), 'error');
           return;
         }
 
         const data = json.data || {};
-        total = parseInt(data.total, 10) || 0;
+        const meta = data.meta || {};
+        total = Number(meta.filter_count ?? meta.total_count ?? 0) || 0;
 
         renderRows(data.items || []);
         qs('#vp-total').textContent = `Total: ${total}`;
-        const page = total > 0 ? `${Math.floor(offset / limit) + 1} / ${Math.max(1, Math.ceil(total / limit))}` : '0 / 0';
-        qs('#vp-page').textContent = page;
+
+        const totalPages = Math.max(1, Math.ceil(total / limit));
+        const currentPage = total > 0 ? Math.floor(offset / limit) + 1 : 1;
+        qs('#vp-page').textContent = `${currentPage} / ${totalPages}`;
 
         elPrev.disabled = offset <= 0;
-        elNext.disabled = (offset + limit) >= total;
-
+        elNext.disabled = offset + limit >= total;
       } catch (e) {
         showNotice(`List error: ${e.message}`, 'error');
+        error('list failed', e);
       }
     }
 
@@ -292,15 +347,16 @@
       try {
         const json = await post(cfg, cfg.actions.decide, { id, decision, reason: reason || '' });
         if (!json || !json.success) {
-          const msg = json?.data?.message || 'Action failed';
-          showNotice(msg, 'error');
+          showNotice(safeServerMessage(json, 'Action failed'), 'error');
           return;
         }
+
         showNotice(`OK: ${decision}`, 'success');
         closeModal();
         await load();
       } catch (e) {
-        showNotice(`${decision} error: ${e.message}`, 'error');
+        const msg = e?.response?.data?.message || e.message || `${decision} failed`;
+        showNotice(msg, 'error');
         error(`${decision} failed`, e);
       }
     }
@@ -308,7 +364,10 @@
     function openDetails(row) {
       const id = row.getAttribute('data-id');
       const tds = row.querySelectorAll('td');
-      const html = `
+
+      openModal(
+        'Request details',
+        `
         <div class="vp-details">
           <div><b>ID:</b> ${escHtml(id)}</div>
           <div><b>Status:</b> ${escHtml(tds[1]?.innerText || '')}</div>
@@ -319,18 +378,20 @@
           <div><b>Created:</b> ${escHtml(tds[6]?.innerText || '')}</div>
           <div><b>Reviewed:</b> ${escHtml(tds[7]?.innerText || '')}</div>
         </div>
-      `;
-      openModal('Request details', html, `<button class="button" type="button" data-close="1">Close</button>`);
+      `,
+        '<button class="button" type="button" data-close="1">Close</button>'
+      );
     }
 
     function openReject(row) {
       const id = row.getAttribute('data-id');
       const email = row.querySelectorAll('td')[4]?.innerText || '';
+
       openModal(
         'Reject request',
         `
           <p>Request #${escHtml(id)} (${escHtml(email)})</p>
-          <label>Reason (required)</label>
+          <label for="vp-reason">Reason (required)</label>
           <textarea id="vp-reason" style="width:100%; min-height:90px" placeholder="Why rejected?"></textarea>
         `,
         `
@@ -340,8 +401,8 @@
       );
 
       const btn = qs('#vp-do-reject');
-      btn.addEventListener('click', async () => {
-        const reason = (qs('#vp-reason').value || '').trim();
+      btn?.addEventListener('click', async () => {
+        const reason = (qs('#vp-reason')?.value || '').trim();
         if (!reason) {
           showNotice('Reason is required for reject.', 'error');
           return;
@@ -353,11 +414,12 @@
     function openApprove(row) {
       const id = row.getAttribute('data-id');
       const email = row.querySelectorAll('td')[4]?.innerText || '';
+
       openModal(
         'Approve request',
         `
           <p>Approve request #${escHtml(id)} (${escHtml(email)})</p>
-          <p class="vp-hint">Важно: email должен быть с нормальным доменом и TLD (например name@example.com). Домены .local Directus у тебя отклоняет.</p>
+          <p class="vp-hint">Email должен быть валидным для Directus (например user@example.com).</p>
         `,
         `
           <button class="button" type="button" data-close="1">Cancel</button>
@@ -366,22 +428,26 @@
       );
 
       const btn = qs('#vp-do-approve');
-      btn.addEventListener('click', async () => {
+      btn?.addEventListener('click', async () => {
         await decide(id, 'approve', '');
       });
     }
 
-    // Bind events
-    qs('#vp-modal').addEventListener('click', (e) => {
+    qs('#vp-modal')?.addEventListener('click', (e) => {
       const t = e.target;
-      if (t && t.getAttribute && t.getAttribute('data-close') === '1') closeModal();
+      if (t && t.getAttribute && t.getAttribute('data-close') === '1') {
+        closeModal();
+      }
     });
 
-    qs('#vp-tbody').addEventListener('click', (e) => {
+    qs('#vp-tbody')?.addEventListener('click', (e) => {
       const btn = e.target.closest('button[data-act]');
       if (!btn) return;
+
       const row = btn.closest('tr[data-id]');
       if (!row) return;
+
+      lastModalTrigger = btn;
 
       const act = btn.getAttribute('data-act');
       if (act === 'details') openDetails(row);
@@ -395,7 +461,7 @@
     });
 
     elNext.addEventListener('click', () => {
-      offset = offset + limit;
+      offset += limit;
       load();
     });
 
@@ -405,8 +471,15 @@
       load();
     });
 
-    elStatus.addEventListener('change', () => { offset = 0; load(); });
-    elType.addEventListener('change', () => { offset = 0; load(); });
+    elStatus.addEventListener('change', () => {
+      offset = 0;
+      load();
+    });
+
+    elType.addEventListener('change', () => {
+      offset = 0;
+      load();
+    });
 
     elReset.addEventListener('click', () => {
       elStatus.value = 'pending';
@@ -424,7 +497,7 @@
     }, 300));
 
     load();
-    log('Ready.');
+    debug('Ready.');
   }
 
   if (document.readyState === 'loading') {

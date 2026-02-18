@@ -31,39 +31,16 @@ function vp_onboarding_admin_get_directus_collection() {
 }
 
 function vp_onboarding_admin_get_role_map() {
-    $role_dentist = (string) vp_onboarding_admin_get_env('VP_DX_ROLE_DENTIST', '');
-    $role_auto = (string) vp_onboarding_admin_get_env('VP_DX_ROLE_AUTO', vp_onboarding_admin_get_env('VP_DX_ROLE_AUTO_SPECIALIST', ''));
-    $role_location = (string) vp_onboarding_admin_get_env('VP_DX_ROLE_LOCATION', vp_onboarding_admin_get_env('VP_DX_ROLE_LOCATION_MANAGER', ''));
-    $role_partner = (string) vp_onboarding_admin_get_env('VP_DX_ROLE_PARTNER', vp_onboarding_admin_get_env('VP_DX_ROLE_PARTNER_MANAGER', ''));
-    $role_moderator = (string) vp_onboarding_admin_get_env('VP_DX_ROLE_VP_MODERATOR', '');
-    $role_admin = (string) vp_onboarding_admin_get_env('VP_DX_ROLE_VP_ADMIN', '');
-    $role_public = (string) vp_onboarding_admin_get_env('VP_DX_ROLE_API_PUBLIC', '');
-    $role_car_owner = (string) vp_onboarding_admin_get_env('VP_DX_ROLE_CAR_OWNER', $role_public);
-
     return [
-        // canonical
-        'dentist' => $role_dentist,
-        'auto' => $role_auto,
-        'location' => $role_location,
-        'partner' => $role_partner,
-        'moderator' => $role_moderator,
-        'admin' => $role_admin,
-        'car_owner' => $role_car_owner,
-
-        // synonyms from UI/legacy
-        'auto_specialist' => $role_auto,
-        'location_manager' => $role_location,
-        'location_owner' => $role_location,
-        'partner_manager' => $role_partner,
-        'vp_admin' => $role_admin,
-        'vp_moderator' => $role_moderator,
-
-        // optional fallback bucket (åñëè ãäå-òî âñïëûâàåò demo/test)
-        'api_public' => $role_public,
-        'public' => $role_public,
+        'dentist' => (string) vp_onboarding_admin_get_env('VP_DX_ROLE_DENTIST', ''),
+        'auto' => (string) vp_onboarding_admin_get_env('VP_DX_ROLE_AUTO', vp_onboarding_admin_get_env('VP_DX_ROLE_AUTO_SPECIALIST', '')),
+        'location' => (string) vp_onboarding_admin_get_env('VP_DX_ROLE_LOCATION', vp_onboarding_admin_get_env('VP_DX_ROLE_LOCATION_MANAGER', '')),
+        'partner' => (string) vp_onboarding_admin_get_env('VP_DX_ROLE_PARTNER', vp_onboarding_admin_get_env('VP_DX_ROLE_PARTNER_MANAGER', '')),
+        'moderator' => (string) vp_onboarding_admin_get_env('VP_DX_ROLE_VP_MODERATOR', ''),
+        'admin' => (string) vp_onboarding_admin_get_env('VP_DX_ROLE_VP_ADMIN', ''),
+        'car_owner' => (string) vp_onboarding_admin_get_env('VP_DX_ROLE_CAR_OWNER', vp_onboarding_admin_get_env('VP_DX_ROLE_API_PUBLIC', '')),
     ];
 }
-
 
 function vp_onboarding_admin_user_can_access() {
     return current_user_can('manage_options');
@@ -205,27 +182,6 @@ function vp_dx_email_is_directus_compatible($email) {
     return true;
 }
 
-function vp_dx_get_directus_me_id($token) {
-    static $cached = null;
-    if ($cached !== null) {
-        return $cached;
-    }
-
-    $res = vp_dx_request('GET', '/users/me?fields=id', $token);
-    if (is_wp_error($res)) {
-        $cached = '';
-        return $cached;
-    }
-
-    $id = '';
-    if (isset($res['data']) && is_array($res['data']) && !empty($res['data']['id'])) {
-        $id = (string) $res['data']['id'];
-    }
-
-    $cached = $id;
-    return $cached;
-}
-
 add_action('admin_menu', function () {
     add_menu_page(
         'VP Onboarding',
@@ -269,17 +225,17 @@ add_action('admin_enqueue_scripts', function ($hook) {
             'decide' => 'vp_onboarding_admin_decide',
         ],
         'i18n' => [
-            'loading' => 'Çàãðóçêà…',
-            'error' => 'Îøèáêà',
-            'noData' => 'Íåò äàííûõ',
+            'loading' => 'Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ°â€¦',
+            'error' => 'ÐžÑˆÐ¸Ð±ÐºÐ°',
+            'noData' => 'ÐÐµÑ‚ Ð´Ð°Ð½Ð½Ñ‹Ñ…',
             'approve' => 'Approve',
             'reject' => 'Reject',
             'details' => 'Details',
-            'close' => 'Çàêðûòü',
-            'reasonRequired' => 'Ïðè÷èíà îáÿçàòåëüíà äëÿ Reject.',
-            'confirmApprove' => 'Ïîäòâåðäèòü Approve?',
-            'confirmReject' => 'Ïîäòâåðäèòü Reject?',
-            'missingConfig' => 'Îøèáêà èíèöèàëèçàöèè: êîíôèãóðàöèÿ VPOnboardingAdmin íå íàéäåíà.',
+            'close' => 'Ð—Ð°ÐºÑ€Ñ‹Ñ‚ÑŒ',
+            'reasonRequired' => 'ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð° Ð¾Ð±ÑÐ·Ð°Ñ‚ÐµÐ»ÑŒÐ½Ð° Ð´Ð»Ñ Reject.',
+            'confirmApprove' => 'ÐŸÐ¾Ð´Ñ‚Ð²ÐµÑ€Ð´Ð¸Ñ‚ÑŒ Approve?',
+            'confirmReject' => 'ÐŸÐ¾Ð´Ñ‚Ð²ÐµÑ€Ð´Ð¸Ñ‚ÑŒ Reject?',
+            'missingConfig' => 'ÐžÑˆÐ¸Ð±ÐºÐ° Ð¸Ð½Ð¸Ñ†Ð¸Ð°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ð¸: ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ VPOnboardingAdmin Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°.',
         ],
     ];
 
@@ -381,7 +337,6 @@ function vp_onboarding_admin_ajax_list() {
     if (is_wp_error($res)) {
         vp_onboarding_admin_log_directus_error('list_failed', $res, ['offset' => $offset, 'limit' => $limit]);
         vp_onboarding_admin_send_wp_error($res, 502);
-        return;
     }
 
     $data = isset($res['data']) && is_array($res['data']) ? $res['data'] : [];
@@ -426,7 +381,6 @@ function vp_onboarding_admin_ajax_get() {
     if (is_wp_error($res)) {
         vp_onboarding_admin_log_directus_error('get_failed', $res, ['request_id' => $id]);
         vp_onboarding_admin_send_wp_error($res, 502);
-        return;
     }
 
     wp_send_json_success([
@@ -458,7 +412,6 @@ function vp_onboarding_admin_ajax_decide() {
     if (is_wp_error($get)) {
         vp_onboarding_admin_log_directus_error('decide_get_failed', $get, ['request_id' => $id, 'decision' => $decision]);
         vp_onboarding_admin_send_wp_error($get, 502);
-        return;
     }
 
     $request = isset($get['data']) && is_array($get['data']) ? $get['data'] : null;
@@ -467,21 +420,14 @@ function vp_onboarding_admin_ajax_decide() {
     }
 
     $now = gmdate('c');
-
-    // reviewed_by in Directus expects UUID (directus_users.id), not WP login.
-    // Use current Directus token identity.
-    $reviewed_by = vp_dx_get_directus_me_id($token);
+    $reviewed_by = (string) wp_get_current_user()->user_login;
 
     $update_payload = [
         'status' => ($decision === 'approve') ? 'approved' : 'rejected',
+        'reviewed_by' => $reviewed_by,
         'reviewed_at' => $now,
         'decision_reason' => ($decision === 'reject') ? $reason : '',
     ];
-
-    // Add reviewed_by only when we have a valid UUID; otherwise skip to avoid DB errors.
-    if ($reviewed_by !== '') {
-        $update_payload['reviewed_by'] = $reviewed_by;
-    }
 
     $created_user = null;
 
@@ -492,43 +438,25 @@ function vp_onboarding_admin_ajax_decide() {
         if (!vp_dx_email_is_directus_compatible($email)) {
             $err = new WP_Error(
                 'vp_invalid_email',
-                'Email íå ïðîø¸ë âàëèäàöèþ Directus. Èñïîëüçóéòå àäðåñ ñ êîððåêòíûì ïóáëè÷íûì äîìåíîì (íàïðèìåð user@example.com).',
+                'Email Ð½Ðµ Ð¿Ñ€Ð¾ÑˆÑ‘Ð» Ð²Ð°Ð»Ð¸Ð´Ð°Ñ†Ð¸ÑŽ Directus. Ð˜ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐ¹Ñ‚Ðµ Ð°Ð´Ñ€ÐµÑ Ñ ÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð½Ñ‹Ð¼ Ð¿ÑƒÐ±Ð»Ð¸Ñ‡Ð½Ñ‹Ð¼ Ð´Ð¾Ð¼ÐµÐ½Ð¾Ð¼ (Ð½Ð°Ð¿Ñ€Ð¸Ð¼ÐµÑ€ user@example.com).',
                 ['http_code' => 422, 'directus_message' => 'Validation failed for field "email"', 'email' => $email]
             );
             vp_onboarding_admin_log_directus_error('approve_email_invalid', $err, ['request_id' => $id, 'email' => $email_raw]);
             vp_onboarding_admin_send_wp_error($err, 422);
-            return;
         }
 
         $role_map = vp_onboarding_admin_get_role_map();
-
-        // normalize user_type for stable mapping
-        $user_type_raw = isset($request['user_type']) ? (string) $request['user_type'] : '';
-        $user_type = strtolower(trim($user_type_raw));
-        $user_type = str_replace('-', '_', $user_type);
-
-        // debug (no secrets)
-        error_log('[VP Onboarding] approve user_type_raw=' . $user_type_raw . ' normalized=' . $user_type);
-
+        $user_type = isset($request['user_type']) ? (string) $request['user_type'] : '';
         $role_id = isset($role_map[$user_type]) ? (string) $role_map[$user_type] : '';
 
         if ($role_id === '') {
-            $hint = 'Set env VP_DX_ROLE_' . strtoupper($user_type) . ' (or VP_DX_ROLE_CAR_OWNER / VP_DX_ROLE_API_PUBLIC).';
-            $err = new WP_Error(
-                'vp_role_not_configured',
-                'Directus role is not configured for user_type: ' . $user_type . '. ' . $hint,
-                ['http_code' => 422]
-            );
-            vp_onboarding_admin_log_directus_error('approve_role_missing', $err, ['request_id' => $id, 'user_type' => $user_type]);
-            vp_onboarding_admin_send_wp_error($err, 422);
-            return;
+            wp_send_json_error(['message' => 'Directus role is not configured for user_type: ' . $user_type], 500);
         }
 
         $user_res = vp_dx_get_or_create_user($request);
         if (is_wp_error($user_res)) {
             vp_onboarding_admin_log_directus_error('approve_user_failed', $user_res, ['request_id' => $id, 'email' => $email]);
             vp_onboarding_admin_send_wp_error($user_res, 502);
-            return;
         }
 
         $created_user = $user_res;
@@ -543,7 +471,6 @@ function vp_onboarding_admin_ajax_decide() {
             if (is_wp_error($patch_user)) {
                 vp_onboarding_admin_log_directus_error('approve_patch_user_failed', $patch_user, ['request_id' => $id, 'user_id' => $user_id, 'email' => $email]);
                 vp_onboarding_admin_send_wp_error($patch_user, 502);
-                return;
             }
         }
 
@@ -558,7 +485,6 @@ function vp_onboarding_admin_ajax_decide() {
     if (is_wp_error($patch)) {
         vp_onboarding_admin_log_directus_error('decide_patch_failed', $patch, ['request_id' => $id, 'decision' => $decision]);
         vp_onboarding_admin_send_wp_error($patch, 502);
-        return;
     }
 
     wp_send_json_success([
@@ -587,7 +513,7 @@ function vp_dx_get_or_create_user($request) {
     if (!vp_dx_email_is_directus_compatible($email)) {
         return new WP_Error(
             'vp_invalid_email',
-            'Email íå ïðîø¸ë âàëèäàöèþ Directus. Èñïîëüçóéòå àäðåñ ñ êîððåêòíûì ïóáëè÷íûì äîìåíîì (íàïðèìåð user@example.com).',
+            'Email Ð½Ðµ Ð¿Ñ€Ð¾ÑˆÑ‘Ð» Ð²Ð°Ð»Ð¸Ð´Ð°Ñ†Ð¸ÑŽ Directus. Ð˜ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐ¹Ñ‚Ðµ Ð°Ð´Ñ€ÐµÑ Ñ ÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð½Ñ‹Ð¼ Ð¿ÑƒÐ±Ð»Ð¸Ñ‡Ð½Ñ‹Ð¼ Ð´Ð¾Ð¼ÐµÐ½Ð¾Ð¼ (Ð½Ð°Ð¿Ñ€Ð¸Ð¼ÐµÑ€ user@example.com).',
             ['http_code' => 422, 'directus_message' => 'Validation failed for field "email"']
         );
     }
