@@ -1,32 +1,32 @@
-# cmd: docker logs --tail 32 vse_mariadb
-# time: 2026-02-18T08:39:59+00:00
+# cmd: docker logs --tail 36 vse_mariadb
+# time: 2026-02-18T20:01:12+00:00
 
-2026-02-18 10:31:09+02:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.11.15+maria~ubu2204 started.
-2026-02-18 10:31:10+02:00 [Warn] [Entrypoint]: /sys/fs/cgroup///memory.pressure not writable, functionality unavailable to MariaDB
-2026-02-18 10:31:10+02:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
-2026-02-18 10:31:10+02:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.11.15+maria~ubu2204 started.
-2026-02-18 10:31:10+02:00 [Note] [Entrypoint]: MariaDB upgrade not required
-2026-02-18 10:31:10 0 [Note] Starting MariaDB 10.11.15-MariaDB-ubu2204 source revision cb0d6dd835023a7162ace471cd047161f205dd58 server_uid klV4FzBPwPMGD712Faorz0+F7rU= as process 1
-2026-02-18 10:31:10 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
-2026-02-18 10:31:10 0 [Note] InnoDB: Number of transaction pools: 1
-2026-02-18 10:31:10 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
-2026-02-18 10:31:10 0 [Note] mariadbd: O_TMPFILE is not supported on /tmp (disabling future attempts)
-2026-02-18 10:31:10 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+2026-02-18 14:13:56+02:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.11.15+maria~ubu2204 started.
+2026-02-18 14:13:56+02:00 [Warn] [Entrypoint]: /sys/fs/cgroup///memory.pressure not writable, functionality unavailable to MariaDB
+2026-02-18 14:13:56+02:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2026-02-18 14:13:56+02:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:10.11.15+maria~ubu2204 started.
+2026-02-18 14:13:56+02:00 [Note] [Entrypoint]: MariaDB upgrade not required
+2026-02-18 14:13:56 0 [Note] Starting MariaDB 10.11.15-MariaDB-ubu2204 source revision cb0d6dd835023a7162ace471cd047161f205dd58 server_uid KdN8hWuS+EXEcsm2/RoMp2kjoqA= as process 1
+2026-02-18 14:13:56 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2026-02-18 14:13:57 0 [Note] InnoDB: Number of transaction pools: 1
+2026-02-18 14:13:57 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+2026-02-18 14:13:57 0 [Note] mariadbd: O_TMPFILE is not supported on /tmp (disabling future attempts)
+2026-02-18 14:13:57 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
 create_uring failed: falling back to libaio
-2026-02-18 10:31:10 0 [Note] InnoDB: Using Linux native AIO
-2026-02-18 10:31:10 0 [Note] InnoDB: innodb_buffer_pool_size_max=128m, innodb_buffer_pool_size=128m
-2026-02-18 10:31:10 0 [Note] InnoDB: Completed initialization of buffer pool
-2026-02-18 10:31:10 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
-2026-02-18 10:31:10 0 [Note] InnoDB: End of log at LSN=77483486
-2026-02-18 10:31:10 0 [Note] InnoDB: 128 rollback segments are active.
-2026-02-18 10:31:10 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
-2026-02-18 10:31:10 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
-2026-02-18 10:31:10 0 [Note] InnoDB: log sequence number 77483486; transaction id 33896
-2026-02-18 10:31:10 0 [Note] Plugin 'FEEDBACK' is disabled.
-2026-02-18 10:31:10 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
-2026-02-18 10:31:10 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
-2026-02-18 10:31:10 0 [Note] Server socket created on IP: '[REDACTED_IP]', port: '3306'.
-2026-02-18 10:31:10 0 [Note] Server socket created on IP: '::', port: '3306'.
-2026-02-18 10:31:10 0 [Note] mariadbd: ready for connections.
+2026-02-18 14:13:57 0 [Note] InnoDB: Using Linux native AIO
+2026-02-18 14:13:57 0 [Note] InnoDB: innodb_buffer_pool_size_max=128m, innodb_buffer_pool_size=128m
+2026-02-18 14:13:57 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-02-18 14:13:57 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+2026-02-18 14:13:57 0 [Note] InnoDB: End of log at LSN=77849698
+2026-02-18 14:13:57 0 [Note] InnoDB: 128 rollback segments are active.
+2026-02-18 14:13:57 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-02-18 14:13:57 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2026-02-18 14:13:57 0 [Note] InnoDB: log sequence number 77849698; transaction id 34072
+2026-02-18 14:13:57 0 [Note] Plugin 'FEEDBACK' is disabled.
+2026-02-18 14:13:57 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2026-02-18 14:13:57 0 [Warning] You need to use --log-bin to make --expire-logs-days or --binlog-expire-logs-seconds work.
+2026-02-18 14:13:57 0 [Note] Server socket created on IP: '[REDACTED_IP]', port: '3306'.
+2026-02-18 14:13:57 0 [Note] Server socket created on IP: '::', port: '3306'.
+2026-02-18 14:13:57 0 [Note] InnoDB: Buffer pool(s) load completed at 260218 14:13:57
+2026-02-18 14:13:57 0 [Note] mariadbd: ready for connections.
 Version: '10.11.15-MariaDB-ubu2204'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
-2026-02-18 10:31:10 0 [Note] InnoDB: Buffer pool(s) load completed at 260218 10:31:10
