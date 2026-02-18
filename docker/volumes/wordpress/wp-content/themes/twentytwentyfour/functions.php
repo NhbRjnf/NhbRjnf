@@ -329,3 +329,39 @@ add_action('wp_enqueue_scripts', function () {
     true
   );
 });
+/**
+ * VP: assets for /app shell page
+ */
+if (!defined('VP_APP_ASSET_VERSION')) {
+  define('VP_APP_ASSET_VERSION', '1.0.0');
+}
+
+add_action('wp_enqueue_scripts', function () {
+  if (!is_page('app')) {
+    return;
+  }
+
+  wp_enqueue_style(
+    'vp-app',
+    get_stylesheet_directory_uri() . '/assets/vp-app.css',
+    [],
+    VP_APP_ASSET_VERSION
+  );
+
+  wp_enqueue_script(
+    'vp-app',
+    get_stylesheet_directory_uri() . '/assets/app/vp-app.js',
+    [],
+    VP_APP_ASSET_VERSION,
+    true
+  );
+
+  wp_add_inline_script(
+    'vp-app',
+    'window.VP_APP_CONFIG=' . wp_json_encode([
+      'assetVersion' => VP_APP_ASSET_VERSION,
+      'apiBase' => home_url('/wp-json/vp/v1/app'),
+    ]) . ';',
+    'before'
+  );
+});
