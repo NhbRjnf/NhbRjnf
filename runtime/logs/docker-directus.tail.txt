@@ -1,20 +1,35 @@
-# cmd: docker logs --tail 17 vse_directus
-# time: 2026-02-17T19:05:39+00:00
+# cmd: docker logs --tail 32 vse_directus
+# time: 2026-02-18T08:39:59+00:00
 
-[21:02:08] GET /api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 7ms
-[21:02:10] GET /demo/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
-[21:02:10] GET /cms/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
-[21:02:10] GET /crm/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
-[21:02:10] GET /admin/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 200 2ms
-[21:02:12] GET /backup/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 5ms
-[21:02:12] GET /blog/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
-[21:02:13] GET /workspace/drupal/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 9ms
-[21:02:14] GET /panel/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 7ms
-[21:02:14] GET /public/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
-[21:02:14] GET /apps/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 4ms
-[21:02:14] GET /app/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php 404 8ms
-[21:02:15] GET /index.php?s=/index/\think\app/invokefunction&function=call_user_func_array&vars[0]=md5&vars[1][]=Hello 404 7ms
-[21:02:16] GET /public/index.php?s=/index/\think\app/invokefunction&function=call_user_func_array&vars[0]=md5&vars[1][]=Hello 404 6ms
-[21:02:16] GET /index.php?lang=../../../../../../../../usr/local/lib/php/pearcmd&+config-create+/&/%3C?echo(md5(%22hi%22));?%3E+/tmp/index1.php 404 4ms
-[21:02:16] GET /index.php?lang=../../../../../../../../tmp/index1 404 8ms
-[21:02:17] GET /containers/json 404 5ms
+[09:22:38] GET /users?filter%5Bemail%5D%5B_eq%5D=test%2Bflow-json%40vseponyatno.local&limit=1&fields=id%2Cemail%2Cstatus%2Crole 200 12ms
+[09:22:52] GET /items/vp_onboarding_requests/5?fields=id%2Cemail%2Cphone%2Cfirst_name%2Clast_name%2Cuser_type%2Cauto_approve_method%2Crequested_tenant_slug%2Cstatus%2Ccreated_user_id%2Ccreated_profile_id 200 17ms
+[09:22:52] GET /users?filter%5Bemail%5D%5B_eq%5D=test%2Bapprove2%40vseponyatno.local&limit=1&fields=id%2Cemail%2Cstatus%2Crole 200 19ms
+[09:23:45] POST /items/vp_onboarding_requests 200 30ms
+[09:23:50] GET /items/vp_onboarding_requests?limit=20&offset=0&sort=-created_at&fields=id%2Ccreated_at%2Cstatus%2Cuser_type%2Cfirst_name%2Clast_name%2Cemail%2Cphone%2Cauto_approve_method%2Creviewed_at%2Creviewed_by_email%2Creviewed_by_wp_login%2Cdecision_reason&meta=filter_count 200 17ms
+[09:23:54] GET /items/vp_onboarding_requests/14?fields=id%2Cemail%2Cphone%2Cfirst_name%2Clast_name%2Cuser_type%2Cauto_approve_method%2Crequested_tenant_slug%2Cstatus%2Ccreated_user_id%2Ccreated_profile_id 200 9ms
+[09:23:54] GET /users?filter%5Bemail%5D%5B_eq%5D=test%2Bd1%40vseponyatno.local&limit=1&fields=id%2Cemail%2Cstatus%2Crole 200 17ms
+[09:23:55] POST /users 403 20ms
+[09:29:24] POST /users 400 31ms
+[09:54:06] PROPFIND / 404 13ms
+[10:07:28] GET /items/vp_onboarding_requests?fields=id%2Cstatus%2Cuser_type%2Cemail%2Cphone%2Cfirst_name%2Clast_name%2Cauto_approve_method%2Ccreated_at%2Creviewed_at%2Creviewed_by_email%2Cdecision_reason%2Ccreated_user_id%2Ccreated_profile_id&limit=25&offset=0&sort=-created_at&meta=filter_count&filter=%7B%22status%22%3A%7B%22_eq%22%3A%22pending%22%7D%7D 200 31ms
+[10:07:39] GET /items/vp_onboarding_requests?fields=id%2Cstatus%2Cuser_type%2Cemail%2Cphone%2Cfirst_name%2Clast_name%2Cauto_approve_method%2Ccreated_at%2Creviewed_at%2Creviewed_by_email%2Cdecision_reason%2Ccreated_user_id%2Ccreated_profile_id&limit=25&offset=0&sort=-created_at&meta=filter_count&filter=%5B%5D 200 17ms
+[10:07:56] GET /items/vp_onboarding_requests/14?fields=%2A 200 12ms
+[10:08:11] GET /items/vp_onboarding_requests/1?fields=%2A 200 13ms
+[10:08:13] GET /items/vp_onboarding_requests/1?fields=%2A 200 11ms
+[10:08:14] GET /items/vp_onboarding_requests/1?fields=%2A 200 18ms
+[10:08:15] GET /items/vp_onboarding_requests/1?fields=%2A 200 11ms
+[10:09:05] GET /items/vp_onboarding_requests/11?fields=%2A 200 15ms
+[10:09:05] PATCH /items/vp_onboarding_requests/11 403 18ms
+[10:09:06] GET /items/vp_onboarding_requests/11?fields=%2A 200 13ms
+[10:09:06] PATCH /items/vp_onboarding_requests/11 403 7ms
+[10:09:07] GET /items/vp_onboarding_requests/11?fields=%2A 200 11ms
+[10:09:07] PATCH /items/vp_onboarding_requests/11 403 11ms
+[10:09:08] GET /items/vp_onboarding_requests/11?fields=%2A 200 12ms
+[10:09:08] PATCH /items/vp_onboarding_requests/11 403 9ms
+[10:10:03] GET /items/vp_onboarding_requests?fields=id%2Cstatus%2Cuser_type%2Cemail%2Cphone%2Cfirst_name%2Clast_name%2Cauto_approve_method%2Ccreated_at%2Creviewed_at%2Creviewed_by_email%2Cdecision_reason%2Ccreated_user_id%2Ccreated_profile_id&limit=25&offset=0&sort=-created_at&meta=filter_count&filter=%7B%22status%22%3A%7B%22_eq%22%3A%22pending%22%7D%7D 200 32ms
+[10:10:11] GET /items/vp_onboarding_requests?fields=id%2Cstatus%2Cuser_type%2Cemail%2Cphone%2Cfirst_name%2Clast_name%2Cauto_approve_method%2Ccreated_at%2Creviewed_at%2Creviewed_by_email%2Cdecision_reason%2Ccreated_user_id%2Ccreated_profile_id&limit=25&offset=0&sort=-created_at&meta=filter_count&filter=%5B%5D 200 17ms
+[10:10:26] GET /items/vp_onboarding_requests/13?fields=%2A 200 10ms
+[10:34:53] GET /items/vp_allowlist_domains?limit=1&filter=%7B%22domain%22%3A%7B%22_eq%22%3A%22yandex.ru%22%7D%7D 403 27ms
+[10:34:53] GET /items/vp_allowlist_domain?limit=1&filter=%7B%22domain%22%3A%7B%22_eq%22%3A%22yandex.ru%22%7D%7D 403 9ms
+[10:34:53] POST /items/vp_onboarding_requests 200 40ms
+[10:38:33] GET / 302 2ms

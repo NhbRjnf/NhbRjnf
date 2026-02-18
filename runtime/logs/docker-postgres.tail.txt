@@ -1,7 +1,6 @@
-# cmd: docker logs --tail 17 vse_postgres
-# time: 2026-02-17T19:05:39+00:00
+# cmd: docker logs --tail 32 vse_postgres
+# time: 2026-02-18T08:39:59+00:00
 
-2026-02-17 09:33:07.772 EET [27] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.006 s, sync=0.002 s, total=1.012 s; sync files=11, longest=0.001 s, average=0.001 s; distance=29 kB, estimate=60 kB
 2026-02-17 09:38:06.869 EET [27] LOG:  checkpoint starting: time
 2026-02-17 09:38:07.677 EET [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.804 s, sync=0.002 s, total=0.809 s; sync files=9, longest=0.001 s, average=0.001 s; distance=28 kB, estimate=56 kB
 2026-02-17 09:43:06.777 EET [27] LOG:  checkpoint starting: time
@@ -18,3 +17,19 @@
 2026-02-17 13:08:10.955 EET [27] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.002 s, total=1.111 s; sync files=7, longest=0.001 s, average=0.001 s; distance=28 kB, estimate=59 kB
 2026-02-17 20:33:15.838 EET [27] LOG:  checkpoint starting: time
 2026-02-17 20:33:16.451 EET [27] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.605 s, sync=0.002 s, total=0.613 s; sync files=7, longest=0.001 s, average=0.001 s; distance=21 kB, estimate=55 kB
+2026-02-17 22:08:16.985 EET [27] LOG:  checkpoint starting: time
+2026-02-17 22:08:17.392 EET [27] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.001 s, total=0.408 s; sync files=5, longest=0.001 s, average=0.001 s; distance=17 kB, estimate=51 kB
+2026-02-18 07:33:23.435 EET [27] LOG:  checkpoint starting: time
+2026-02-18 07:33:24.646 EET [27] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.206 s, sync=0.003 s, total=1.212 s; sync files=13, longest=0.002 s, average=0.001 s; distance=45 kB, estimate=51 kB
+2026-02-18 07:38:23.746 EET [27] LOG:  checkpoint starting: time
+2026-02-18 07:38:24.957 EET [27] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.206 s, sync=0.002 s, total=1.211 s; sync files=11, longest=0.001 s, average=0.001 s; distance=47 kB, estimate=50 kB
+2026-02-18 07:43:24.058 EET [27] LOG:  checkpoint starting: time
+2026-02-18 07:43:28.177 EET [27] LOG:  checkpoint complete: wrote 42 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.115 s, sync=0.002 s, total=4.120 s; sync files=23, longest=0.001 s, average=0.001 s; distance=242 kB, estimate=242 kB
+2026-02-18 07:58:24.230 EET [27] LOG:  checkpoint starting: time
+2026-02-18 07:58:27.048 EET [27] LOG:  checkpoint complete: wrote 29 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.813 s, sync=0.002 s, total=2.819 s; sync files=22, longest=0.001 s, average=0.001 s; distance=116 kB, estimate=229 kB
+2026-02-18 08:03:24.112 EET [27] LOG:  checkpoint starting: time
+2026-02-18 08:03:24.217 EET [27] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.001 s, total=0.105 s; sync files=1, longest=0.001 s, average=0.001 s; distance=1 kB, estimate=207 kB
+2026-02-18 09:28:25.493 EET [27] LOG:  checkpoint starting: time
+2026-02-18 09:28:28.414 EET [27] LOG:  checkpoint complete: wrote 30 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.915 s, sync=0.002 s, total=2.923 s; sync files=19, longest=0.001 s, average=0.001 s; distance=81 kB, estimate=194 kB
+2026-02-18 10:38:26.409 EET [27] LOG:  checkpoint starting: time
+2026-02-18 10:38:27.923 EET [27] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.507 s, sync=0.002 s, total=1.514 s; sync files=16, longest=0.001 s, average=0.001 s; distance=36 kB, estimate=178 kB

@@ -1,0 +1,16 @@
+# time: 2026-02-18T08:40:22+00:00
+# url: http://[REDACTED_IP]:8055/roles
+
+HTTP/1.1 200 OK
+Content-Security-Policy: script-src 'self' 'unsafe-eval';worker-src 'self' blob:;child-src 'self' blob:;img-src 'self' data: blob: https://raw.githubusercontent.com https://avatars.githubusercontent.com;media-src 'self';connect-src 'self' https://* wss://*;default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';object-src 'none';script-src-attr 'none';style-src 'self' https: 'unsafe-inline'
+X-Powered-By: Directus
+Cache-Control: no-cache
+Vary: Origin, Cache-Control
+Content-Type: application/json; charset=utf-8
+Content-Length: 2516
+ETag: W/"9d4-NxGJmIDYNHhCTC52aNlaRRWzDKs"
+Date: Wed, 18 Feb 2026 08:40:22 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"data":[{"id":"05a3e980-747f-4cd5-9b22-156a11bd4e57","name":"VP Admin","icon":"security","description":"Full access for project administrators","parent":null,"app_access":true,"admin_access":true,"children":[],"policies":["cbffcf10-ea14-4bbd-9820-21aa2cd1a859"],"users":[]},{"id":"26f56b21-9446-4bf1-8129-cf1c830c11f4","name":"Partner Manager","icon":"apartment","description":"Manufacturer / partner access","parent":null,"app_access":true,"admin_access":false,"children":[],"policies":["1caaae05-9a38-424a-9277-2aa40f529bd5"],"users":[]},{"id":"5d9180b4-0e5a-4aa9-8931-79dc6696d33a","name":"Dentist","icon":"supervised_user_circle","description":"Dentist cabinet access","parent":null,"app_access":true,"admin_access":false,"children":[],"policies":["7ef350ae-5e33-48bd-a19d-92fe5cbf6aa4"],"users":[]},{"id":"78701cda-fe14-4c00-b389-4bec1ba38835","name":"VP Moderator","icon":"add_moderator","description":"Onboarding moderation and content moderation","parent":null,"app_access":true,"admin_access":false,"children":[],"policies":["3614fc93-5cea-40c7-8ea6-390148726af7"],"users":[]},{"id":"893a1b06-02e1-4327-a1a9-fce9c380863b","name":"api_public","icon":"swap_horizontal_circle","description":null,"parent":null,"app_access":true,"admin_access":true,"children":[],"policies":["b4e15c19-aca4-4a95-90a3-6a8dfd9d73fb"],"users":["1c40d2d0-0aa6-45db-8379-c3c91709b9ec"]},{"id":"99f6d7eb-3468-4dab-a606-a27e04b32ce7","name":"VP Onboarding Admin","icon":"assignment_ind","description":"Can review onboarding requests and manage allowlist/invites","parent":null,"app_access":true,"admin_access":false,"children":[],"policies":["99e523fb-5775-4731-93ba-4f9c7bf168a3"],"users":[]},{"id":"af11e2a1-0dc9-4289-ac48-df84824a8565","name":"Administrator","icon":"verified","description":"$t:admin_description","parent":null,"app_access":true,"admin_access":true,"children":[],"policies":["19b1f376-4758-4bd9-9e4e-c7c2ef1b1311"],"users":["3dc5253b-e452-4909-99a0-624591df6b4f"]},{"id":"c8a4c6cd-7941-43cc-a570-ec9e62b215ae","name":"Auto Specialist","icon":"directions_car","description":"Automotive cabinet access","parent":null,"app_access":true,"admin_access":false,"children":[],"policies":["8eb92ff6-88cc-4fb9-9ab0-a91f959d972a"],"users":[]},{"id":"d5cb47af-ac02-4453-947c-8d46deffa799","name":"Location Manager","icon":"manage_accounts","description":"Location / mall navigation management","parent":null,"app_access":true,"admin_access":false,"children":[],"policies":["b4bd3780-af23-4b17-bc6b-acb5f351b336"],"users":[]}]}

@@ -1,9 +1,8 @@
-2026/02/17 00:14:28 [crit] 276871#276871: *15342 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 00:14:35 [crit] 276871#276871: *15354 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 00:14:48 [crit] 276871#276871: *15369 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 00:48:18 [crit] 276871#276871: *15469 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 01:39:16 [crit] 276871#276871: *15652 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 04:03:26 [crit] 276871#276871: *15831 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 09:36:41 [crit] 276871#276871: *16676 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 14:10:24 [crit] 276871#276871: *17597 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
-2026/02/17 18:09:36 [crit] 276871#276871: *18010 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
+2026/02/18 01:03:03 [crit] 276871#276871: *18774 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
+2026/02/18 01:05:27 [crit] 276871#276871: *18783 SSL_do_handshake() failed (SSL: error:0A00006C:SSL routines::bad key share) while SSL handshaking, client: [REDACTED_IP], server: [REDACTED_IP]:443
+2026/02/18 06:47:03 [notice] 621037#621037: signal process started
+2026/02/18 06:47:16 [error] 621038#621038: *23544 access forbidden by rule, client: [REDACTED_IP], server: xn--b1awacccnl0jqa.xn--p1ai, request: "HEAD /.git/config HTTP/1.1", host: "xn--b1awacccnl0jqa.xn--p1ai"
+2026/02/18 06:47:16 [error] 621038#621038: *23545 access forbidden by rule, client: [REDACTED_IP], server: xn--b1awacccnl0jqa.xn--p1ai, request: "HEAD /.env HTTP/1.1", host: "xn--b1awacccnl0jqa.xn--p1ai"
+2026/02/18 07:04:35 [error] 621038#621038: *23740 access forbidden by rule, client: [REDACTED_IP], server: directus.xn--b1awacccnl0jqa.xn--p1ai, request: "GET /.git/config HTTP/1.1", host: "www.xn--b1agyadcdon3k.xn--p1ai"
+2026/02/18 07:04:47 [error] 621038#621038: *23752 access forbidden by rule, client: [REDACTED_IP], server: directus.xn--b1awacccnl0jqa.xn--p1ai, request: "GET /.git/config HTTP/1.1", host: "www.xn--b1awacccnl0jqa.xn--p1ai"
+2026/02/18 07:22:12 [error] 621038#621038: *23769 access forbidden by rule, client: [REDACTED_IP], server: directus.xn--b1awacccnl0jqa.xn--p1ai, request: "GET /.git/config HTTP/1.1", host: "[REDACTED_IP]"

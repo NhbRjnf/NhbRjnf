@@ -1,535 +1,435 @@
-(function () {
-  const DEFAULT_LIMIT = Number(VPOnboardingAdmin.defaultLimit || 20);
-  const SEARCH_DEBOUNCE_MS = 350;
+(() => {
+  'use strict';
 
-  const state = {
-    offset: 0,
-    limit: [20, 50, 100].includes(DEFAULT_LIMIT) ? DEFAULT_LIMIT : 20,
-    total: 0,
-    loading: false,
-    rows: [],
-    activeRequestId: 0,
-    currentModalClose: null,
-  };
-
-  const el = {
-    notice: document.getElementById('vp-onboarding-notice'),
-    status: document.getElementById('vp-status-filter'),
-    userType: document.getElementById('vp-user-type-filter'),
-    search: document.getElementById('vp-search-filter'),
-    limit: document.getElementById('vp-limit-select'),
-    reset: document.getElementById('vp-reset-filters'),
-    tableBody: document.querySelector('#vp-onboarding-table tbody'),
-    tableLoading: document.getElementById('vp-table-loading'),
-    prev: document.getElementById('vp-prev-page'),
-    next: document.getElementById('vp-next-page'),
-    pageInfo: document.getElementById('vp-page-info'),
-    modalRoot: document.getElementById('vp-modal-root'),
-  };
-
-  let searchTimer = null;
-
-  function escapeHtml(text) {
-    const node = document.createElement('div');
-    node.textContent = text == null ? '' : String(text);
-    return node.innerHTML;
+  function log(...args) {
+    // eslint-disable-next-line no-console
+    console.log('[VP Onboarding]', ...args);
+  }
+  function warn(...args) {
+    // eslint-disable-next-line no-console
+    console.warn('[VP Onboarding]', ...args);
+  }
+  function error(...args) {
+    // eslint-disable-next-line no-console
+    console.error('[VP Onboarding]', ...args);
   }
 
-  function formatDate(iso) {
-    if (!iso) {
-      return { label: '—', iso: '' };
-    }
+  function qs(sel, root = document) {
+    return root.querySelector(sel);
+  }
 
-    const date = new Date(iso);
-    if (Number.isNaN(date.getTime())) {
-      return { label: String(iso), iso: String(iso) };
-    }
+  function escHtml(s) {
+    return String(s)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
 
-    return {
-      label: new Intl.DateTimeFormat('ru-RU', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(date),
-      iso: date.toISOString(),
+  function debounce(fn, ms) {
+    let t = null;
+    return (...args) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn(...args), ms);
     };
   }
 
-  function fullName(row) {
-    return [row.first_name || '', row.last_name || ''].join(' ').trim() || '—';
+  async function post(cfg, action, payload) {
+    const fd = new URLSearchParams();
+    fd.set('action', action);
+    fd.set('nonce', cfg.nonce);
+    Object.entries(payload || {}).forEach(([k, v]) => {
+      if (v === undefined || v === null) return;
+      fd.set(k, String(v));
+    });
+
+    const res = await fetch(cfg.ajaxUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+      body: fd.toString(),
+      credentials: 'same-origin',
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json;
   }
 
-  function statusBadge(status) {
-    const normalized = status || 'unknown';
-    return `<span class="vp-badge vp-badge--status vp-badge--${escapeHtml(normalized)}">${escapeHtml(normalized)}</span>`;
-  }
+  function buildLayout(root) {
+    root.innerHTML = `
+      <div class="vp-onboarding-toolbar">
+        <div class="vp-onboarding-filters">
+          <label>
+            Status
+            <select id="vp-status">
+              <option value="pending">pending</option>
+              <option value="approved">approved</option>
+              <option value="rejected">rejected</option>
+              <option value="all">all</option>
+            </select>
+          </label>
 
-  function userTypeBadge(value) {
-    const label = value || '—';
-    return `<span class="vp-badge vp-badge--user-type">${escapeHtml(label)}</span>`;
-  }
+          <label>
+            User type
+            <select id="vp-user-type">
+              <option value="all">all</option>
+              <option value="dentist">dentist</option>
+              <option value="auto">auto</option>
+              <option value="location">location</option>
+              <option value="partner">partner</option>
+            </select>
+          </label>
 
-  function isReviewed(row) {
-    return row.status === 'approved' || row.status === 'rejected';
-  }
+          <label class="vp-onboarding-search">
+            Search
+            <input id="vp-search" type="text" placeholder="email / phone / name" />
+          </label>
 
-  function reviewedLabel(row) {
-    if (!row.reviewed_at && !row.reviewed_by_email && !row.reviewed_by_wp_login) {
-      return '—';
-    }
+          <label>
+            Limit
+            <select id="vp-limit">
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </label>
 
-    const date = formatDate(row.reviewed_at);
-    const actor = row.reviewed_by_email || row.reviewed_by_wp_login || 'moderator';
-    return `${escapeHtml(actor)} · ${escapeHtml(date.label)}`;
-  }
+          <button class="button" id="vp-reset" type="button">Reset</button>
+        </div>
+        <div class="vp-onboarding-meta">
+          <span id="vp-total"></span>
+        </div>
+      </div>
 
-  function showNotice(message, type = 'success') {
-    const cssClass = type === 'error' ? 'notice notice-error' : 'notice notice-success';
-    el.notice.className = cssClass;
-    el.notice.innerHTML = `<p>${escapeHtml(message)}</p>`;
-    el.notice.style.display = 'block';
-  }
+      <div id="vp-notice" class="vp-onboarding-notice" style="display:none"></div>
 
-  function clearNotice() {
-    el.notice.className = '';
-    el.notice.innerHTML = '';
-    el.notice.style.display = 'none';
-  }
+      <div class="vp-onboarding-table-wrap">
+        <table class="widefat fixed striped vp-onboarding-table">
+          <thead>
+            <tr>
+              <th style="width:70px">ID</th>
+              <th style="width:110px">Status</th>
+              <th style="width:120px">Type</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th style="width:160px">Phone</th>
+              <th style="width:170px">Created</th>
+              <th style="width:170px">Reviewed</th>
+              <th style="width:220px">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="vp-tbody"></tbody>
+        </table>
+      </div>
 
-  function setLoading(flag) {
-    state.loading = flag;
-    el.tableLoading.hidden = !flag;
-    el.prev.disabled = flag || state.offset === 0;
-    el.next.disabled = flag || state.offset + state.limit >= state.total;
-  }
+      <div class="vp-onboarding-pager">
+        <button class="button" id="vp-prev" type="button">в†ђ Prev</button>
+        <span id="vp-page"></span>
+        <button class="button" id="vp-next" type="button">Next в†’</button>
+      </div>
 
-  function renderPagination() {
-    const from = state.total === 0 ? 0 : state.offset + 1;
-    const to = Math.min(state.offset + state.limit, state.total);
-    el.pageInfo.textContent = `Показано ${from}–${to} из ${state.total}`;
-    el.prev.disabled = state.loading || state.offset === 0;
-    el.next.disabled = state.loading || state.offset + state.limit >= state.total;
-  }
-
-  function renderEmpty(text = 'Заявки по текущим фильтрам не найдены.') {
-    el.tableBody.innerHTML = `<tr><td colspan="9" class="vp-empty">${escapeHtml(text)}</td></tr>`;
-  }
-
-  function rowActionButtons(row) {
-    const reviewed = isReviewed(row);
-    const title = reviewed ? 'Заявка уже рассмотрена' : '';
-
-    return `
-      <div class="vp-row-actions">
-        <button class="button button-small vp-action" data-action="approve" data-id="${Number(row.id)}" ${reviewed ? 'disabled' : ''} title="${escapeHtml(title)}">Approve</button>
-        <button class="button button-small vp-action" data-action="reject" data-id="${Number(row.id)}" ${reviewed ? 'disabled' : ''} title="${escapeHtml(title)}">Reject</button>
-        <button class="button button-small vp-action" data-action="details" data-id="${Number(row.id)}">Details</button>
+      <div id="vp-modal" class="vp-modal" aria-hidden="true">
+        <div class="vp-modal__backdrop" data-close="1"></div>
+        <div class="vp-modal__dialog" role="dialog" aria-modal="true">
+          <div class="vp-modal__header">
+            <h2 id="vp-modal-title"></h2>
+            <button class="vp-modal__close" type="button" data-close="1">Г—</button>
+          </div>
+          <div id="vp-modal-body" class="vp-modal__body"></div>
+          <div id="vp-modal-actions" class="vp-modal__actions"></div>
+        </div>
       </div>
     `;
   }
 
-  function renderTable(rows) {
-    if (!Array.isArray(rows) || rows.length === 0) {
-      renderEmpty();
-      return;
-    }
-
-    el.tableBody.innerHTML = rows
-      .map((row) => {
-        const created = formatDate(row.created_at);
-        return `
-          <tr class="vp-row" data-id="${Number(row.id)}" tabindex="0" role="button" aria-label="Открыть детали заявки #${Number(row.id)}">
-            <td title="${escapeHtml(created.iso)}">${escapeHtml(created.label)}</td>
-            <td>${statusBadge(row.status)}</td>
-            <td>${userTypeBadge(row.user_type)}</td>
-            <td>${escapeHtml(fullName(row))}</td>
-            <td>${escapeHtml(row.email || '—')}</td>
-            <td>${escapeHtml(row.phone || '—')}</td>
-            <td>${escapeHtml(row.auto_approve_method || '—')}</td>
-            <td>${reviewedLabel(row)}</td>
-            <td>${rowActionButtons(row)}</td>
-          </tr>
-        `;
-      })
-      .join('');
+  function showNotice(text, kind = 'info') {
+    const el = qs('#vp-notice');
+    if (!el) return;
+    el.className = `vp-onboarding-notice vp-onboarding-notice--${kind}`;
+    el.textContent = text;
+    el.style.display = 'block';
   }
 
-  function currentFilters() {
-    return {
-      status: el.status.value.trim(),
-      user_type: el.userType.value.trim(),
-      search: el.search.value.trim(),
-      offset: String(state.offset),
-      limit: String(state.limit),
-    };
+  function hideNotice() {
+    const el = qs('#vp-notice');
+    if (!el) return;
+    el.style.display = 'none';
   }
 
-  async function post(params) {
-    const response = await fetch(VPOnboardingAdmin.ajaxUrl, {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-      body: params.toString(),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    return response.json();
-  }
-
-  async function fetchRequests() {
-    const requestId = ++state.activeRequestId;
-    setLoading(true);
-
-    const params = new URLSearchParams();
-    params.append('action', 'vp_onboarding_fetch_requests');
-    params.append('nonce', VPOnboardingAdmin.nonce);
-
-    const filters = currentFilters();
-    Object.keys(filters).forEach((key) => params.append(key, filters[key]));
-
-    try {
-      const json = await post(params);
-
-      if (requestId !== state.activeRequestId) {
-        return;
-      }
-
-      if (!json.success) {
-        throw new Error(json.data?.message || 'Не удалось загрузить заявки.');
-      }
-
-      state.rows = Array.isArray(json.data?.rows) ? json.data.rows : [];
-      state.total = Number(json.data?.filter_count || 0);
-      clearNotice();
-      renderTable(state.rows);
-      renderPagination();
-    } catch (error) {
-      if (requestId !== state.activeRequestId) {
-        return;
-      }
-
-      console.error('[VP Onboarding] fetch failed', error);
-      state.rows = [];
-      state.total = 0;
-      renderEmpty('Ошибка загрузки заявок. Попробуйте обновить список.');
-      renderPagination();
-      showNotice(error.message || 'Ошибка загрузки заявок.', 'error');
-    } finally {
-      if (requestId === state.activeRequestId) {
-        setLoading(false);
-        renderPagination();
-      }
-    }
-  }
-
-  function findRowById(id) {
-    return state.rows.find((row) => Number(row.id) === Number(id));
+  function openModal(title, bodyHtml, actionsHtml) {
+    qs('#vp-modal-title').textContent = title;
+    qs('#vp-modal-body').innerHTML = bodyHtml;
+    qs('#vp-modal-actions').innerHTML = actionsHtml || '';
+    const m = qs('#vp-modal');
+    m.setAttribute('aria-hidden', 'false');
+    m.classList.add('is-open');
   }
 
   function closeModal() {
-    if (typeof state.currentModalClose === 'function') {
-      state.currentModalClose();
-    }
+    const m = qs('#vp-modal');
+    m.setAttribute('aria-hidden', 'true');
+    m.classList.remove('is-open');
   }
 
-  function openModal(contentHtml, onOpen) {
-    const overlay = document.createElement('div');
-    overlay.className = 'vp-modal-overlay';
-    overlay.innerHTML = `
-      <div class="vp-modal" role="dialog" aria-modal="true">
-        ${contentHtml}
-      </div>
-    `;
+  function renderRows(items) {
+    const tb = qs('#vp-tbody');
+    if (!tb) return;
+    if (!items || items.length === 0) {
+      tb.innerHTML = `<tr><td colspan="9" style="padding:14px">No items</td></tr>`;
+      return;
+    }
 
-    const remove = () => {
-      el.modalRoot.hidden = true;
-      el.modalRoot.innerHTML = '';
-      state.currentModalClose = null;
-      document.removeEventListener('keydown', handleEsc);
-    };
+    tb.innerHTML = items.map((r) => {
+      const fullName = `${r.first_name || ''} ${r.last_name || ''}`.trim();
+      const status = r.status || '';
+      const ut = r.user_type || '';
+      const created = r.created_at ? new Date(r.created_at).toLocaleString() : '';
+      const reviewed = r.reviewed_at ? new Date(r.reviewed_at).toLocaleString() : '';
 
-    const handleEsc = (event) => {
-      if (event.key === 'Escape') {
-        remove();
+      return `
+        <tr data-id="${escHtml(r.id)}">
+          <td>${escHtml(r.id)}</td>
+          <td><span class="vp-badge vp-badge--${escHtml(status)}">${escHtml(status)}</span></td>
+          <td>${escHtml(ut)}</td>
+          <td>${escHtml(fullName)}</td>
+          <td>${escHtml(r.email || '')}</td>
+          <td>${escHtml(r.phone || '')}</td>
+          <td>${escHtml(created)}</td>
+          <td>${escHtml(reviewed)}</td>
+          <td class="vp-actions">
+            <button class="button button-small" data-act="details">Details</button>
+            <button class="button button-primary button-small" data-act="approve">Approve</button>
+            <button class="button button-secondary button-small" data-act="reject">Reject</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function ensureOnboardingPage() {
+    // MU-РїР»Р°РіРёРЅС‹ РјРѕРіСѓС‚ Р±С‹С‚СЊ РїРѕРґРєР»СЋС‡РµРЅС‹ РіРґРµ СѓРіРѕРґРЅРѕ, РїРѕСЌС‚РѕРјСѓ РїСЂРѕРІРµСЂСЏРµРј С‡С‚Рѕ РєРѕСЂРµРЅСЊ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+    return !!document.getElementById('vp-onboarding-root');
+  }
+
+  function main() {
+    // 1) РљРѕРЅС„РёРі
+    const cfg = window.VPOnboardingAdmin;
+    if (!cfg || !cfg.ajaxUrl || !cfg.nonce || !cfg.actions) {
+      error('VPOnboardingAdmin is missing. Inline config was not printed.');
+      return;
+    }
+
+    // 2) РЎС‚СЂР°РЅРёС†Р°
+    if (!ensureOnboardingPage()) {
+      warn('Not on onboarding page; skip init.');
+      return;
+    }
+
+    const root = qs('#vp-onboarding-root');
+    buildLayout(root);
+
+    const elStatus = qs('#vp-status');
+    const elType   = qs('#vp-user-type');
+    const elSearch = qs('#vp-search');
+    const elLimit  = qs('#vp-limit');
+    const elPrev   = qs('#vp-prev');
+    const elNext   = qs('#vp-next');
+    const elReset  = qs('#vp-reset');
+
+    const missing = { elStatus, elType, elSearch, elLimit, elPrev, elNext, elReset };
+    for (const [k, v] of Object.entries(missing)) {
+      if (!v) {
+        warn('Missing DOM elements for binding', missing);
+        return;
       }
-    };
-
-    overlay.addEventListener('click', (event) => {
-      if (event.target === overlay) {
-        remove();
-      }
-    });
-
-    el.modalRoot.hidden = false;
-    el.modalRoot.innerHTML = '';
-    el.modalRoot.appendChild(overlay);
-    document.addEventListener('keydown', handleEsc);
-
-    state.currentModalClose = remove;
-
-    if (typeof onOpen === 'function') {
-      onOpen(overlay, remove);
-    }
-  }
-
-  async function decideRequest(id, decision, reason) {
-    const params = new URLSearchParams();
-    params.append('action', 'vp_onboarding_decide_request');
-    params.append('nonce', VPOnboardingAdmin.nonce);
-    params.append('id', String(id));
-    params.append('decision', decision);
-    params.append('reason', reason || '');
-
-    const json = await post(params);
-    if (!json.success) {
-      throw new Error(json.data?.message || 'Не удалось обновить заявку.');
     }
 
-    return json.data?.result || {};
-  }
+    let offset = 0;
+    let limit = parseInt(elLimit.value, 10) || 25;
+    let total = 0;
+    let activeReq = 0;
 
-  function openDetails(row) {
-    const created = formatDate(row.created_at);
-    const reviewed = formatDate(row.reviewed_at);
-    const decisionReason = row.decision_reason || '—';
+    async function load() {
+      hideNotice();
+      const reqId = ++activeReq;
 
-    openModal(`
-      <div class="vp-modal__header">
-        <h2>Заявка #${Number(row.id)}</h2>
-        <button type="button" class="button-link vp-modal-close" data-close>Закрыть</button>
-      </div>
-      <div class="vp-modal__content">
-        <dl class="vp-details-grid">
-          <dt>Status</dt><dd>${escapeHtml(row.status || '—')}</dd>
-          <dt>User type</dt><dd>${escapeHtml(row.user_type || '—')}</dd>
-          <dt>Full name</dt><dd>${escapeHtml(fullName(row))}</dd>
-          <dt>Email</dt><dd>${escapeHtml(row.email || '—')}</dd>
-          <dt>Phone</dt><dd>${escapeHtml(row.phone || '—')}</dd>
-          <dt>Created at</dt><dd title="${escapeHtml(created.iso)}">${escapeHtml(created.label)}</dd>
-          <dt>Auto-approve method</dt><dd>${escapeHtml(row.auto_approve_method || '—')}</dd>
-          <dt>Reviewed by</dt><dd>${escapeHtml(row.reviewed_by_email || row.reviewed_by_wp_login || '—')}</dd>
-          <dt>Reviewed at</dt><dd title="${escapeHtml(reviewed.iso)}">${escapeHtml(reviewed.label)}</dd>
-          <dt>Decision reason</dt><dd>${escapeHtml(decisionReason)}</dd>
-        </dl>
-      </div>
-    `, (overlay, close) => {
-      overlay.querySelector('[data-close]')?.addEventListener('click', close);
-    });
-  }
-
-  function openApproveModal(row) {
-    openModal(`
-      <div class="vp-modal__header">
-        <h2>Подтвердить approve</h2>
-        <button type="button" class="button-link vp-modal-close" data-close>Закрыть</button>
-      </div>
-      <div class="vp-modal__content">
-        <p>Будет создан или привязан Directus user + profile, после чего заявка перейдёт в статус <strong>approved</strong>.</p>
-        <p><strong>${escapeHtml(fullName(row))}</strong> · ${escapeHtml(row.email || 'без email')}</p>
-      </div>
-      <div class="vp-modal__footer">
-        <button type="button" class="button" data-close>Отмена</button>
-        <button type="button" class="button button-primary" data-confirm>Подтвердить approve</button>
-      </div>
-    `, (overlay, close) => {
-      overlay.querySelectorAll('[data-close]').forEach((btn) => btn.addEventListener('click', close));
-      const confirmButton = overlay.querySelector('[data-confirm]');
-
-      confirmButton?.addEventListener('click', async () => {
-        confirmButton.disabled = true;
-        confirmButton.textContent = 'Сохраняем...';
-
-        try {
-          const result = await decideRequest(row.id, 'approve', '');
-          close();
-          const suffix = result.dry_run ? ' (dry-run)' : '';
-          showNotice((result.message || 'Заявка одобрена.') + suffix, 'success');
-          fetchRequests();
-        } catch (error) {
-          console.error('[VP Onboarding] approve failed', error);
-          showNotice(error.message || 'Не удалось одобрить заявку.', 'error');
-          confirmButton.disabled = false;
-          confirmButton.textContent = 'Подтвердить approve';
-        }
-      });
-    });
-  }
-
-  function openRejectModal(row) {
-    openModal(`
-      <div class="vp-modal__header">
-        <h2>Отклонить заявку #${Number(row.id)}</h2>
-        <button type="button" class="button-link vp-modal-close" data-close>Закрыть</button>
-      </div>
-      <div class="vp-modal__content">
-        <label class="vp-filter-control" for="vp-reject-reason">
-          <span class="vp-filter-label">Причина отказа <span class="description">(обязательно)</span></span>
-          <textarea id="vp-reject-reason" rows="4" placeholder="Укажите причину отказа"></textarea>
-        </label>
-      </div>
-      <div class="vp-modal__footer">
-        <button type="button" class="button" data-close>Отмена</button>
-        <button type="button" class="button button-primary" data-confirm disabled>Подтвердить reject</button>
-      </div>
-    `, (overlay, close) => {
-      overlay.querySelectorAll('[data-close]').forEach((btn) => btn.addEventListener('click', close));
-      const textarea = overlay.querySelector('#vp-reject-reason');
-      const confirmButton = overlay.querySelector('[data-confirm]');
-
-      const syncState = () => {
-        const value = textarea.value.trim();
-        confirmButton.disabled = value.length === 0;
+      const payload = {
+        status: elStatus.value,
+        user_type: elType.value,
+        search: elSearch.value.trim(),
+        offset,
+        limit,
       };
 
-      textarea.addEventListener('input', syncState);
-      textarea.focus();
+      try {
+        const json = await post(cfg, cfg.actions.list, payload);
+        if (reqId !== activeReq) return; // СѓСЃС‚Р°СЂРµРІС€РёР№ Р·Р°РїСЂРѕСЃ
 
-      confirmButton?.addEventListener('click', async () => {
-        const reason = textarea.value.trim();
-        if (!reason) {
-          syncState();
+        if (!json || !json.success) {
+          showNotice(json?.data?.message || 'List failed', 'error');
           return;
         }
 
-        confirmButton.disabled = true;
-        confirmButton.textContent = 'Сохраняем...';
+        const data = json.data || {};
+        total = parseInt(data.total, 10) || 0;
 
-        try {
-          const result = await decideRequest(row.id, 'reject', reason);
-          close();
-          const suffix = result.dry_run ? ' (dry-run)' : '';
-          showNotice((result.message || 'Заявка отклонена.') + suffix, 'success');
-          fetchRequests();
-        } catch (error) {
-          console.error('[VP Onboarding] reject failed', error);
-          showNotice(error.message || 'Не удалось отклонить заявку.', 'error');
-          confirmButton.disabled = false;
-          confirmButton.textContent = 'Подтвердить reject';
+        renderRows(data.items || []);
+        qs('#vp-total').textContent = `Total: ${total}`;
+        const page = total > 0 ? `${Math.floor(offset / limit) + 1} / ${Math.max(1, Math.ceil(total / limit))}` : '0 / 0';
+        qs('#vp-page').textContent = page;
+
+        elPrev.disabled = offset <= 0;
+        elNext.disabled = (offset + limit) >= total;
+
+      } catch (e) {
+        showNotice(`List error: ${e.message}`, 'error');
+      }
+    }
+
+    async function decide(id, decision, reason) {
+      hideNotice();
+      try {
+        const json = await post(cfg, cfg.actions.decide, { id, decision, reason: reason || '' });
+        if (!json || !json.success) {
+          const msg = json?.data?.message || 'Action failed';
+          showNotice(msg, 'error');
+          return;
         }
+        showNotice(`OK: ${decision}`, 'success');
+        closeModal();
+        await load();
+      } catch (e) {
+        showNotice(`${decision} error: ${e.message}`, 'error');
+        error(`${decision} failed`, e);
+      }
+    }
+
+    function openDetails(row) {
+      const id = row.getAttribute('data-id');
+      const tds = row.querySelectorAll('td');
+      const html = `
+        <div class="vp-details">
+          <div><b>ID:</b> ${escHtml(id)}</div>
+          <div><b>Status:</b> ${escHtml(tds[1]?.innerText || '')}</div>
+          <div><b>User type:</b> ${escHtml(tds[2]?.innerText || '')}</div>
+          <div><b>Name:</b> ${escHtml(tds[3]?.innerText || '')}</div>
+          <div><b>Email:</b> ${escHtml(tds[4]?.innerText || '')}</div>
+          <div><b>Phone:</b> ${escHtml(tds[5]?.innerText || '')}</div>
+          <div><b>Created:</b> ${escHtml(tds[6]?.innerText || '')}</div>
+          <div><b>Reviewed:</b> ${escHtml(tds[7]?.innerText || '')}</div>
+        </div>
+      `;
+      openModal('Request details', html, `<button class="button" type="button" data-close="1">Close</button>`);
+    }
+
+    function openReject(row) {
+      const id = row.getAttribute('data-id');
+      const email = row.querySelectorAll('td')[4]?.innerText || '';
+      openModal(
+        'Reject request',
+        `
+          <p>Request #${escHtml(id)} (${escHtml(email)})</p>
+          <label>Reason (required)</label>
+          <textarea id="vp-reason" style="width:100%; min-height:90px" placeholder="Why rejected?"></textarea>
+        `,
+        `
+          <button class="button" type="button" data-close="1">Cancel</button>
+          <button class="button button-secondary" type="button" id="vp-do-reject">Reject</button>
+        `
+      );
+
+      const btn = qs('#vp-do-reject');
+      btn.addEventListener('click', async () => {
+        const reason = (qs('#vp-reason').value || '').trim();
+        if (!reason) {
+          showNotice('Reason is required for reject.', 'error');
+          return;
+        }
+        await decide(id, 'reject', reason);
       });
-    });
-  }
-
-  function onRowAction(rowId, action) {
-    const row = findRowById(rowId);
-    if (!row) {
-      showNotice('Заявка не найдена в текущем списке.', 'error');
-      return;
     }
 
-    if (action === 'details') {
-      openDetails(row);
-      return;
+    function openApprove(row) {
+      const id = row.getAttribute('data-id');
+      const email = row.querySelectorAll('td')[4]?.innerText || '';
+      openModal(
+        'Approve request',
+        `
+          <p>Approve request #${escHtml(id)} (${escHtml(email)})</p>
+          <p class="vp-hint">Р’Р°Р¶РЅРѕ: email РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃ РЅРѕСЂРјР°Р»СЊРЅС‹Рј РґРѕРјРµРЅРѕРј Рё TLD (РЅР°РїСЂРёРјРµСЂ name@example.com). Р”РѕРјРµРЅС‹ .local Directus Сѓ С‚РµР±СЏ РѕС‚РєР»РѕРЅСЏРµС‚.</p>
+        `,
+        `
+          <button class="button" type="button" data-close="1">Cancel</button>
+          <button class="button button-primary" type="button" id="vp-do-approve">Approve</button>
+        `
+      );
+
+      const btn = qs('#vp-do-approve');
+      btn.addEventListener('click', async () => {
+        await decide(id, 'approve', '');
+      });
     }
 
-    if (action === 'approve') {
-      openApproveModal(row);
-      return;
-    }
-
-    if (action === 'reject') {
-      openRejectModal(row);
-    }
-  }
-
-  function applyFilters() {
-    state.offset = 0;
-    fetchRequests();
-  }
-
-  function debounceSearch() {
-    if (searchTimer) {
-      clearTimeout(searchTimer);
-    }
-
-    searchTimer = setTimeout(() => {
-      applyFilters();
-    }, SEARCH_DEBOUNCE_MS);
-  }
-
-  function resetFilters() {
-    el.status.value = 'pending';
-    el.userType.value = '';
-    el.search.value = '';
-    el.limit.value = String(state.limit);
-    clearNotice();
-    applyFilters();
-  }
-
-  function bindEvents() {
-    el.status.addEventListener('change', applyFilters);
-    el.userType.addEventListener('change', applyFilters);
-    el.search.addEventListener('input', debounceSearch);
-
-    el.limit.value = String(state.limit);
-    el.limit.addEventListener('change', () => {
-      state.limit = Number(el.limit.value || 20);
-      applyFilters();
+    // Bind events
+    qs('#vp-modal').addEventListener('click', (e) => {
+      const t = e.target;
+      if (t && t.getAttribute && t.getAttribute('data-close') === '1') closeModal();
     });
 
-    el.reset.addEventListener('click', resetFilters);
+    qs('#vp-tbody').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-act]');
+      if (!btn) return;
+      const row = btn.closest('tr[data-id]');
+      if (!row) return;
 
-    el.prev.addEventListener('click', () => {
-      if (state.loading || state.offset === 0) {
-        return;
-      }
-      state.offset = Math.max(0, state.offset - state.limit);
-      fetchRequests();
+      const act = btn.getAttribute('data-act');
+      if (act === 'details') openDetails(row);
+      if (act === 'reject') openReject(row);
+      if (act === 'approve') openApprove(row);
     });
 
-    el.next.addEventListener('click', () => {
-      if (state.loading || state.offset + state.limit >= state.total) {
-        return;
-      }
-      state.offset += state.limit;
-      fetchRequests();
+    elPrev.addEventListener('click', () => {
+      offset = Math.max(0, offset - limit);
+      load();
     });
 
-    el.tableBody.addEventListener('click', (event) => {
-      const actionButton = event.target.closest('.vp-action');
-      if (actionButton) {
-        event.stopPropagation();
-        onRowAction(Number(actionButton.dataset.id), actionButton.dataset.action);
-        return;
-      }
-
-      const row = event.target.closest('.vp-row');
-      if (row) {
-        onRowAction(Number(row.dataset.id), 'details');
-      }
+    elNext.addEventListener('click', () => {
+      offset = offset + limit;
+      load();
     });
 
-    el.tableBody.addEventListener('keydown', (event) => {
-      if (event.key !== 'Enter' && event.key !== ' ') {
-        return;
-      }
-
-      const row = event.target.closest('.vp-row');
-      if (row) {
-        event.preventDefault();
-        onRowAction(Number(row.dataset.id), 'details');
-      }
+    elLimit.addEventListener('change', () => {
+      limit = parseInt(elLimit.value, 10) || 25;
+      offset = 0;
+      load();
     });
+
+    elStatus.addEventListener('change', () => { offset = 0; load(); });
+    elType.addEventListener('change', () => { offset = 0; load(); });
+
+    elReset.addEventListener('click', () => {
+      elStatus.value = 'pending';
+      elType.value = 'all';
+      elSearch.value = '';
+      elLimit.value = '25';
+      limit = 25;
+      offset = 0;
+      load();
+    });
+
+    elSearch.addEventListener('input', debounce(() => {
+      offset = 0;
+      load();
+    }, 300));
+
+    load();
+    log('Ready.');
   }
 
-  bindEvents();
-  renderPagination();
-
-  if (VPOnboardingAdmin.isDryRun) {
-    showNotice('Dry-run включён: Directus-записи не изменяются.', 'success');
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', main);
+  } else {
+    main();
   }
-
-  fetchRequests();
-
-  window.VPOnboardingAdminUI = {
-    fetchRequests,
-    closeModal,
-  };
 })();
