@@ -97,7 +97,7 @@ if (!function_exists('vp_app_cookie_options')) {
 }
 
 if (!function_exists('vp_app_directus_request')) {
-  function vp_app_directus_request($method, $path, $token = '') {
+  function vp_app_directus_request($method, $path, $token = '', $body = null) {
     $base = vp_app_directus_base_url();
     if ($base === '') {
       return new WP_Error('vp_app_directus_env_missing', 'DIRECTUS URL is missing', ['status' => 500]);
@@ -108,11 +108,18 @@ if (!function_exists('vp_app_directus_request')) {
       $headers['Authorization'] = 'Bearer ' . $token;
     }
 
-    $response = wp_remote_request($base . $path, [
+    $args = [
       'method' => strtoupper((string)$method),
       'timeout' => 30,
       'headers' => $headers,
-    ]);
+    ];
+
+    if ($body !== null) {
+      $args['headers']['Content-Type'] = 'application/json';
+      $args['body'] = wp_json_encode($body, JSON_UNESCAPED_UNICODE);
+    }
+
+    $response = wp_remote_request($base . $path, $args);
 
     if (is_wp_error($response)) {
       return $response;
@@ -131,6 +138,114 @@ if (!function_exists('vp_app_directus_request')) {
     }
 
     return is_array($json) ? $json : ['data' => null];
+  }
+}
+
+if (!function_exists('vp_app_runtime_log_dentist')) {
+  function vp_app_runtime_log_dentist($level, $action, $message, $ctx = []) {
+    $runtimeDir = '/opt/vseponyatno/runtime';
+    $logFile = $runtimeDir . '/vp-dentist.log';
+
+    if (!is_dir($runtimeDir)) {
+      wp_mkdir_p($runtimeDir);
+    }
+
+    $safeCtx = is_array($ctx) ? $ctx : [];
+    foreach (['access_token', 'refresh_token', 'token', 'password', 'vp_dx_at', 'vp_dx_rt'] as $secretKey) {
+      if (isset($safeCtx[$secretKey])) {
+        unset($safeCtx[$secretKey]);
+      }
+    }
+
+    $line = sprintf(
+      "%s [vp-dentist] level=%s action=%s user=%s tenant=%s msg=\"%s\" ctx=%s\n",
+      date(DATE_ATOM),
+      sanitize_text_field((string)$level),
+      sanitize_text_field((string)$action),
+      sanitize_text_field((string)($safeCtx['user_id'] ?? 'unknown')),
+      sanitize_text_field((string)($safeCtx['tenant_id'] ?? 'unknown')),
+      str_replace('"', '\\"', (string)$message),
+      wp_json_encode($safeCtx, JSON_UNESCAPED_UNICODE)
+    );
+
+    $written = @file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
+    if ($written === false) {
+      error_log('[vp-dentist] runtime log write failed: ' . $line);
+    }
+  }
+}
+
+if (!function_exists('vp_app_is_directus_id')) {
+  function vp_app_is_directus_id($value) {
+    $stringValue = trim((string)$value);
+    if ($stringValue === '') {
+      return false;
+    }
+
+    if (preg_match('/^[0-9]+$/', $stringValue) === 1) {
+      return true;
+    }
+
+    return preg_match('/^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[1-5][0-9a-fA-F]{3}\-[89abAB][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$/', $stringValue) === 1;
+  }
+}
+
+if (!function_exists('vp_app_dentist_context')) {
+  function vp_app_dentist_context($token, $requestId, $action) {
+    $me = vp_app_fetch_me($token);
+    if (is_wp_error($me)) {
+      $status = (int)($me->get_error_data()['status'] ?? 500);
+      vp_app_runtime_log_dentist('error', $action, $me->get_error_message(), ['request_id' => $requestId, 'status' => $status]);
+      return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $me->get_error_message()], $status);
+    }
+
+    $userId = (string)($me['id'] ?? '');
+    if ($userId === '') {
+      vp_app_runtime_log_dentist('error', $action, 'Directus user id missing', ['request_id' => $requestId]);
+      return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'unauthorized'], 401);
+    }
+
+    $profile = vp_app_fetch_profile($token, $userId);
+    if (is_wp_error($profile)) {
+      $status = (int)($profile->get_error_data()['status'] ?? 500);
+      vp_app_runtime_log_dentist('error', $action, $profile->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId]);
+      return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $profile->get_error_message()], $status);
+    }
+
+    if ((string)($profile['user_type'] ?? '') !== 'dentist') {
+      vp_app_runtime_log_dentist('error', $action, 'User is not dentist', ['request_id' => $requestId, 'user_id' => $userId]);
+      return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'forbidden'], 403);
+    }
+
+    $tenantId = trim((string)($_COOKIE['vp_tenant'] ?? ''));
+    if ($tenantId === '') {
+      vp_app_runtime_log_dentist('error', $action, 'Active tenant is missing', ['request_id' => $requestId, 'user_id' => $userId]);
+      return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'tenant_required'], 400);
+    }
+
+    $memberships = vp_app_fetch_memberships($token, $userId);
+    if (is_wp_error($memberships)) {
+      $status = (int)($memberships->get_error_data()['status'] ?? 500);
+      vp_app_runtime_log_dentist('error', $action, $memberships->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId, 'tenant_id' => $tenantId]);
+      return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $memberships->get_error_message()], $status);
+    }
+
+    $activeTenant = vp_app_active_tenant(vp_app_normalize_tenants($memberships), $tenantId);
+    if ($activeTenant === null) {
+      vp_app_runtime_log_dentist('error', $action, 'Tenant is not available for user', ['request_id' => $requestId, 'user_id' => $userId, 'tenant_id' => $tenantId]);
+      return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'forbidden'], 403);
+    }
+
+    return [
+      'user_id' => $userId,
+      'tenant_id' => $tenantId,
+    ];
+  }
+}
+
+if (!function_exists('vp_app_dentist_case_code')) {
+  function vp_app_dentist_case_code() {
+    return sprintf('DENT-%s-%04d', wp_date('Ymd'), random_int(0, 9999));
   }
 }
 
@@ -363,6 +478,157 @@ add_action('rest_api_init', function () {
 
       vp_app_runtime_log('info', 'tenant_set', 'Tenant switched', ['request_id' => $requestId, 'tenant_id' => $tenantId, 'user_id' => $userId]);
       return vp_app_json(['ok' => true, 'request_id' => $requestId], 200);
+    },
+  ]);
+
+  register_rest_route('vp/v1/app', '/dentist/cases', [
+    'methods' => 'GET',
+    'permission_callback' => '__return_true',
+    'callback' => function () {
+      $requestId = vp_app_request_id();
+      $token = vp_app_require_auth_token($requestId, 'dentist_cases_list_error');
+      if ($token instanceof WP_REST_Response) {
+        return $token;
+      }
+
+      $ctx = vp_app_dentist_context($token, $requestId, 'dentist_cases_list_error');
+      if ($ctx instanceof WP_REST_Response) {
+        return $ctx;
+      }
+
+      $filter = rawurlencode(wp_json_encode(['tenant_id' => ['_eq' => (string)$ctx['tenant_id']]]));
+      $fields = rawurlencode('id,case_code,title,status,created_at');
+      $res = vp_app_directus_request('GET', '/items/vp_cases?fields=' . $fields . '&limit=50&sort=-created_at&filter=' . $filter, $token);
+
+      if (is_wp_error($res)) {
+        $status = (int)($res->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log_dentist('error', 'dentist_cases_list_error', $res->get_error_message(), [
+          'request_id' => $requestId,
+          'status' => $status,
+          'user_id' => $ctx['user_id'],
+          'tenant_id' => $ctx['tenant_id'],
+        ]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $res->get_error_message()], $status);
+      }
+
+      $items = [];
+      foreach (($res['data'] ?? []) as $row) {
+        $items[] = [
+          'id' => (string)($row['id'] ?? ''),
+          'case_code' => (string)($row['case_code'] ?? ''),
+          'title' => (string)($row['title'] ?? ''),
+          'status' => (string)($row['status'] ?? ''),
+          'created_at' => (string)($row['created_at'] ?? ''),
+        ];
+      }
+
+      vp_app_runtime_log_dentist('info', 'dentist_cases_list_success', 'loaded', [
+        'request_id' => $requestId,
+        'user_id' => $ctx['user_id'],
+        'tenant_id' => $ctx['tenant_id'],
+        'count' => count($items),
+      ]);
+
+      return vp_app_json([
+        'ok' => true,
+        'request_id' => $requestId,
+        'items' => $items,
+      ], 200);
+    },
+  ]);
+
+  register_rest_route('vp/v1/app', '/dentist/cases', [
+    'methods' => 'POST',
+    'permission_callback' => '__return_true',
+    'callback' => function (WP_REST_Request $request) {
+      $requestId = vp_app_request_id();
+      $token = vp_app_require_auth_token($requestId, 'dentist_case_create_error');
+      if ($token instanceof WP_REST_Response) {
+        return $token;
+      }
+
+      $ctx = vp_app_dentist_context($token, $requestId, 'dentist_case_create_error');
+      if ($ctx instanceof WP_REST_Response) {
+        return $ctx;
+      }
+
+      $title = trim((string)$request->get_param('title'));
+      if ($title === '' || mb_strlen($title) < 1 || mb_strlen($title) > 200) {
+        vp_app_runtime_log_dentist('error', 'dentist_case_create_error', 'Invalid title', [
+          'request_id' => $requestId,
+          'user_id' => $ctx['user_id'],
+          'tenant_id' => $ctx['tenant_id'],
+        ]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'title_invalid'], 400);
+      }
+
+      $clinicId = $request->get_param('clinic_id');
+      $patientId = $request->get_param('patient_id');
+      $clinicId = $clinicId === null || $clinicId === '' ? null : trim((string)$clinicId);
+      $patientId = $patientId === null || $patientId === '' ? null : trim((string)$patientId);
+
+      if (($clinicId !== null && !vp_app_is_directus_id($clinicId)) || ($patientId !== null && !vp_app_is_directus_id($patientId))) {
+        vp_app_runtime_log_dentist('error', 'dentist_case_create_error', 'Invalid clinic_id or patient_id', [
+          'request_id' => $requestId,
+          'user_id' => $ctx['user_id'],
+          'tenant_id' => $ctx['tenant_id'],
+        ]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'invalid_payload'], 400);
+      }
+
+      $res = null;
+      $createBody = [];
+      $maxAttempts = 5;
+      for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+        $createBody = [
+          'case_code' => vp_app_dentist_case_code(),
+          'title' => $title,
+          'status' => 'new',
+          'tenant_id' => $ctx['tenant_id'],
+          'clinic_id' => $clinicId,
+          'patient_id' => $patientId,
+          'created_by' => $ctx['user_id'],
+        ];
+
+        $res = vp_app_directus_request('POST', '/items/vp_cases', $token, $createBody);
+        if (!is_wp_error($res)) {
+          break;
+        }
+
+        $status = (int)($res->get_error_data()['status'] ?? 500);
+        $message = strtolower((string)$res->get_error_message());
+        $isDuplicate = $status === 409 || strpos($message, 'unique') !== false || strpos($message, 'duplicate') !== false;
+        if (!$isDuplicate || $attempt === $maxAttempts) {
+          vp_app_runtime_log_dentist('error', 'dentist_case_create_error', $res->get_error_message(), [
+            'request_id' => $requestId,
+            'status' => $status,
+            'user_id' => $ctx['user_id'],
+            'tenant_id' => $ctx['tenant_id'],
+            'attempt' => $attempt,
+          ]);
+          return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $res->get_error_message()], $status);
+        }
+      }
+
+      $item = $res['data'] ?? [];
+      vp_app_runtime_log_dentist('info', 'dentist_case_create_success', 'created', [
+        'request_id' => $requestId,
+        'user_id' => $ctx['user_id'],
+        'tenant_id' => $ctx['tenant_id'],
+        'case_id' => (string)($item['id'] ?? ''),
+      ]);
+
+      return vp_app_json([
+        'ok' => true,
+        'request_id' => $requestId,
+        'item' => [
+          'id' => (string)($item['id'] ?? ''),
+          'case_code' => (string)($item['case_code'] ?? ''),
+          'title' => (string)($item['title'] ?? ''),
+          'status' => (string)($item['status'] ?? 'new'),
+          'created_at' => (string)($item['created_at'] ?? ''),
+        ],
+      ], 200);
     },
   ]);
 });

@@ -261,3 +261,4 @@ Stack trace:
 [18-Feb-2026 13:09:20 UTC] [VP Onboarding] approve user_type_raw=dentist normalized=dentist
 [18-Feb-2026 13:09:21 UTC] [VP Onboarding] {"context":"approve_profile_failed","error":"Directus HTTP 500: An unexpected error occurred.","http_code":500,"directus_message":"An unexpected error occurred.","path":"/items/vp_user_profiles","method":"POST","request_id":"17","user_id":"1203f3e9-349c-46b3-b23e-67756e860e6a","user_type":"dentist"}
 [18-Feb-2026 13:27:00 UTC] [VP Onboarding] approve user_type_raw=dentist normalized=dentist
+[18-Feb-2026 20:54:33 UTC] [VP Onboarding] approve user_type_raw=dentist normalized=dentist

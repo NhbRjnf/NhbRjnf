@@ -1,0 +1,235 @@
+# cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose config
+# time: 2026-02-18T20:56:44+00:00
+
+name: docker
+services:
+  directus:
+    container_name: vse_directus
+    depends_on:
+      postgres:
+        condition: service_started
+        required: true
+    environment:
+      ADMIN_EMAIL: [REDACTED_EMAIL]
+      ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
+      DB_CLIENT: pg
+      DB_DATABASE: vseponyatno
+      DB_HOST: postgres
+      DB_PASSWORD: '!!!LdfRjnf'
+      DB_PORT: "5432"
+      DB_USER: vse_user
+      DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
+      DIRECTUS_ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
+      DIRECTUS_API_TOKEN: AYz9KNn9IB-t3vOGF9HRJAcAt64Rw1cg
+      DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      DIRECTUS_URL: http://vse_directus:8055
+      
+      POSTGRES_DB: vseponyatno
+      POSTGRES_PASSWORD: '!!!LdfRjnf'
+      POSTGRES_USER: vse_user
+      PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      
+      TZ: Europe/Riga
+      VP_DIRECTUS_TOKEN: B6oGVcuKNSXRR96p7jKqf38wE8955zfI
+      VP_DIRECTUS_URL: http://vse_directus:8055
+      VP_DX_ROLE_API_PUBLIC: 893a1b06-02e1-4327-a1a9-fce9c380863b
+      VP_DX_ROLE_AUTO: c8a4c6cd-7941-43cc-a570-ec9e62b215ae
+      VP_DX_ROLE_AUTO_SPECIALIST: c8a4c6cd-7941-43cc-a570-ec9e62b215ae
+      VP_DX_ROLE_CAR_OWNER: 893a1b06-02e1-4327-a1a9-fce9c380863b
+      VP_DX_ROLE_DENTIST: 5d9180b4-0e5a-4aa9-8931-79dc6696d33a
+      VP_DX_ROLE_LOCATION: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_LOCATION_MANAGER: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_LOCATION_OWNER: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_ONBOARDING_ADMIN: 99f6d7eb-3468-4dab-a606-a27e04b32ce7
+      VP_DX_ROLE_PARTNER: 26f56b21-9446-4bf1-8129-cf1c830c11f4
+      VP_DX_ROLE_PARTNER_MANAGER: 26f56b21-9446-4bf1-8129-cf1c830c11f4
+      VP_DX_ROLE_VP_ADMIN: 05a3e980-747f-4cd5-9b22-156a11bd4e57
+      VP_DX_ROLE_VP_MODERATOR: 78701cda-fe14-4c00-b389-4bec1ba38835
+      VP_SERVICE_ADMIN_TOKEN: AYz9KNn9IB-t3vOGF9HRJAcAt64Rw1cg
+      VP_SERVICE_USER_TOKEN: B6oGVcuKNSXRR96p7jKqf38wE8955zfI
+      WP_DB_HOST: mariadb
+      WP_DB_NAME: wp_vseponyatno
+      WP_DB_PASSWORD: '!!!LdfRjnf'
+      WP_DB_USER: wp_user
+    image: directus/directus:11.15.2
+    networks:
+      vseponyatno_net: null
+    ports:
+      - mode: ingress
+        host_ip: [REDACTED_IP]
+        target: 8055
+        published: "8055"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/directus_uploads
+        target: /directus/uploads
+        bind: {}
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/directus_extensions
+        target: /directus/extensions
+        bind: {}
+  mariadb:
+    container_name: vse_mariadb
+    environment:
+      DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
+      DIRECTUS_ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
+      DIRECTUS_API_TOKEN: AYz9KNn9IB-t3vOGF9HRJAcAt64Rw1cg
+      DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      DIRECTUS_URL: http://vse_directus:8055
+      MARIADB_DATABASE: wp_vseponyatno
+      MARIADB_PASSWORD: '!!!LdfRjnf'
+      MARIADB_ROOT_PASSWORD: '!!!LdfRjnf'
+      MARIADB_USER: wp_user
+      POSTGRES_DB: vseponyatno
+      POSTGRES_PASSWORD: '!!!LdfRjnf'
+      POSTGRES_USER: vse_user
+      PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      TZ: Europe/Riga
+      VP_DIRECTUS_TOKEN: B6oGVcuKNSXRR96p7jKqf38wE8955zfI
+      VP_DIRECTUS_URL: http://vse_directus:8055
+      VP_DX_ROLE_API_PUBLIC: 893a1b06-02e1-4327-a1a9-fce9c380863b
+      VP_DX_ROLE_AUTO: c8a4c6cd-7941-43cc-a570-ec9e62b215ae
+      VP_DX_ROLE_AUTO_SPECIALIST: c8a4c6cd-7941-43cc-a570-ec9e62b215ae
+      VP_DX_ROLE_CAR_OWNER: 893a1b06-02e1-4327-a1a9-fce9c380863b
+      VP_DX_ROLE_DENTIST: 5d9180b4-0e5a-4aa9-8931-79dc6696d33a
+      VP_DX_ROLE_LOCATION: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_LOCATION_MANAGER: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_LOCATION_OWNER: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_ONBOARDING_ADMIN: 99f6d7eb-3468-4dab-a606-a27e04b32ce7
+      VP_DX_ROLE_PARTNER: 26f56b21-9446-4bf1-8129-cf1c830c11f4
+      VP_DX_ROLE_PARTNER_MANAGER: 26f56b21-9446-4bf1-8129-cf1c830c11f4
+      VP_DX_ROLE_VP_ADMIN: 05a3e980-747f-4cd5-9b22-156a11bd4e57
+      VP_DX_ROLE_VP_MODERATOR: 78701cda-fe14-4c00-b389-4bec1ba38835
+      VP_SERVICE_ADMIN_TOKEN: AYz9KNn9IB-t3vOGF9HRJAcAt64Rw1cg
+      VP_SERVICE_USER_TOKEN: B6oGVcuKNSXRR96p7jKqf38wE8955zfI
+      WP_DB_HOST: mariadb
+      WP_DB_NAME: wp_vseponyatno
+      WP_DB_PASSWORD: '!!!LdfRjnf'
+      WP_DB_USER: wp_user
+    image: mariadb:10.11
+    networks:
+      vseponyatno_net: null
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/mariadb
+        target: /var/lib/mysql
+        bind: {}
+  postgres:
+    container_name: vse_postgres
+    environment:
+      DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
+      DIRECTUS_ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
+      DIRECTUS_API_TOKEN: AYz9KNn9IB-t3vOGF9HRJAcAt64Rw1cg
+      DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      DIRECTUS_URL: http://vse_directus:8055
+      POSTGRES_DB: vseponyatno
+      POSTGRES_PASSWORD: '!!!LdfRjnf'
+      POSTGRES_USER: vse_user
+      PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      TZ: Europe/Riga
+      VP_DIRECTUS_TOKEN: B6oGVcuKNSXRR96p7jKqf38wE8955zfI
+      VP_DIRECTUS_URL: http://vse_directus:8055
+      VP_DX_ROLE_API_PUBLIC: 893a1b06-02e1-4327-a1a9-fce9c380863b
+      VP_DX_ROLE_AUTO: c8a4c6cd-7941-43cc-a570-ec9e62b215ae
+      VP_DX_ROLE_AUTO_SPECIALIST: c8a4c6cd-7941-43cc-a570-ec9e62b215ae
+      VP_DX_ROLE_CAR_OWNER: 893a1b06-02e1-4327-a1a9-fce9c380863b
+      VP_DX_ROLE_DENTIST: 5d9180b4-0e5a-4aa9-8931-79dc6696d33a
+      VP_DX_ROLE_LOCATION: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_LOCATION_MANAGER: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_LOCATION_OWNER: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_ONBOARDING_ADMIN: 99f6d7eb-3468-4dab-a606-a27e04b32ce7
+      VP_DX_ROLE_PARTNER: 26f56b21-9446-4bf1-8129-cf1c830c11f4
+      VP_DX_ROLE_PARTNER_MANAGER: 26f56b21-9446-4bf1-8129-cf1c830c11f4
+      VP_DX_ROLE_VP_ADMIN: 05a3e980-747f-4cd5-9b22-156a11bd4e57
+      VP_DX_ROLE_VP_MODERATOR: 78701cda-fe14-4c00-b389-4bec1ba38835
+      VP_SERVICE_ADMIN_TOKEN: AYz9KNn9IB-t3vOGF9HRJAcAt64Rw1cg
+      VP_SERVICE_USER_TOKEN: B6oGVcuKNSXRR96p7jKqf38wE8955zfI
+      WP_DB_HOST: mariadb
+      WP_DB_NAME: wp_vseponyatno
+      WP_DB_PASSWORD: '!!!LdfRjnf'
+      WP_DB_USER: wp_user
+    image: postgres:15
+    networks:
+      vseponyatno_net: null
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/postgres
+        target: /var/lib/postgresql/data
+        bind: {}
+  wordpress:
+    container_name: vse_wordpress
+    depends_on:
+      mariadb:
+        condition: service_started
+        required: true
+    environment:
+      DIRECTUS_ADMIN_EMAIL: [REDACTED_EMAIL]
+      DIRECTUS_ADMIN_PASSWORD: ML42^Utsj6Pu1YrTK$$
+      DIRECTUS_API_TOKEN: AYz9KNn9IB-t3vOGF9HRJAcAt64Rw1cg
+      DIRECTUS_BASE_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_KEY: e94d2445ba6cab9d67035dc048911df8f6d6ba478ac35f99
+      DIRECTUS_PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      DIRECTUS_SECRET: 9cb7b140c726784fa7def19c241c5776ee6d97069aa4611beeeaf9c58008ad32
+      DIRECTUS_URL: http://vse_directus:8055
+      POSTGRES_DB: vseponyatno
+      POSTGRES_PASSWORD: '!!!LdfRjnf'
+      POSTGRES_USER: vse_user
+      PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
+      TZ: Europe/Riga
+      VP_DIRECTUS_TOKEN: B6oGVcuKNSXRR96p7jKqf38wE8955zfI
+      VP_DIRECTUS_URL: http://vse_directus:8055
+      VP_DX_ROLE_API_PUBLIC: 893a1b06-02e1-4327-a1a9-fce9c380863b
+      VP_DX_ROLE_AUTO: c8a4c6cd-7941-43cc-a570-ec9e62b215ae
+      VP_DX_ROLE_AUTO_SPECIALIST: c8a4c6cd-7941-43cc-a570-ec9e62b215ae
+      VP_DX_ROLE_CAR_OWNER: 893a1b06-02e1-4327-a1a9-fce9c380863b
+      VP_DX_ROLE_DENTIST: 5d9180b4-0e5a-4aa9-8931-79dc6696d33a
+      VP_DX_ROLE_LOCATION: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_LOCATION_MANAGER: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_LOCATION_OWNER: d5cb47af-ac02-4453-947c-8d46deffa799
+      VP_DX_ROLE_ONBOARDING_ADMIN: 99f6d7eb-3468-4dab-a606-a27e04b32ce7
+      VP_DX_ROLE_PARTNER: 26f56b21-9446-4bf1-8129-cf1c830c11f4
+      VP_DX_ROLE_PARTNER_MANAGER: 26f56b21-9446-4bf1-8129-cf1c830c11f4
+      VP_DX_ROLE_VP_ADMIN: 05a3e980-747f-4cd5-9b22-156a11bd4e57
+      VP_DX_ROLE_VP_MODERATOR: 78701cda-fe14-4c00-b389-4bec1ba38835
+      VP_SERVICE_ADMIN_TOKEN: AYz9KNn9IB-t3vOGF9HRJAcAt64Rw1cg
+      VP_SERVICE_USER_TOKEN: B6oGVcuKNSXRR96p7jKqf38wE8955zfI
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_NAME: wp_vseponyatno
+      WORDPRESS_DB_PASSWORD: '!!!LdfRjnf'
+      WORDPRESS_DB_USER: wp_user
+      WP_DB_HOST: mariadb
+      WP_DB_NAME: wp_vseponyatno
+      WP_DB_PASSWORD: '!!!LdfRjnf'
+      WP_DB_USER: wp_user
+    image: wordpress:php8.2-apache
+    networks:
+      vseponyatno_net: null
+    ports:
+      - mode: ingress
+        host_ip: [REDACTED_IP]
+        target: 80
+        published: "8080"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/vseponyatno/docker/volumes/wordpress
+        target: /var/www/html
+        bind: {}
+networks:
+  vseponyatno_net:
+    name: docker_vseponyatno_net
+    driver: bridge
