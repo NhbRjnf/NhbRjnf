@@ -272,9 +272,9 @@ if (!function_exists('vp_app_fetch_profile')) {
 
 if (!function_exists('vp_app_fetch_memberships')) {
   function vp_app_fetch_memberships($token, $userId) {
-    $fields = rawurlencode('id,role,status,user_type,tenant_id.id,tenant_id.title,tenant_id.name');
+    $fields = rawurlencode('id,tenant_id,user_id,role,status,created_at');
     $filter = rawurlencode(wp_json_encode(['user_id' => ['_eq' => (string)$userId], 'status' => ['_eq' => 'active']]));
-    $res = vp_app_directus_request('GET', '/items/vp_memberships?limit=100&fields=' . $fields . '&filter=' . $filter, $token);
+    $res = vp_app_directus_request('GET', '/items/vp_memberships?limit=-1&fields=' . $fields . '&filter=' . $filter, $token);
     if (is_wp_error($res)) {
       return $res;
     }
@@ -282,20 +282,82 @@ if (!function_exists('vp_app_fetch_memberships')) {
   }
 }
 
+if (!function_exists('vp_app_fetch_tenants_by_ids')) {
+  function vp_app_fetch_tenants_by_ids($token, $tenantIds) {
+    $ids = [];
+    foreach ((array)$tenantIds as $tenantId) {
+      $tenantId = trim((string)$tenantId);
+      if ($tenantId !== '') {
+        $ids[] = $tenantId;
+      }
+    }
+
+    if (empty($ids)) {
+      return [];
+    }
+
+    $filter = rawurlencode(wp_json_encode(['id' => ['_in' => array_values(array_unique($ids))]]));
+    $fields = rawurlencode('id,title,slug,status');
+    $res = vp_app_directus_request('GET', '/items/vp_tenants?limit=-1&fields=' . $fields . '&filter=' . $filter, $token);
+    if (is_wp_error($res)) {
+      return $res;
+    }
+
+    $map = [];
+    foreach (($res['data'] ?? []) as $row) {
+      $id = trim((string)($row['id'] ?? ''));
+      if ($id !== '') {
+        $map[$id] = $row;
+      }
+    }
+
+    return $map;
+  }
+}
+
+if (!function_exists('vp_app_membership_tenant_id')) {
+  function vp_app_membership_tenant_id($membership) {
+    if (isset($membership['tenant_id']) && is_array($membership['tenant_id'])) {
+      return trim((string)($membership['tenant_id']['id'] ?? ''));
+    }
+
+    return trim((string)($membership['tenant_id'] ?? ''));
+  }
+}
+
+if (!function_exists('vp_app_membership_role')) {
+  function vp_app_membership_role($membership) {
+    $role = trim((string)($membership['member_role'] ?? ''));
+    if ($role !== '') {
+      return $role;
+    }
+
+    $role = trim((string)($membership['role'] ?? ''));
+    return $role !== '' ? $role : 'viewer';
+  }
+}
+
 if (!function_exists('vp_app_normalize_tenants')) {
-  function vp_app_normalize_tenants($memberships) {
+  function vp_app_normalize_tenants($memberships, $tenantMap = [], $profileUserType = '') {
     $tenants = [];
     foreach ($memberships as $membership) {
-      $tenantId = (string)($membership['tenant_id']['id'] ?? '');
+      $tenantId = vp_app_membership_tenant_id($membership);
       if ($tenantId === '') {
         continue;
       }
 
+      $tenant = is_array($tenantMap[$tenantId] ?? null) ? $tenantMap[$tenantId] : [];
+      $tenantTitle = trim((string)($tenant['title'] ?? ''));
+      if ($tenantTitle === '' && isset($membership['tenant_id']) && is_array($membership['tenant_id'])) {
+        $tenantTitle = trim((string)($membership['tenant_id']['title'] ?? $membership['tenant_id']['name'] ?? ''));
+      }
+
       $tenants[] = [
         'tenant_id' => $tenantId,
-        'tenant_title' => (string)($membership['tenant_id']['title'] ?? $membership['tenant_id']['name'] ?? $tenantId),
-        'member_role' => (string)($membership['role'] ?? 'viewer'),
-        'user_type' => (string)($membership['user_type'] ?? ''),
+        'tenant_title' => $tenantTitle !== '' ? $tenantTitle : $tenantId,
+        'member_role' => vp_app_membership_role($membership),
+        'status' => (string)($membership['status'] ?? ''),
+        'user_type' => (string)$profileUserType,
       ];
     }
     return $tenants;
@@ -340,7 +402,21 @@ if (!function_exists('vp_app_build_payload')) {
       return $memberships;
     }
 
-    $tenants = vp_app_normalize_tenants($memberships);
+    $tenantIds = [];
+    foreach ($memberships as $membership) {
+      $tenantId = vp_app_membership_tenant_id($membership);
+      if ($tenantId !== '') {
+        $tenantIds[] = $tenantId;
+      }
+    }
+
+    $tenantMap = vp_app_fetch_tenants_by_ids($token, $tenantIds);
+    if (is_wp_error($tenantMap)) {
+      return $tenantMap;
+    }
+
+    $profileUserType = (string)($profile['user_type'] ?? '');
+    $tenants = vp_app_normalize_tenants($memberships, $tenantMap, $profileUserType);
     $activeTenant = vp_app_active_tenant($tenants, $_COOKIE['vp_tenant'] ?? '');
 
     return [
@@ -399,6 +475,13 @@ add_action('rest_api_init', function () {
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $payload->get_error_message()], $status);
       }
 
+      vp_app_runtime_log('info', 'app_me_boot', 'Payload built', [
+        'request_id' => $requestId,
+        'user_id' => (string)($payload['user']['id'] ?? 'unknown'),
+        'memberships_count' => count($payload['tenants'] ?? []),
+        'active_tenant_id' => (string)($payload['active_tenant']['tenant_id'] ?? ''),
+      ]);
+
       return vp_app_json($payload, 200);
     },
   ]);
@@ -420,17 +503,40 @@ add_action('rest_api_init', function () {
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $me->get_error_message()], $status);
       }
 
-      $memberships = vp_app_fetch_memberships($token, (string)($me['id'] ?? ''));
+      $userId = (string)($me['id'] ?? '');
+      $profile = $userId !== '' ? vp_app_fetch_profile($token, $userId) : null;
+      if (is_wp_error($profile)) {
+        $status = (int)($profile->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log('error', 'app_tenants', $profile->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $profile->get_error_message()], $status);
+      }
+
+      $memberships = vp_app_fetch_memberships($token, $userId);
       if (is_wp_error($memberships)) {
         $status = (int)($memberships->get_error_data()['status'] ?? 500);
-        vp_app_runtime_log('error', 'app_tenants', $memberships->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => (string)($me['id'] ?? 'unknown')]);
+        vp_app_runtime_log('error', 'app_tenants', $memberships->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId]);
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $memberships->get_error_message()], $status);
+      }
+
+      $tenantIds = [];
+      foreach ($memberships as $membership) {
+        $tenantId = vp_app_membership_tenant_id($membership);
+        if ($tenantId !== '') {
+          $tenantIds[] = $tenantId;
+        }
+      }
+
+      $tenantMap = vp_app_fetch_tenants_by_ids($token, $tenantIds);
+      if (is_wp_error($tenantMap)) {
+        $status = (int)($tenantMap->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log('error', 'app_tenants', $tenantMap->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $tenantMap->get_error_message()], $status);
       }
 
       return vp_app_json([
         'ok' => true,
         'request_id' => $requestId,
-        'tenants' => vp_app_normalize_tenants($memberships),
+        'tenants' => vp_app_normalize_tenants($memberships, $tenantMap, (string)($profile['user_type'] ?? '')),
       ], 200);
     },
   ]);

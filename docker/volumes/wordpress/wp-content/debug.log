@@ -274,3 +274,9 @@ Stack trace:
 
 [19-Feb-2026 05:23:51 UTC] [vp-app] runtime log write failed: 2026-02-19T05:23:51+00:00 [vp-app] level=error action=app_me user=unknown ip=176.208.74.10 msg="You don't have permission to access field \"user_type\" in collection \"vp_memberships\" or it does not exist. Queried in root." ctx={"request_id":"1a2f212929af0b13","status":403,"user_id":"unknown"}
 
+[19-Feb-2026 05:55:07 UTC] [vp-app] runtime log write failed: 2026-02-19T05:55:07+00:00 [vp-app] level=error action=app_me user=unknown ip=176.208.74.10 msg="Token expired." ctx={"request_id":"cd73a93029704ee3","status":401,"user_id":"unknown"}
+
+[19-Feb-2026 05:55:27 UTC] [vp-app] runtime log write failed: 2026-02-19T05:55:27+00:00 [vp-app] level=info action=app_me_boot user=c2feda5f-ee02-47c0-bc29-554911ae25c9 ip=176.208.74.10 msg="Payload built" ctx={"request_id":"edae60f0aa328616","user_id":"c2feda5f-ee02-47c0-bc29-554911ae25c9","memberships_count":0,"active_tenant_id":""}
+
+[19-Feb-2026 06:00:28 UTC] [vp-app] runtime log write failed: 2026-02-19T06:00:28+00:00 [vp-app] level=info action=app_me_boot user=c2feda5f-ee02-47c0-bc29-554911ae25c9 ip=176.208.74.10 msg="Payload built" ctx={"request_id":"d169f4b46f87ebe0","user_id":"c2feda5f-ee02-47c0-bc29-554911ae25c9","memberships_count":0,"active_tenant_id":""}
+
