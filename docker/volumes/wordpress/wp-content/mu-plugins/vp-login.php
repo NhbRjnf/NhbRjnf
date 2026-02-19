@@ -206,7 +206,7 @@ if (!function_exists('vp_login_resolve_redirect')) {
     if ($type === 'partner') {
       return home_url('/partner/');
     }
-    return home_url('/cabinet/');
+    return home_url('/app/#/dashboard');
   }
 }
 

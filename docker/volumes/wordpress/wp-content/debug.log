@@ -262,3 +262,15 @@ Stack trace:
 [18-Feb-2026 13:09:21 UTC] [VP Onboarding] {"context":"approve_profile_failed","error":"Directus HTTP 500: An unexpected error occurred.","http_code":500,"directus_message":"An unexpected error occurred.","path":"/items/vp_user_profiles","method":"POST","request_id":"17","user_id":"1203f3e9-349c-46b3-b23e-67756e860e6a","user_type":"dentist"}
 [18-Feb-2026 13:27:00 UTC] [VP Onboarding] approve user_type_raw=dentist normalized=dentist
 [18-Feb-2026 20:54:33 UTC] [VP Onboarding] approve user_type_raw=dentist normalized=dentist
+[19-Feb-2026 00:33:20 UTC] Automatic updates starting...
+[19-Feb-2026 00:33:21 UTC] Automatic updates complete.
+[19-Feb-2026 02:35:55 UTC] [vp-app] runtime log write failed: 2026-02-19T02:35:55+00:00 [vp-app] level=error action=app_me user=unknown ip=195.49.205.54 msg="You don't have permission to access collection \"vp_memberships\" or it does not exist. Queried in root." ctx={"request_id":"00a8bd1a43fa8448","status":403,"user_id":"unknown"}
+
+[19-Feb-2026 05:21:41 UTC] [vp-app] runtime log write failed: 2026-02-19T05:21:41+00:00 [vp-app] level=error action=app_me user=unknown ip=176.208.74.10 msg="You don't have permission to access field \"user_type\" in collection \"vp_memberships\" or it does not exist. Queried in root." ctx={"request_id":"15605506ac2c3532","status":403,"user_id":"unknown"}
+
+[19-Feb-2026 05:22:37 UTC] [vp-app] runtime log write failed: 2026-02-19T05:22:37+00:00 [vp-app] level=error action=app_me user=unknown ip=176.208.74.10 msg="You don't have permission to access field \"user_type\" in collection \"vp_memberships\" or it does not exist. Queried in root." ctx={"request_id":"79755ee6816f28b3","status":403,"user_id":"unknown"}
+
+[19-Feb-2026 05:22:41 UTC] [vp-app] runtime log write failed: 2026-02-19T05:22:41+00:00 [vp-app] level=error action=app_me user=unknown ip=176.208.74.10 msg="You don't have permission to access field \"user_type\" in collection \"vp_memberships\" or it does not exist. Queried in root." ctx={"request_id":"3cd2b94a69ffe353","status":403,"user_id":"unknown"}
+
+[19-Feb-2026 05:23:51 UTC] [vp-app] runtime log write failed: 2026-02-19T05:23:51+00:00 [vp-app] level=error action=app_me user=unknown ip=176.208.74.10 msg="You don't have permission to access field \"user_type\" in collection \"vp_memberships\" or it does not exist. Queried in root." ctx={"request_id":"1a2f212929af0b13","status":403,"user_id":"unknown"}
+

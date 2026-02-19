@@ -115,7 +115,7 @@
           })
         });
 
-        window.location.href = data.redirect || '/cabinet/';
+        window.location.href = data.redirect || '/app/#/dashboard';
       } catch (error) {
         setStatus(error.message || 'Ошибка входа');
       }
