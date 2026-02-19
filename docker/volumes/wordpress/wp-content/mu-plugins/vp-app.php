@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 }
 
 if (!defined('VP_APP_ASSET_VERSION')) {
-  define('VP_APP_ASSET_VERSION', '1.0.0');
+  define('VP_APP_ASSET_VERSION', (string)(function_exists('vp_app_asset_version') ? vp_app_asset_version() : '1.0.0'));
 }
 
 if (!function_exists('vp_app_request_id')) {
@@ -19,6 +19,29 @@ if (!function_exists('vp_app_request_id')) {
     } catch (Exception $e) {
       return uniqid('vpapp_', true);
     }
+  }
+}
+
+if (!function_exists('vp_app_module_user_type')) {
+  function vp_app_module_user_type($userType) {
+    $type = trim((string)$userType);
+    $map = [
+      'dentist_doctor' => 'dentist',
+      'clinic_admin' => 'dentist',
+      'auto_business' => 'auto',
+      'location_admin' => 'location',
+      'content_partner' => 'partner',
+      'car_owner' => 'car_owner',
+    ];
+
+    return $map[$type] ?? $type;
+  }
+}
+
+if (!function_exists('vp_app_is_dentist_family')) {
+  function vp_app_is_dentist_family($userType) {
+    $type = trim((string)$userType);
+    return in_array($type, ['dentist', 'dentist_doctor', 'clinic_admin'], true);
   }
 }
 
@@ -265,7 +288,7 @@ if (!function_exists('vp_app_dentist_context')) {
       return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $profile->get_error_message()], $status);
     }
 
-    if ((string)($profile['user_type'] ?? '') !== 'dentist') {
+    if (!vp_app_is_dentist_family((string)($profile['user_type'] ?? ''))) {
       vp_app_runtime_log_dentist('error', $action, 'User is not dentist', ['request_id' => $requestId, 'user_id' => $userId]);
       return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'forbidden'], 403);
     }
@@ -410,12 +433,9 @@ if (!function_exists('vp_app_profile_avatar_info')) {
       }
     }
 
-    $avatarUrl = trim((string)($profile['avatar_url'] ?? ''));
-    if ($avatarUrl === '' && $avatarId !== '') {
-      $base = vp_app_directus_base_url();
-      if ($base !== '') {
-        $avatarUrl = $base . '/assets/' . rawurlencode($avatarId);
-      }
+    $avatarUrl = '';
+    if ($avatarId !== '') {
+      $avatarUrl = home_url('/wp-json/vp/v1/app/profile/avatar') . '?ver=' . rawurlencode((string)VP_APP_ASSET_VERSION);
     }
 
     return [
@@ -434,6 +454,7 @@ if (!function_exists('vp_app_build_profile_payload')) {
       'id' => (int)($profile['id'] ?? 0),
       'user_id' => (string)($profile['user_id'] ?? ''),
       'user_type' => (string)($profile['user_type'] ?? ''),
+      'module_user_type' => vp_app_module_user_type((string)($profile['user_type'] ?? '')),
       'status' => (string)($profile['status'] ?? ''),
       'phone' => (string)($profile['phone'] ?? ''),
       'avatar_file' => (string)$avatar['avatar_file'],
@@ -494,6 +515,39 @@ if (!function_exists('vp_app_directus_upload_file')) {
     }
 
     return is_array($json) ? $json : ['data' => null];
+  }
+}
+
+if (!function_exists('vp_app_directus_fetch_asset')) {
+  function vp_app_directus_fetch_asset($token, $fileId) {
+    $base = vp_app_directus_base_url();
+    if ($base === '') {
+      return new WP_Error('vp_app_directus_env_missing', 'DIRECTUS URL is missing', ['status' => 500]);
+    }
+
+    $headers = [];
+    if ($token !== '') {
+      $headers['Authorization'] = 'Bearer ' . $token;
+    }
+
+    $response = wp_remote_get($base . '/assets/' . rawurlencode((string)$fileId), [
+      'timeout' => 30,
+      'headers' => $headers,
+    ]);
+
+    if (is_wp_error($response)) {
+      return $response;
+    }
+
+    $status = (int)wp_remote_retrieve_response_code($response);
+    if ($status < 200 || $status >= 300) {
+      return new WP_Error('vp_app_directus_http_error', 'Directus asset request failed', ['status' => $status]);
+    }
+
+    return [
+      'content_type' => (string)wp_remote_retrieve_header($response, 'content-type'),
+      'body' => (string)wp_remote_retrieve_body($response),
+    ];
   }
 }
 
@@ -950,7 +1004,7 @@ add_action('rest_api_init', function () {
       $upload = vp_app_directus_upload_file($serviceToken, $tmpPath, $name !== '' ? $name : 'avatar', $type);
       if (is_wp_error($upload)) {
         $status = (int)($upload->get_error_data()['status'] ?? 500);
-        vp_app_runtime_log('error', 'avatar_upload_error', $upload->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId, 'size' => $size, 'type' => $type]);
+        vp_app_runtime_log('error', 'avatar_upload_error', $upload->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId, 'size' => $size, 'type' => $type, 'which_token' => 'service', 'directus_status' => $status]);
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $upload->get_error_message()], $status);
       }
 
@@ -980,7 +1034,7 @@ add_action('rest_api_init', function () {
       ]);
       if (is_wp_error($patch)) {
         $status = (int)($patch->get_error_data()['status'] ?? 500);
-        vp_app_runtime_log('error', 'avatar_upload_error', $patch->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId, 'file_id' => $fileId, 'size' => $size, 'type' => $type]);
+        vp_app_runtime_log('error', 'avatar_upload_error', $patch->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId, 'file_id' => $fileId, 'size' => $size, 'type' => $type, 'which_token' => 'service', 'directus_status' => $status]);
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $patch->get_error_message()], $status);
       }
 
@@ -1001,6 +1055,56 @@ add_action('rest_api_init', function () {
         ],
         'me' => $payload,
       ], 200);
+    },
+  ]);
+
+  register_rest_route('vp/v1/app', '/profile/avatar', [
+    'methods' => 'GET',
+    'permission_callback' => '__return_true',
+    'callback' => function () {
+      $requestId = vp_app_request_id();
+      $token = vp_app_require_auth_token($requestId, 'avatar_proxy');
+      if ($token instanceof WP_REST_Response) {
+        return $token;
+      }
+
+      $me = vp_app_fetch_me($token);
+      if (is_wp_error($me)) {
+        $status = (int)($me->get_error_data()['status'] ?? 500);
+        if ($status === 401) {
+          return vp_app_session_expired_response($requestId);
+        }
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $me->get_error_message()], $status);
+      }
+
+      $userId = (string)($me['id'] ?? '');
+      $serviceToken = vp_app_require_service_token($requestId, 'avatar_proxy_error');
+      if (is_wp_error($serviceToken)) {
+        $status = (int)($serviceToken->get_error_data()['status'] ?? 500);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $serviceToken->get_error_message()], $status);
+      }
+
+      $profile = vp_app_fetch_profile($serviceToken, $userId);
+      if (is_wp_error($profile) || !is_array($profile)) {
+        return new WP_REST_Response(null, 204);
+      }
+
+      $avatar = vp_app_profile_avatar_info($profile);
+      $fileId = trim((string)($avatar['avatar_file'] ?? ''));
+      if ($fileId === '') {
+        return new WP_REST_Response(null, 204);
+      }
+
+      $asset = vp_app_directus_fetch_asset($serviceToken, $fileId);
+      if (is_wp_error($asset)) {
+        $status = (int)($asset->get_error_data()['status'] ?? 500);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $asset->get_error_message()], $status);
+      }
+
+      $response = new WP_REST_Response((string)($asset['body'] ?? ''), 200);
+      $response->header('Content-Type', (string)($asset['content_type'] ?? 'application/octet-stream'));
+      $response->header('Cache-Control', 'private, max-age=300');
+      return $response;
     },
   ]);
 

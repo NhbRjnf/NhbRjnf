@@ -32,6 +32,14 @@ if (!root) {
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#39;');
     },
+    initials() {
+      const me = state.me || {};
+      const first = String(me?.user?.first_name || '').trim();
+      const last = String(me?.user?.last_name || '').trim();
+      const email = String(me?.user?.email || 'U').trim();
+      const base = `${first.charAt(0)}${last.charAt(0)}`.trim() || email.charAt(0);
+      return base.toUpperCase();
+    },
     toast(message) {
       let toast = document.querySelector('.vp-toast');
       if (!toast) {
@@ -47,17 +55,10 @@ if (!root) {
 
   const api = {
     async request(path, options = {}) {
-      const fetchOptions = {
-        credentials: 'include',
-        ...options,
-      };
-
+      const fetchOptions = { credentials: 'include', ...options };
       const hasFormDataBody = typeof FormData !== 'undefined' && fetchOptions.body instanceof FormData;
       if (!hasFormDataBody) {
-        fetchOptions.headers = {
-          'Content-Type': 'application/json',
-          ...(options.headers || {}),
-        };
+        fetchOptions.headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
       } else if (options.headers) {
         fetchOptions.headers = { ...options.headers };
       }
@@ -72,60 +73,32 @@ if (!root) {
       }
       return json;
     },
-    me() {
-      return this.request('/me');
-    },
-    tenants() {
-      return this.request('/tenants');
-    },
+    me() { return this.request('/me'); },
+    tenants() { return this.request('/tenants'); },
     setTenant(tenantId) {
-      return this.request('/tenant', {
-        method: 'POST',
-        body: JSON.stringify({ tenant_id: tenantId }),
-      });
+      return this.request('/tenant', { method: 'POST', body: JSON.stringify({ tenant_id: tenantId }) });
     },
     updateProfile(payload) {
-      return this.request('/profile', {
-        method: 'PATCH',
-        body: JSON.stringify(payload),
-      });
+      return this.request('/profile', { method: 'PATCH', body: JSON.stringify(payload) });
     },
     uploadAvatar(file) {
       const formData = new FormData();
       formData.append('file', file);
-      return this.request('/profile/avatar', {
-        method: 'POST',
-        body: formData,
-      });
+      return this.request('/profile/avatar', { method: 'POST', body: formData });
     },
     async logout() {
       const response = await fetch('/wp-json/vp/v1/logout', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
       });
       const json = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        const err = new Error(json.error || `HTTP ${response.status}`);
-        err.status = response.status;
-        err.body = json;
-        throw err;
-      }
+      if (!response.ok) throw new Error(json.error || `HTTP ${response.status}`);
       return json;
     },
   };
 
-  function setState(partial) {
-    Object.assign(state, partial);
-  }
-
-  function getState() {
-    return { ...state };
-  }
-
-  function navigate(route) {
-    window.location.hash = route.startsWith('#') ? route : `#${route}`;
-  }
+  function setState(partial) { Object.assign(state, partial); }
+  function navigate(route) { window.location.hash = route.startsWith('#') ? route : `#${route}`; }
+  function getState() { return { ...state }; }
 
   function applyTheme(theme) {
     if (!theme) {
@@ -136,25 +109,13 @@ if (!root) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('vp_theme', theme);
   }
-
   function initTheme() {
     const saved = localStorage.getItem('vp_theme');
-    if (saved === 'dark' || saved === 'light') {
-      applyTheme(saved);
-    }
+    if (saved === 'dark' || saved === 'light') applyTheme(saved);
   }
 
   function moduleContext() {
-    return {
-      api,
-      me: state.me,
-      tenant: state.activeTenant,
-      setState,
-      getState,
-      navigate,
-      ui,
-      assetVersion: state.assetVersion,
-    };
+    return { api, me: state.me, tenant: state.activeTenant, setState, getState, navigate, ui, assetVersion: state.assetVersion };
   }
 
   function uniqBy(list, keyBuilder) {
@@ -173,7 +134,6 @@ if (!root) {
   async function loadModules(userType) {
     const baseModule = await import(`/wp-content/themes/twentytwentyfour/assets/app/modules/base.js?ver=${assetVersion}`);
     let userModule = null;
-
     const normalizedUserType = String(userType || '').trim();
     if (normalizedUserType && normalizedUserType !== 'base') {
       try {
@@ -184,54 +144,33 @@ if (!root) {
     }
 
     const ctx = moduleContext();
-    const menu = uniqBy(
-      [...(baseModule.getMenu(ctx) || []), ...(userModule?.getMenu?.(ctx) || [])],
-      (item) => `${item.id || ''}::${item.route || ''}`,
-    );
-    const routes = uniqBy(
-      [...(baseModule.getRoutes(ctx) || []), ...(userModule?.getRoutes?.(ctx) || [])],
-      (item) => item.route || '',
-    );
+    const menu = uniqBy([...(baseModule.getMenu(ctx) || []), ...(userModule?.getMenu?.(ctx) || [])], (item) => `${item.id || ''}::${item.route || ''}`);
+    const routes = uniqBy([...(baseModule.getRoutes(ctx) || []), ...(userModule?.getRoutes?.(ctx) || [])], (item) => item.route || '');
 
-    if (typeof baseModule.onActivate === 'function') {
-      await baseModule.onActivate(ctx);
-    }
-    if (typeof userModule?.onActivate === 'function') {
-      await userModule.onActivate(ctx);
-    }
+    if (typeof baseModule.onActivate === 'function') await baseModule.onActivate(ctx);
+    if (typeof userModule?.onActivate === 'function') await userModule.onActivate(ctx);
 
-    setState({
-      menu,
-      routes,
-      moduleInfo: {
-        moduleId: userModule?.moduleId || 'base',
-        title: userModule?.title || 'Базовый модуль',
-      },
-    });
+    setState({ menu, routes, moduleInfo: { moduleId: userModule?.moduleId || 'base', title: userModule?.title || 'Базовый модуль' } });
   }
 
-  function currentRoute() {
-    return window.location.hash || '#/dashboard';
-  }
-
-  function findRoute(route) {
-    return state.routes.find((item) => item.route === route);
-  }
-
-  function renderErrorCard(text) {
-    return `<section class="vp-card"><div class="vp-badge is-danger">Ошибка</div><p>${ui.escapeHTML(text)}</p></section>`;
-  }
+  function currentRoute() { return window.location.hash || '#/dashboard'; }
+  function findRoute(route) { return state.routes.find((item) => item.route === route); }
+  function renderErrorCard(text) { return `<section class="vp-card"><div class="vp-badge is-danger">Ошибка</div><p>${ui.escapeHTML(text)}</p></section>`; }
 
   function renderLayout() {
     const me = state.me;
     const userName = [me?.user?.first_name, me?.user?.last_name].filter(Boolean).join(' ').trim() || me?.user?.email || 'Пользователь';
-    const userType = me?.profile?.user_type || 'unknown';
+    const userType = me?.profile?.module_user_type || me?.profile?.user_type || 'unknown';
     const activeTenant = me?.active_tenant?.tenant_title || 'Не выбран';
 
     const menuHtml = state.menu.map((item) => {
       const active = state.currentRoute === item.route ? ' is-active' : '';
       return `<button class="vp-btn${active}" data-route="${ui.escapeHTML(item.route)}">${ui.escapeHTML(item.label)}</button>`;
     }).join('');
+
+    const avatar = me?.profile?.avatar_url
+      ? `<img class="vp-avatarimg" src="${ui.escapeHTML(me.profile.avatar_url)}" alt="avatar"/>`
+      : `<span class="vp-avatarfallback">${ui.escapeHTML(ui.initials())}</span>`;
 
     root.innerHTML = `
       <section class="vp-card vp-app-header">
@@ -247,6 +186,7 @@ if (!root) {
           <span class="vp-badge">${ui.escapeHTML(me?.user?.email || '')}</span>
           <span class="vp-badge">type: ${ui.escapeHTML(userType)}</span>
           <span class="vp-badge">tenant: ${ui.escapeHTML(activeTenant)}</span>
+          <button id="vpAvatarBtn" class="vp-avatarbtn" type="button" title="Профиль">${avatar}</button>
           <button id="vpThemeToggle" class="vp-iconbtn" type="button" title="Переключить тему">☀/🌙</button>
           <button id="vpLogoutBtn" class="vp-btn is-sm" type="button">Выйти</button>
         </div>
@@ -261,39 +201,32 @@ if (!root) {
       </section>
     `;
 
-    root.querySelectorAll('[data-route]').forEach((btn) => {
-      btn.addEventListener('click', () => navigate(btn.getAttribute('data-route')));
-    });
+    root.querySelectorAll('[data-route]').forEach((btn) => btn.addEventListener('click', () => navigate(btn.getAttribute('data-route'))));
+    document.getElementById('vpAvatarBtn')?.addEventListener('click', () => navigate('#/profile'));
 
     const toggle = document.getElementById('vpThemeToggle');
-    if (toggle) {
-      toggle.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme');
-        applyTheme(current === 'dark' ? 'light' : 'dark');
-      });
-    }
+    toggle?.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
 
     const logoutBtn = document.getElementById('vpLogoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', async () => {
-        logoutBtn.disabled = true;
-        try {
-          await api.logout();
-        } catch (err) {
-          console.error('[vp-app] logout error', err);
-          ui.toast('Не удалось завершить сессию на сервере. Выполнен локальный выход.');
-        } finally {
-          setState({ me: null, activeTenant: null });
-          window.location.href = '/login/';
-        }
-      });
-    }
+    logoutBtn?.addEventListener('click', async () => {
+      logoutBtn.disabled = true;
+      try {
+        await api.logout();
+      } catch (err) {
+        ui.toast('Не удалось завершить сессию на сервере. Выполнен локальный выход.');
+      } finally {
+        setState({ me: null, activeTenant: null });
+        window.location.href = '/login/';
+      }
+    });
   }
 
   function renderRoute() {
     const content = document.getElementById('vpAppContent');
     if (!content) return;
-
     const route = findRoute(state.currentRoute);
     if (!route) {
       content.innerHTML = renderErrorCard(`Маршрут не найден: ${state.currentRoute}`);
@@ -314,12 +247,7 @@ if (!root) {
     content.innerHTML = '';
     content.appendChild(wrapper);
 
-    try {
-      route.render(slot, moduleContext());
-    } catch (err) {
-      console.error('[vp-app] route render error', err);
-      slot.innerHTML = renderErrorCard(err.message || 'Ошибка рендера');
-    }
+    try { route.render(slot, moduleContext()); } catch (err) { slot.innerHTML = renderErrorCard(err.message || 'Ошибка рендера'); }
   }
 
   async function boot() {
@@ -327,16 +255,12 @@ if (!root) {
     try {
       const me = await api.me();
       setState({ me, activeTenant: me.active_tenant, currentRoute: currentRoute() });
-      const userType = me?.profile?.user_type || 'base';
+      const userType = me?.profile?.module_user_type || me?.profile?.user_type || 'base';
       await loadModules(userType);
       renderLayout();
       renderRoute();
     } catch (err) {
-      console.error('[vp-app] boot error', err);
-      if (err.status === 401) {
-        window.location.href = '/login/';
-        return;
-      }
+      if (err.status === 401) { window.location.href = '/login/'; return; }
       root.innerHTML = renderErrorCard(err.message || 'Ошибка загрузки кабинета');
     }
   }

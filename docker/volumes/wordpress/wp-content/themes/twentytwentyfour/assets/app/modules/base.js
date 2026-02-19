@@ -1,10 +1,19 @@
 function normalizeUserType(userType) {
   const type = String(userType || '').trim();
-  if (type === 'location_owner') return 'location';
-  if (type === 'car_owner') return 'car_owner';
-  if (type === 'business_owner') return 'partner';
-  if (type === 'client') return 'auto';
-  return type;
+  const map = {
+    dentist_doctor: 'dentist',
+    clinic_admin: 'dentist',
+    auto_business: 'auto',
+    location_admin: 'location',
+    content_partner: 'partner',
+    car_owner: 'car_owner',
+    moderator: 'moderator',
+    admin: 'admin',
+    location_owner: 'location',
+    business_owner: 'partner',
+    client: 'auto',
+  };
+  return map[type] || type;
 }
 
 function allowedFileTypesByRole(userType) {
@@ -14,23 +23,10 @@ function allowedFileTypesByRole(userType) {
       'Кейсы: STL/PLY/OBJ (через кейсы/сканы, не в профиле)',
       'Документы: PDF (только как вложение к кейсу/инструкции)',
     ],
-    location: [
-      'Аватар: JPG/PNG/WebP',
-      'Сцены: GLB/GLTF',
-      'Схемы: PDF/PNG',
-    ],
-    auto: [
-      'Аватар: JPG/PNG/WebP',
-      'Фото/видео для обращений: JPG/PNG/WebP, MP4 (лимит будет позже)',
-    ],
-    partner: [
-      'Аватар: JPG/PNG/WebP',
-      'Документы: PDF, изображения (для карточек/инструкций)',
-    ],
-    car_owner: [
-      'Аватар: JPG/PNG/WebP',
-      'Документы по продукту: PDF/изображения (через карточки/QR)',
-    ],
+    location: ['Аватар: JPG/PNG/WebP', 'Сцены: GLB/GLTF', 'Схемы: PDF/PNG'],
+    auto: ['Аватар: JPG/PNG/WebP', 'Фото/видео для обращений: JPG/PNG/WebP, MP4 (лимит будет позже)'],
+    partner: ['Аватар: JPG/PNG/WebP', 'Документы: PDF, изображения (для карточек/инструкций)'],
+    car_owner: ['Аватар: JPG/PNG/WebP', 'Документы по продукту: PDF/изображения (через карточки/QR)'],
   };
 
   return map[normalizeUserType(userType)] || ['Аватар: JPG/PNG/WebP'];
@@ -65,6 +61,7 @@ function renderProfileView(container, ctx) {
             <tr><td>Имя</td><td>${ctx.ui.escapeHTML(u.first_name || '')}</td></tr>
             <tr><td>Фамилия</td><td>${ctx.ui.escapeHTML(u.last_name || '')}</td></tr>
             <tr><td>User type</td><td>${ctx.ui.escapeHTML(p.user_type || '')}</td></tr>
+            <tr><td>Module type</td><td>${ctx.ui.escapeHTML(p.module_user_type || normalizeUserType(p.user_type || ''))}</td></tr>
             <tr><td>Статус</td><td>${ctx.ui.escapeHTML(p.status || '')}</td></tr>
             <tr><td>Телефон</td><td>${ctx.ui.escapeHTML(p.phone || '')}</td></tr>
           </tbody>
@@ -75,11 +72,16 @@ function renderProfileView(container, ctx) {
       <div class="vp-toolbar">
         <div class="vp-toolbar-left"><div class="vp-badge">Аватар</div></div>
       </div>
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-        ${p.avatar_url ? `<img src="${ctx.ui.escapeHTML(p.avatar_url)}" alt="avatar" style="width:84px;height:84px;border-radius:999px;object-fit:cover;border:1px solid var(--line);"/>` : '<div class="vp-badge">Не загружен</div>'}
+      <div class="vp-avatar-upload-wrap">
+        ${p.avatar_url ? `<img src="${ctx.ui.escapeHTML(p.avatar_url)}" alt="avatar" class="vp-avatar-preview"/>` : '<div class="vp-badge">Не загружен</div>'}
         <div>
-          <input id="vpAvatarInput" type="file" accept="image/jpeg,image/png,image/webp" class="vp-input" style="max-width:280px;"/>
-          <div class="vp-cell-muted">JPG/PNG/WEBP, до 5MB</div>
+          <input id="vpAvatarInput" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+          <div class="vp-toolbar-left">
+            <button id="vpAvatarPick" type="button" class="vp-btn">Загрузить аватар</button>
+            <span id="vpAvatarStatus" class="vp-badge">JPG/PNG/WEBP, до 5MB</span>
+          </div>
+          <div id="vpAvatarName" class="vp-cell-muted" style="margin-top:8px;">Файл не выбран</div>
+          <img id="vpAvatarPreviewTemp" class="vp-avatar-preview" style="margin-top:10px;display:none;" alt="preview"/>
         </div>
       </div>
     </div>
@@ -94,33 +96,48 @@ function renderProfileView(container, ctx) {
     </div>
   `;
 
-  const editBtn = container.querySelector('#vpProfileEdit');
-  editBtn?.addEventListener('click', () => renderProfileEdit(container, ctx));
+  container.querySelector('#vpProfileEdit')?.addEventListener('click', () => renderProfileEdit(container, ctx));
 
   const avatarInput = container.querySelector('#vpAvatarInput');
+  const avatarPick = container.querySelector('#vpAvatarPick');
+  const avatarName = container.querySelector('#vpAvatarName');
+  const avatarStatus = container.querySelector('#vpAvatarStatus');
+  const avatarPreviewTemp = container.querySelector('#vpAvatarPreviewTemp');
+
+  avatarPick?.addEventListener('click', () => avatarInput?.click());
+
   avatarInput?.addEventListener('change', async () => {
     const file = avatarInput.files?.[0];
     if (!file) return;
 
+    if (avatarName) avatarName.textContent = file.name;
+    if (avatarStatus) avatarStatus.textContent = 'Файл выбран';
+
+    if (avatarPreviewTemp && window.URL?.createObjectURL) {
+      avatarPreviewTemp.src = window.URL.createObjectURL(file);
+      avatarPreviewTemp.style.display = 'block';
+    }
+
     try {
       avatarInput.disabled = true;
+      if (avatarPick) avatarPick.disabled = true;
+      if (avatarStatus) avatarStatus.textContent = 'Загрузка...';
+
       const result = await ctx.api.uploadAvatar(file);
       const me = result.me || await ctx.api.me();
       ctx.setState({ me, activeTenant: me.active_tenant });
       ctx.ui.toast('Аватар обновлён');
-      renderProfileView(container, {
-        ...ctx,
-        me,
-      });
+      renderProfileView(container, { ...ctx, me });
     } catch (err) {
-      console.error('[vp-app] avatar upload error', err);
       const errHost = container.querySelector('#vpProfileError');
+      if (avatarStatus) avatarStatus.textContent = 'Ошибка загрузки';
       if (errHost) {
         errHost.innerHTML = `<div class="vp-card"><span class="vp-badge is-danger">Ошибка</span> ${ctx.ui.escapeHTML(err.message || 'Не удалось загрузить аватар')}</div>`;
       }
     } finally {
       avatarInput.value = '';
       avatarInput.disabled = false;
+      if (avatarPick) avatarPick.disabled = false;
     }
   });
 }
@@ -167,17 +184,12 @@ function renderProfileEdit(container, ctx, errorText = '') {
     try {
       const saveBtn = container.querySelector('#vpProfileSave');
       if (saveBtn) saveBtn.disabled = true;
-      const result = await ctx.api.updateProfile({
-        first_name: firstName,
-        last_name: lastName,
-        phone,
-      });
+      const result = await ctx.api.updateProfile({ first_name: firstName, last_name: lastName, phone });
       const me = result.me || await ctx.api.me();
       ctx.setState({ me, activeTenant: me.active_tenant });
       ctx.ui.toast('Профиль обновлён');
       renderProfileView(container, { ...ctx, me });
     } catch (err) {
-      console.error('[vp-app] profile save error', err);
       renderProfileEdit(container, ctx, err.message || 'Ошибка обновления профиля');
     }
   });
@@ -199,13 +211,7 @@ export function getRoutes() {
         `;
       },
     },
-    {
-      route: '#/profile',
-      title: 'Profile',
-      render(container, ctx) {
-        renderProfileView(container, ctx);
-      },
-    },
+    { route: '#/profile', title: 'Profile', render(container, ctx) { renderProfileView(container, ctx); } },
     {
       route: '#/tenants',
       title: 'Tenants',
@@ -252,7 +258,6 @@ export function getRoutes() {
               ctx.ui.toast('Тенант переключён');
               ctx.navigate('#/dashboard');
             } catch (err) {
-              console.error('[vp-app] tenant switch error', err);
               ctx.ui.toast(`Ошибка переключения tenant: ${err.message}`);
             }
           });

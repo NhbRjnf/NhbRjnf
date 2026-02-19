@@ -332,8 +332,30 @@ add_action('wp_enqueue_scripts', function () {
 /**
  * VP: assets for /app shell page
  */
+if (!function_exists('vp_app_asset_version')) {
+  function vp_app_asset_version() {
+    $files = [
+      get_stylesheet_directory() . '/assets/app/vp-app.js',
+      get_stylesheet_directory() . '/assets/vp-app.css',
+      get_stylesheet_directory() . '/assets/app/modules/base.js',
+    ];
+
+    $maxMtime = 0;
+    foreach ($files as $file) {
+      if (file_exists($file)) {
+        $mtime = (int) filemtime($file);
+        if ($mtime > $maxMtime) {
+          $maxMtime = $mtime;
+        }
+      }
+    }
+
+    return '1.0.' . (string) $maxMtime;
+  }
+}
+
 if (!defined('VP_APP_ASSET_VERSION')) {
-  define('VP_APP_ASSET_VERSION', '1.0.0');
+  define('VP_APP_ASSET_VERSION', vp_app_asset_version());
 }
 
 add_action('wp_enqueue_scripts', function () {
