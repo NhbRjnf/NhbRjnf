@@ -9,6 +9,133 @@ export function getMenu() {
   ];
 }
 
+function renderProfileView(container, ctx) {
+  const u = ctx.me.user || {};
+  const p = ctx.me.profile || {};
+
+  container.innerHTML = `
+    <div id="vpProfileError"></div>
+    <div class="vp-card is-soft">
+      <div class="vp-toolbar">
+        <div class="vp-toolbar-left"><div class="vp-badge">Профиль</div></div>
+        <div class="vp-toolbar-right"><button id="vpProfileEdit" type="button" class="vp-btn">Редактировать</button></div>
+      </div>
+      <div class="vp-table-wrap">
+        <table class="vp-table">
+          <tbody>
+            <tr><td>Email</td><td>${ctx.ui.escapeHTML(u.email || '')}</td></tr>
+            <tr><td>Имя</td><td>${ctx.ui.escapeHTML(u.first_name || '')}</td></tr>
+            <tr><td>Фамилия</td><td>${ctx.ui.escapeHTML(u.last_name || '')}</td></tr>
+            <tr><td>User type</td><td>${ctx.ui.escapeHTML(p.user_type || '')}</td></tr>
+            <tr><td>Статус</td><td>${ctx.ui.escapeHTML(p.status || '')}</td></tr>
+            <tr><td>Телефон</td><td>${ctx.ui.escapeHTML(p.phone || '')}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="vp-card">
+      <div class="vp-toolbar">
+        <div class="vp-toolbar-left"><div class="vp-badge">Аватар</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        ${p.avatar_url ? `<img src="${ctx.ui.escapeHTML(p.avatar_url)}" alt="avatar" style="width:84px;height:84px;border-radius:999px;object-fit:cover;border:1px solid var(--line);"/>` : '<div class="vp-badge">Не загружен</div>'}
+        <div>
+          <input id="vpAvatarInput" type="file" accept="image/*" class="vp-input" style="max-width:280px;"/>
+          <div class="vp-cell-muted">JPG/PNG/WEBP, до 5MB</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const editBtn = container.querySelector('#vpProfileEdit');
+  editBtn?.addEventListener('click', () => renderProfileEdit(container, ctx));
+
+  const avatarInput = container.querySelector('#vpAvatarInput');
+  avatarInput?.addEventListener('change', async () => {
+    const file = avatarInput.files?.[0];
+    if (!file) return;
+
+    try {
+      avatarInput.disabled = true;
+      const result = await ctx.api.uploadAvatar(file);
+      const me = result.me || await ctx.api.me();
+      ctx.setState({ me, activeTenant: me.active_tenant });
+      ctx.ui.toast('Аватар обновлён');
+      renderProfileView(container, {
+        ...ctx,
+        me,
+      });
+    } catch (err) {
+      console.error('[vp-app] avatar upload error', err);
+      const errHost = container.querySelector('#vpProfileError');
+      if (errHost) {
+        errHost.innerHTML = `<div class="vp-card"><span class="vp-badge is-danger">Ошибка</span> ${ctx.ui.escapeHTML(err.message || 'Не удалось загрузить аватар')}</div>`;
+      }
+    } finally {
+      avatarInput.value = '';
+      avatarInput.disabled = false;
+    }
+  });
+}
+
+function renderProfileEdit(container, ctx, errorText = '') {
+  const u = ctx.me.user || {};
+  const p = ctx.me.profile || {};
+
+  container.innerHTML = `
+    <div id="vpProfileError">${errorText ? `<div class="vp-card"><span class="vp-badge is-danger">Ошибка</span> ${ctx.ui.escapeHTML(errorText)}</div>` : ''}</div>
+    <div class="vp-card is-soft">
+      <div class="vp-toolbar">
+        <div class="vp-toolbar-left"><div class="vp-badge">Редактирование профиля</div></div>
+      </div>
+      <div style="display:grid;gap:10px;max-width:480px;">
+        <label>Email
+          <input class="vp-input" type="text" id="vpProfileEmail" value="${ctx.ui.escapeHTML(u.email || '')}" readonly />
+        </label>
+        <label>Имя
+          <input class="vp-input" type="text" id="vpProfileFirstName" maxlength="80" value="${ctx.ui.escapeHTML(u.first_name || '')}" />
+        </label>
+        <label>Фамилия
+          <input class="vp-input" type="text" id="vpProfileLastName" maxlength="80" value="${ctx.ui.escapeHTML(u.last_name || '')}" />
+        </label>
+        <label>Телефон
+          <input class="vp-input" type="text" id="vpProfilePhone" maxlength="64" value="${ctx.ui.escapeHTML(p.phone || '')}" />
+        </label>
+      </div>
+      <div class="vp-toolbar" style="margin-top:12px;">
+        <div class="vp-toolbar-left">
+          <button id="vpProfileSave" class="vp-btn vp-primary" type="button">Сохранить</button>
+          <button id="vpProfileCancel" class="vp-btn" type="button">Отмена</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  container.querySelector('#vpProfileCancel')?.addEventListener('click', () => renderProfileView(container, ctx));
+  container.querySelector('#vpProfileSave')?.addEventListener('click', async () => {
+    const firstName = String(container.querySelector('#vpProfileFirstName')?.value || '').trim();
+    const lastName = String(container.querySelector('#vpProfileLastName')?.value || '').trim();
+    const phone = String(container.querySelector('#vpProfilePhone')?.value || '').trim();
+
+    try {
+      const saveBtn = container.querySelector('#vpProfileSave');
+      if (saveBtn) saveBtn.disabled = true;
+      const result = await ctx.api.updateProfile({
+        first_name: firstName,
+        last_name: lastName,
+        phone,
+      });
+      const me = result.me || await ctx.api.me();
+      ctx.setState({ me, activeTenant: me.active_tenant });
+      ctx.ui.toast('Профиль обновлён');
+      renderProfileView(container, { ...ctx, me });
+    } catch (err) {
+      console.error('[vp-app] profile save error', err);
+      renderProfileEdit(container, ctx, err.message || 'Ошибка обновления профиля');
+    }
+  });
+}
+
 export function getRoutes() {
   return [
     {
@@ -29,22 +156,7 @@ export function getRoutes() {
       route: '#/profile',
       title: 'Profile',
       render(container, ctx) {
-        const u = ctx.me.user || {};
-        const p = ctx.me.profile || {};
-        container.innerHTML = `
-          <div class="vp-table-wrap">
-            <table class="vp-table">
-              <tbody>
-                <tr><td>Email</td><td>${ctx.ui.escapeHTML(u.email || '')}</td></tr>
-                <tr><td>Имя</td><td>${ctx.ui.escapeHTML(u.first_name || '')}</td></tr>
-                <tr><td>Фамилия</td><td>${ctx.ui.escapeHTML(u.last_name || '')}</td></tr>
-                <tr><td>User type</td><td>${ctx.ui.escapeHTML(p.user_type || '')}</td></tr>
-                <tr><td>Статус</td><td>${ctx.ui.escapeHTML(p.status || '')}</td></tr>
-                <tr><td>Телефон</td><td>${ctx.ui.escapeHTML(p.phone || '')}</td></tr>
-              </tbody>
-            </table>
-          </div>
-        `;
+        renderProfileView(container, ctx);
       },
     },
     {

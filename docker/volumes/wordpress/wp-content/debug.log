@@ -280,3 +280,38 @@ Stack trace:
 
 [19-Feb-2026 06:00:28 UTC] [vp-app] runtime log write failed: 2026-02-19T06:00:28+00:00 [vp-app] level=info action=app_me_boot user=c2feda5f-ee02-47c0-bc29-554911ae25c9 ip=176.208.74.10 msg="Payload built" ctx={"request_id":"d169f4b46f87ebe0","user_id":"c2feda5f-ee02-47c0-bc29-554911ae25c9","memberships_count":0,"active_tenant_id":""}
 
+[19-Feb-2026 07:15:15 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:15:16 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:15:34 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:15:35 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:15:35 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:15:35 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:15:35 UTC] [vp-app] runtime log write failed: 2026-02-19T07:15:35+00:00 [vp-app] level=info action=app_me_boot user=c2feda5f-ee02-47c0-bc29-554911ae25c9 ip=176.208.74.10 msg="Payload built" ctx={"request_id":"4322395b735f6716","user_id":"c2feda5f-ee02-47c0-bc29-554911ae25c9","memberships_count":0,"active_tenant_id":""}
+
+[19-Feb-2026 07:15:43 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:16:08 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:16:09 UTC] [vp-app] runtime log write failed: 2026-02-19T07:16:09+00:00 [vp-app] level=error action=profile_update_error user=c2feda5f-ee02-47c0-bc29-554911ae25c9 ip=176.208.74.10 msg="You don't have permission to access collection \"directus_users\" or it does not exist. Queried in root." ctx={"request_id":"d1dd8ec5e4633131","status":403,"user_id":"c2feda5f-ee02-47c0-bc29-554911ae25c9"}
+
+[19-Feb-2026 07:17:10 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:17:10 UTC] [vp-app] runtime log write failed: 2026-02-19T07:17:10+00:00 [vp-app] level=error action=profile_update_error user=c2feda5f-ee02-47c0-bc29-554911ae25c9 ip=176.208.74.10 msg="profile_not_found" ctx={"request_id":"8703602f210b2eaa","status":404,"user_id":"c2feda5f-ee02-47c0-bc29-554911ae25c9"}
+
+[19-Feb-2026 07:17:13 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:17:13 UTC] [vp-app] runtime log write failed: 2026-02-19T07:17:13+00:00 [vp-app] level=error action=profile_update_error user=c2feda5f-ee02-47c0-bc29-554911ae25c9 ip=176.208.74.10 msg="profile_not_found" ctx={"request_id":"c5543034cd2f3526","status":404,"user_id":"c2feda5f-ee02-47c0-bc29-554911ae25c9"}
+
+[19-Feb-2026 07:17:22 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:17:22 UTC] [vp-app] runtime log write failed: 2026-02-19T07:17:22+00:00 [vp-app] level=error action=avatar_upload_error user=c2feda5f-ee02-47c0-bc29-554911ae25c9 ip=176.208.74.10 msg="You don't have permission to access collection \"directus_files\" or it does not exist. Queried in root." ctx={"request_id":"f975fcffd896ae7d","status":403,"user_id":"c2feda5f-ee02-47c0-bc29-554911ae25c9","size":147814,"type":"image\/png"}
+
+[19-Feb-2026 07:17:27 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:17:30 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:17:30 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:17:40 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:18:23 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:18:23 UTC] [vp-app] runtime log write failed: 2026-02-19T07:18:23+00:00 [vp-app] level=error action=profile_update_error user=c2feda5f-ee02-47c0-bc29-554911ae25c9 ip=176.208.74.10 msg="profile_not_found" ctx={"request_id":"3409844c6e6b3e7f","status":404,"user_id":"c2feda5f-ee02-47c0-bc29-554911ae25c9"}
+
+[19-Feb-2026 07:19:48 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:19:48 UTC] [vp-app] runtime log write failed: 2026-02-19T07:19:48+00:00 [vp-app] level=error action=diag_runtime user=unknown ip=31.128.40.56 msg="Unauthorized: vp_dx_at is missing" ctx={"request_id":"dfe25eb291fd2556"}
+
+[19-Feb-2026 07:24:47 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:26:04 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:26:04 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied
+[19-Feb-2026 07:26:04 UTC] [vp-app] runtime diag failed path=/opt/vseponyatno/runtime is_dir=0 writable=0 uid=33 gid=33 user= sapi=apache2handler open_basedir= last_error=mkdir(): Permission denied

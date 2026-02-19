@@ -22,43 +22,110 @@ if (!function_exists('vp_app_request_id')) {
   }
 }
 
-if (!function_exists('vp_app_runtime_log')) {
-  function vp_app_runtime_log($level, $action, $message, $ctx = []) {
-    $runtimeDir = '/opt/vseponyatno/runtime';
-    $logFile = $runtimeDir . '/vp-app.log';
 
-    if (!is_dir($runtimeDir)) {
-      wp_mkdir_p($runtimeDir);
+if (!function_exists('vp_app_runtime_diag')) {
+  function vp_app_runtime_diag($force = false) {
+    static $cache = null;
+    if ($cache !== null && !$force) {
+      return $cache;
     }
 
-    $userId = 'unknown';
-    if (!empty($ctx['user_id'])) {
-      $userId = (string)$ctx['user_id'];
+    $runtimePath = '/opt/vseponyatno/runtime';
+    $lastError = null;
+    $isDir = is_dir($runtimePath);
+
+    if (!$isDir) {
+      $mk = @mkdir($runtimePath, 0775, true);
+      clearstatcache();
+      $isDir = is_dir($runtimePath);
+      if (!$mk && !$isDir) {
+        $e = error_get_last();
+        $lastError = $e['message'] ?? 'mkdir failed';
+      }
     }
 
+    $isWritable = $isDir && is_writable($runtimePath);
+    if ($isDir) {
+      $probe = @file_put_contents($runtimePath . '/.vp-runtime-check.log', date(DATE_ATOM) . " runtime-check\n", FILE_APPEND | LOCK_EX);
+      if ($probe === false) {
+        $e = error_get_last();
+        $lastError = $e['message'] ?? $lastError;
+        $isWritable = false;
+      } else {
+        $isWritable = true;
+      }
+    }
+
+    $uid = function_exists('posix_geteuid') ? @posix_geteuid() : null;
+    $gid = function_exists('posix_getegid') ? @posix_getegid() : null;
+    $user = function_exists('get_current_user') ? (string)get_current_user() : 'unknown';
+    $openBaseDir = (string)ini_get('open_basedir');
+
+    $cache = [
+      'runtime_path' => $runtimePath,
+      'is_dir' => (bool)$isDir,
+      'is_writable' => (bool)$isWritable,
+      'php_user' => $user,
+      'php_uid' => $uid,
+      'php_gid' => $gid,
+      'php_sapi' => (string)php_sapi_name(),
+      'open_basedir' => $openBaseDir,
+      'last_error' => $lastError,
+    ];
+
+    if (!$cache['is_writable']) {
+      error_log('[vp-app] runtime diag failed path=' . $runtimePath . ' is_dir=' . ($cache['is_dir'] ? '1' : '0') . ' writable=' . ($cache['is_writable'] ? '1' : '0') . ' uid=' . (string)$uid . ' gid=' . (string)$gid . ' user=' . $user . ' sapi=' . $cache['php_sapi'] . ' open_basedir=' . $openBaseDir . ' last_error=' . (string)$lastError);
+    }
+
+    return $cache;
+  }
+}
+
+if (!function_exists('vp_app_sanitize_log_context')) {
+  function vp_app_sanitize_log_context($ctx = []) {
     $safeCtx = is_array($ctx) ? $ctx : [];
     foreach (['access_token', 'refresh_token', 'token', 'password', 'vp_dx_at', 'vp_dx_rt'] as $secretKey) {
       if (isset($safeCtx[$secretKey])) {
         unset($safeCtx[$secretKey]);
       }
     }
+    return $safeCtx;
+  }
+}
 
+if (!function_exists('vp_app_runtime_log_write')) {
+  function vp_app_runtime_log_write($fileName, $line, $fallbackTag) {
+    $diag = vp_app_runtime_diag();
+    $logFile = rtrim((string)$diag['runtime_path'], '/') . '/' . ltrim((string)$fileName, '/');
+    $written = @file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
+    if ($written === false) {
+      error_log('[' . $fallbackTag . '] runtime log write failed: ' . $line);
+    }
+  }
+}
+
+if (!function_exists('vp_app_runtime_log')) {
+  function vp_app_runtime_log($level, $action, $message, $ctx = []) {
+    $userId = 'unknown';
+    if (!empty($ctx['user_id'])) {
+      $userId = (string)$ctx['user_id'];
+    }
+
+    $safeCtx = vp_app_sanitize_log_context($ctx);
     $ip = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field((string)$_SERVER['REMOTE_ADDR']) : 'unknown';
     $line = sprintf(
-      "%s [vp-app] level=%s action=%s user=%s ip=%s msg=\"%s\" ctx=%s\n",
+      '%s [vp-app] level=%s action=%s user=%s ip=%s msg="%s" ctx=%s' . "
+",
       date(DATE_ATOM),
       sanitize_text_field((string)$level),
       sanitize_text_field((string)$action),
       sanitize_text_field((string)$userId),
       $ip,
-      str_replace('"', '\\"', (string)$message),
+      str_replace('"', '\"', (string)$message),
       wp_json_encode($safeCtx, JSON_UNESCAPED_UNICODE)
     );
 
-    $written = @file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
-    if ($written === false) {
-      error_log('[vp-app] runtime log write failed: ' . $line);
-    }
+    vp_app_runtime_log_write('vp-app.log', $line, 'vp-app');
   }
 }
 
@@ -143,35 +210,21 @@ if (!function_exists('vp_app_directus_request')) {
 
 if (!function_exists('vp_app_runtime_log_dentist')) {
   function vp_app_runtime_log_dentist($level, $action, $message, $ctx = []) {
-    $runtimeDir = '/opt/vseponyatno/runtime';
-    $logFile = $runtimeDir . '/vp-dentist.log';
-
-    if (!is_dir($runtimeDir)) {
-      wp_mkdir_p($runtimeDir);
-    }
-
-    $safeCtx = is_array($ctx) ? $ctx : [];
-    foreach (['access_token', 'refresh_token', 'token', 'password', 'vp_dx_at', 'vp_dx_rt'] as $secretKey) {
-      if (isset($safeCtx[$secretKey])) {
-        unset($safeCtx[$secretKey]);
-      }
-    }
+    $safeCtx = vp_app_sanitize_log_context($ctx);
 
     $line = sprintf(
-      "%s [vp-dentist] level=%s action=%s user=%s tenant=%s msg=\"%s\" ctx=%s\n",
+      '%s [vp-dentist] level=%s action=%s user=%s tenant=%s msg="%s" ctx=%s' . "
+",
       date(DATE_ATOM),
       sanitize_text_field((string)$level),
       sanitize_text_field((string)$action),
       sanitize_text_field((string)($safeCtx['user_id'] ?? 'unknown')),
       sanitize_text_field((string)($safeCtx['tenant_id'] ?? 'unknown')),
-      str_replace('"', '\\"', (string)$message),
+      str_replace('"', '\"', (string)$message),
       wp_json_encode($safeCtx, JSON_UNESCAPED_UNICODE)
     );
 
-    $written = @file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
-    if ($written === false) {
-      error_log('[vp-dentist] runtime log write failed: ' . $line);
-    }
+    vp_app_runtime_log_write('vp-dentist.log', $line, 'vp-dentist');
   }
 }
 
@@ -267,6 +320,161 @@ if (!function_exists('vp_app_fetch_profile')) {
       return $res;
     }
     return $res['data'][0] ?? null;
+  }
+}
+
+
+if (!function_exists('vp_app_service_token')) {
+  function vp_app_service_token() {
+    $token = getenv('VP_DIRECTUS_TOKEN');
+    if (!$token) {
+      $token = getenv('DIRECTUS_TOKEN');
+    }
+    return $token ? trim((string)$token) : '';
+  }
+}
+
+if (!function_exists('vp_app_directus_request_with_service_fallback')) {
+  function vp_app_directus_request_with_service_fallback($method, $path, $userToken = '', $body = null) {
+    $serviceToken = vp_app_service_token();
+    if ($serviceToken !== '') {
+      return vp_app_directus_request($method, $path, $serviceToken, $body);
+    }
+    return vp_app_directus_request($method, $path, $userToken, $body);
+  }
+}
+
+if (!function_exists('vp_app_detect_profile_avatar_field')) {
+  function vp_app_detect_profile_avatar_field($token) {
+    static $cached = null;
+    if ($cached !== null) {
+      return $cached;
+    }
+
+    $res = vp_app_directus_request_with_service_fallback('GET', '/fields/vp_user_profiles', $token);
+    if (is_wp_error($res)) {
+      $cached = '';
+      return $cached;
+    }
+
+    $candidates = ['avatar_file', 'avatar', 'avatar_id', 'avatar_image'];
+    $fields = is_array($res['data'] ?? null) ? $res['data'] : [];
+    foreach ($fields as $fieldMeta) {
+      $field = (string)($fieldMeta['field'] ?? '');
+      if (in_array($field, $candidates, true)) {
+        $cached = $field;
+        return $cached;
+      }
+    }
+
+    $cached = '';
+    return $cached;
+  }
+}
+
+if (!function_exists('vp_app_profile_avatar_info')) {
+  function vp_app_profile_avatar_info($profile) {
+    $profile = is_array($profile) ? $profile : [];
+    $avatarId = '';
+    foreach (['avatar_file', 'avatar', 'avatar_id', 'avatar_image'] as $key) {
+      if (!isset($profile[$key])) {
+        continue;
+      }
+      $value = $profile[$key];
+      if (is_array($value)) {
+        $avatarId = trim((string)($value['id'] ?? ''));
+      } else {
+        $avatarId = trim((string)$value);
+      }
+      if ($avatarId !== '') {
+        break;
+      }
+    }
+
+    $avatarUrl = trim((string)($profile['avatar_url'] ?? ''));
+    if ($avatarUrl === '' && $avatarId !== '') {
+      $base = vp_app_directus_base_url();
+      if ($base !== '') {
+        $avatarUrl = $base . '/assets/' . rawurlencode($avatarId);
+      }
+    }
+
+    return [
+      'avatar_file' => $avatarId,
+      'avatar_url' => $avatarUrl,
+    ];
+  }
+}
+
+if (!function_exists('vp_app_build_profile_payload')) {
+  function vp_app_build_profile_payload($profile) {
+    $profile = is_array($profile) ? $profile : [];
+    $avatar = vp_app_profile_avatar_info($profile);
+
+    return [
+      'id' => (int)($profile['id'] ?? 0),
+      'user_id' => (string)($profile['user_id'] ?? ''),
+      'user_type' => (string)($profile['user_type'] ?? ''),
+      'status' => (string)($profile['status'] ?? ''),
+      'phone' => (string)($profile['phone'] ?? ''),
+      'avatar_file' => (string)$avatar['avatar_file'],
+      'avatar_url' => (string)$avatar['avatar_url'],
+    ];
+  }
+}
+
+if (!function_exists('vp_app_directus_upload_file')) {
+  function vp_app_directus_upload_file($token, $tmpPath, $fileName, $mimeType) {
+    $base = vp_app_directus_base_url();
+    if ($base === '') {
+      return new WP_Error('vp_app_directus_env_missing', 'DIRECTUS URL is missing', ['status' => 500]);
+    }
+
+    if (!function_exists('curl_file_create')) {
+      return new WP_Error('vp_app_curl_missing', 'curl_file_create is not available', ['status' => 500]);
+    }
+
+    $ch = curl_init($base . '/files');
+    if ($ch === false) {
+      return new WP_Error('vp_app_curl_init_failed', 'Unable to initialize cURL', ['status' => 500]);
+    }
+
+    $headers = ['Accept: application/json'];
+    if ($token !== '') {
+      $headers[] = 'Authorization: Bearer ' . $token;
+    }
+
+    $postFields = [
+      'file' => curl_file_create($tmpPath, $mimeType, $fileName),
+    ];
+
+    curl_setopt_array($ch, [
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_POST => true,
+      CURLOPT_POSTFIELDS => $postFields,
+      CURLOPT_HTTPHEADER => $headers,
+      CURLOPT_TIMEOUT => 60,
+    ]);
+
+    $raw = curl_exec($ch);
+    $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    curl_close($ch);
+
+    if ($raw === false) {
+      return new WP_Error('vp_app_directus_curl_error', $error !== '' ? $error : 'Directus upload failed', ['status' => 500]);
+    }
+
+    $json = json_decode((string)$raw, true);
+    if ($status < 200 || $status >= 300) {
+      $message = 'Directus upload failed';
+      if (is_array($json) && !empty($json['errors'][0]['message'])) {
+        $message = (string)$json['errors'][0]['message'];
+      }
+      return new WP_Error('vp_app_directus_upload_error', $message, ['status' => $status, 'body' => $json]);
+    }
+
+    return is_array($json) ? $json : ['data' => null];
   }
 }
 
@@ -428,13 +636,7 @@ if (!function_exists('vp_app_build_payload')) {
         'first_name' => (string)($me['first_name'] ?? ''),
         'last_name' => (string)($me['last_name'] ?? ''),
       ],
-      'profile' => [
-        'id' => (int)($profile['id'] ?? 0),
-        'user_id' => (string)($profile['user_id'] ?? ''),
-        'user_type' => (string)($profile['user_type'] ?? ''),
-        'status' => (string)($profile['status'] ?? ''),
-        'phone' => (string)($profile['phone'] ?? ''),
-      ],
+      'profile' => vp_app_build_profile_payload($profile),
       'tenants' => $tenants,
       'active_tenant' => $activeTenant,
       'asset_version' => VP_APP_ASSET_VERSION,
@@ -452,6 +654,10 @@ if (!function_exists('vp_app_require_auth_token')) {
     return $token;
   }
 }
+
+add_action('init', function () {
+  vp_app_runtime_diag(false);
+});
 
 add_action('rest_api_init', function () {
   register_rest_route('vp/v1/app', '/me', [
@@ -584,6 +790,207 @@ add_action('rest_api_init', function () {
 
       vp_app_runtime_log('info', 'tenant_set', 'Tenant switched', ['request_id' => $requestId, 'tenant_id' => $tenantId, 'user_id' => $userId]);
       return vp_app_json(['ok' => true, 'request_id' => $requestId], 200);
+    },
+  ]);
+
+
+  register_rest_route('vp/v1/app', '/profile', [
+    'methods' => 'PATCH',
+    'permission_callback' => '__return_true',
+    'callback' => function (WP_REST_Request $request) {
+      $requestId = vp_app_request_id();
+      $token = vp_app_require_auth_token($requestId, 'profile_update');
+      if ($token instanceof WP_REST_Response) {
+        return $token;
+      }
+
+      $rawParams = $request->get_json_params();
+      $firstName = trim((string)($rawParams['first_name'] ?? ''));
+      $lastName = trim((string)($rawParams['last_name'] ?? ''));
+      $phone = trim((string)($rawParams['phone'] ?? ''));
+
+      if (mb_strlen($firstName) > 80 || mb_strlen($lastName) > 80 || mb_strlen($phone) > 64) {
+        vp_app_runtime_log('error', 'profile_update_error', 'Validation failed', ['request_id' => $requestId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'validation_error'], 400);
+      }
+
+      $me = vp_app_fetch_me($token);
+      if (is_wp_error($me)) {
+        $status = (int)($me->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log('error', 'profile_update_error', $me->get_error_message(), ['request_id' => $requestId, 'status' => $status]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $me->get_error_message()], $status);
+      }
+
+      $userId = (string)($me['id'] ?? '');
+      if ($userId === '') {
+        vp_app_runtime_log('error', 'profile_update_error', 'User id missing', ['request_id' => $requestId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'unauthorized'], 401);
+      }
+
+      $userPatch = vp_app_directus_request('PATCH', '/users/' . rawurlencode($userId), $token, [
+        'first_name' => $firstName,
+        'last_name' => $lastName,
+      ]);
+      if (is_wp_error($userPatch)) {
+        $status = (int)($userPatch->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log('error', 'profile_update_error', $userPatch->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $userPatch->get_error_message()], $status);
+      }
+
+      $profile = vp_app_fetch_profile($token, $userId);
+      if (is_wp_error($profile) || !is_array($profile)) {
+        $status = is_wp_error($profile) ? (int)($profile->get_error_data()['status'] ?? 500) : 404;
+        $message = is_wp_error($profile) ? $profile->get_error_message() : 'profile_not_found';
+        vp_app_runtime_log('error', 'profile_update_error', $message, ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $message], $status);
+      }
+
+      $profileId = (string)($profile['id'] ?? '');
+      $profilePatch = vp_app_directus_request('PATCH', '/items/vp_user_profiles/' . rawurlencode($profileId), $token, [
+        'phone' => $phone,
+      ]);
+      if (is_wp_error($profilePatch)) {
+        $status = (int)($profilePatch->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log('error', 'profile_update_error', $profilePatch->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $profilePatch->get_error_message()], $status);
+      }
+
+      $payload = vp_app_build_payload($token, $requestId);
+      if (is_wp_error($payload)) {
+        $status = (int)($payload->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log('error', 'profile_update_error', $payload->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $payload->get_error_message()], $status);
+      }
+
+      vp_app_runtime_log('info', 'profile_update_success', 'Profile updated', ['request_id' => $requestId, 'user_id' => $userId]);
+      return vp_app_json(['ok' => true, 'request_id' => $requestId, 'me' => $payload], 200);
+    },
+  ]);
+
+  register_rest_route('vp/v1/app', '/profile/avatar', [
+    'methods' => 'POST',
+    'permission_callback' => '__return_true',
+    'callback' => function () {
+      $requestId = vp_app_request_id();
+      $token = vp_app_require_auth_token($requestId, 'avatar_upload');
+      if ($token instanceof WP_REST_Response) {
+        return $token;
+      }
+
+      if (empty($_FILES['file']) || !is_array($_FILES['file'])) {
+        vp_app_runtime_log('error', 'avatar_upload_error', 'File is missing', ['request_id' => $requestId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'file_required'], 400);
+      }
+
+      $file = $_FILES['file'];
+      $tmpPath = (string)($file['tmp_name'] ?? '');
+      $size = (int)($file['size'] ?? 0);
+      $type = (string)($file['type'] ?? '');
+      $name = sanitize_file_name((string)($file['name'] ?? 'avatar'));
+      $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      $maxSize = 5 * 1024 * 1024;
+
+      if ($tmpPath === '' || !file_exists($tmpPath)) {
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'upload_failed'], 400);
+      }
+
+      if (!in_array($type, $allowedTypes, true)) {
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'invalid_file_type'], 400);
+      }
+
+      if ($size <= 0 || $size > $maxSize) {
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'invalid_file_size'], 400);
+      }
+
+      $me = vp_app_fetch_me($token);
+      if (is_wp_error($me)) {
+        $status = (int)($me->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log('error', 'avatar_upload_error', $me->get_error_message(), ['request_id' => $requestId, 'status' => $status]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $me->get_error_message()], $status);
+      }
+      $userId = (string)($me['id'] ?? '');
+
+      $serviceToken = vp_app_service_token();
+      $uploadToken = $serviceToken !== '' ? $serviceToken : $token;
+      $upload = vp_app_directus_upload_file($uploadToken, $tmpPath, $name !== '' ? $name : 'avatar', $type);
+      if (is_wp_error($upload)) {
+        $status = (int)($upload->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log('error', 'avatar_upload_error', $upload->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId, 'size' => $size, 'type' => $type]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $upload->get_error_message()], $status);
+      }
+
+      $fileData = is_array($upload['data'] ?? null) ? $upload['data'] : [];
+      $fileId = (string)($fileData['id'] ?? '');
+      if ($fileId === '') {
+        vp_app_runtime_log('error', 'avatar_upload_error', 'Directus file id missing', ['request_id' => $requestId, 'user_id' => $userId, 'size' => $size, 'type' => $type]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'file_upload_failed'], 500);
+      }
+
+      $profile = vp_app_fetch_profile($token, $userId);
+      if (is_wp_error($profile) || !is_array($profile)) {
+        $status = is_wp_error($profile) ? (int)($profile->get_error_data()['status'] ?? 500) : 404;
+        $message = is_wp_error($profile) ? $profile->get_error_message() : 'profile_not_found';
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $message], $status);
+      }
+
+      $avatarField = vp_app_detect_profile_avatar_field($token);
+      if ($avatarField === '') {
+        vp_app_runtime_log('error', 'avatar_upload_error', 'Avatar field is missing in vp_user_profiles', ['request_id' => $requestId, 'user_id' => $userId, 'file_id' => $fileId]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'avatar_field_missing'], 400);
+      }
+
+      $profileId = (string)($profile['id'] ?? '');
+      $patch = vp_app_directus_request('PATCH', '/items/vp_user_profiles/' . rawurlencode($profileId), $token, [
+        $avatarField => $fileId,
+      ]);
+      if (is_wp_error($patch)) {
+        $status = (int)($patch->get_error_data()['status'] ?? 500);
+        vp_app_runtime_log('error', 'avatar_upload_error', $patch->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId, 'file_id' => $fileId, 'size' => $size, 'type' => $type]);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $patch->get_error_message()], $status);
+      }
+
+      $payload = vp_app_build_payload($token, $requestId);
+      if (is_wp_error($payload)) {
+        $status = (int)($payload->get_error_data()['status'] ?? 500);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $payload->get_error_message()], $status);
+      }
+
+      vp_app_runtime_log('info', 'avatar_upload_success', 'Avatar uploaded', ['request_id' => $requestId, 'user_id' => $userId, 'file_id' => $fileId, 'size' => $size, 'type' => $type]);
+      return vp_app_json([
+        'ok' => true,
+        'request_id' => $requestId,
+        'file' => [
+          'id' => $fileId,
+          'filename_download' => (string)($fileData['filename_download'] ?? ''),
+          'type' => (string)($fileData['type'] ?? $type),
+        ],
+        'me' => $payload,
+      ], 200);
+    },
+  ]);
+
+  register_rest_route('vp/v1/app', '/diag/runtime', [
+    'methods' => 'GET',
+    'permission_callback' => '__return_true',
+    'callback' => function () {
+      $requestId = vp_app_request_id();
+      $token = vp_app_require_auth_token($requestId, 'diag_runtime');
+      if ($token instanceof WP_REST_Response) {
+        return $token;
+      }
+
+      $diag = vp_app_runtime_diag(true);
+      return vp_app_json([
+        'ok' => true,
+        'request_id' => $requestId,
+        'runtime_path' => $diag['runtime_path'],
+        'is_dir' => (bool)$diag['is_dir'],
+        'is_writable' => (bool)$diag['is_writable'],
+        'php_user' => (string)$diag['php_user'],
+        'php_uid' => $diag['php_uid'],
+        'php_gid' => $diag['php_gid'],
+        'last_error' => $diag['last_error'] !== null ? (string)$diag['last_error'] : null,
+      ], 200);
     },
   ]);
 

@@ -47,11 +47,22 @@ if (!root) {
 
   const api = {
     async request(path, options = {}) {
-      const response = await fetch(`/wp-json/vp/v1/app${path}`, {
+      const fetchOptions = {
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
         ...options,
-      });
+      };
+
+      const hasFormDataBody = typeof FormData !== 'undefined' && fetchOptions.body instanceof FormData;
+      if (!hasFormDataBody) {
+        fetchOptions.headers = {
+          'Content-Type': 'application/json',
+          ...(options.headers || {}),
+        };
+      } else if (options.headers) {
+        fetchOptions.headers = { ...options.headers };
+      }
+
+      const response = await fetch(`/wp-json/vp/v1/app${path}`, fetchOptions);
       const json = await response.json().catch(() => ({}));
       if (!response.ok) {
         const err = new Error(json.error || `HTTP ${response.status}`);
@@ -71,6 +82,20 @@ if (!root) {
       return this.request('/tenant', {
         method: 'POST',
         body: JSON.stringify({ tenant_id: tenantId }),
+      });
+    },
+    updateProfile(payload) {
+      return this.request('/profile', {
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+      });
+    },
+    uploadAvatar(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      return this.request('/profile/avatar', {
+        method: 'POST',
+        body: formData,
       });
     },
   };
@@ -117,19 +142,41 @@ if (!root) {
     };
   }
 
+  function uniqBy(list, keyBuilder) {
+    const out = [];
+    const seen = new Set();
+    list.forEach((item) => {
+      if (!item || typeof item !== 'object') return;
+      const key = keyBuilder(item);
+      if (seen.has(key)) return;
+      seen.add(key);
+      out.push(item);
+    });
+    return out;
+  }
+
   async function loadModules(userType) {
     const baseModule = await import(`/wp-content/themes/twentytwentyfour/assets/app/modules/base.js?ver=${assetVersion}`);
-    let userModule;
-    try {
-      userModule = await import(`/wp-content/themes/twentytwentyfour/assets/app/modules/${userType}.js?ver=${assetVersion}`);
-    } catch (err) {
-      console.warn('[vp-app] user module fallback to base only', err);
-      userModule = null;
+    let userModule = null;
+
+    const normalizedUserType = String(userType || '').trim();
+    if (normalizedUserType && normalizedUserType !== 'base') {
+      try {
+        userModule = await import(`/wp-content/themes/twentytwentyfour/assets/app/modules/${normalizedUserType}.js?ver=${assetVersion}`);
+      } catch (err) {
+        console.warn('[vp-app] user module fallback to base only', err);
+      }
     }
 
     const ctx = moduleContext();
-    const menu = [...(baseModule.getMenu(ctx) || []), ...(userModule?.getMenu?.(ctx) || [])];
-    const routes = [...(baseModule.getRoutes(ctx) || []), ...(userModule?.getRoutes?.(ctx) || [])];
+    const menu = uniqBy(
+      [...(baseModule.getMenu(ctx) || []), ...(userModule?.getMenu?.(ctx) || [])],
+      (item) => `${item.id || ''}::${item.route || ''}`,
+    );
+    const routes = uniqBy(
+      [...(baseModule.getRoutes(ctx) || []), ...(userModule?.getRoutes?.(ctx) || [])],
+      (item) => item.route || '',
+    );
 
     if (typeof baseModule.onActivate === 'function') {
       await baseModule.onActivate(ctx);
