@@ -258,7 +258,7 @@ if (!function_exists('vp_app_dentist_context')) {
       return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'unauthorized'], 401);
     }
 
-    $profile = vp_app_fetch_profile($token, $userId);
+    $profile = vp_app_fetch_profile($serviceToken, $userId);
     if (is_wp_error($profile)) {
       $status = (int)($profile->get_error_data()['status'] ?? 500);
       vp_app_runtime_log_dentist('error', $action, $profile->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId]);
@@ -331,6 +331,25 @@ if (!function_exists('vp_app_service_token')) {
       $token = getenv('DIRECTUS_TOKEN');
     }
     return $token ? trim((string)$token) : '';
+  }
+}
+
+
+if (!function_exists('vp_app_session_expired_response')) {
+  function vp_app_session_expired_response($requestId) {
+    vp_app_runtime_log('warn', 'session_expired', 'Session expired, re-login required', ['request_id' => $requestId]);
+    return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'session expired, please login'], 401);
+  }
+}
+
+if (!function_exists('vp_app_require_service_token')) {
+  function vp_app_require_service_token($requestId, $action) {
+    $serviceToken = vp_app_service_token();
+    if ($serviceToken === '') {
+      vp_app_runtime_log('error', $action, 'Service token is missing', ['request_id' => $requestId]);
+      return new WP_Error('vp_app_service_token_missing', 'service_token_missing', ['status' => 500]);
+    }
+    return $serviceToken;
   }
 }
 
@@ -817,6 +836,9 @@ add_action('rest_api_init', function () {
       $me = vp_app_fetch_me($token);
       if (is_wp_error($me)) {
         $status = (int)($me->get_error_data()['status'] ?? 500);
+        if ($status === 401) {
+          return vp_app_session_expired_response($requestId);
+        }
         vp_app_runtime_log('error', 'profile_update_error', $me->get_error_message(), ['request_id' => $requestId, 'status' => $status]);
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $me->get_error_message()], $status);
       }
@@ -827,7 +849,13 @@ add_action('rest_api_init', function () {
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'unauthorized'], 401);
       }
 
-      $userPatch = vp_app_directus_request('PATCH', '/users/' . rawurlencode($userId), $token, [
+      $serviceToken = vp_app_require_service_token($requestId, 'profile_update_error');
+      if (is_wp_error($serviceToken)) {
+        $status = (int)($serviceToken->get_error_data()['status'] ?? 500);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $serviceToken->get_error_message()], $status);
+      }
+
+      $userPatch = vp_app_directus_request('PATCH', '/users/' . rawurlencode($userId), $serviceToken, [
         'first_name' => $firstName,
         'last_name' => $lastName,
       ]);
@@ -837,7 +865,7 @@ add_action('rest_api_init', function () {
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $userPatch->get_error_message()], $status);
       }
 
-      $profile = vp_app_fetch_profile($token, $userId);
+      $profile = vp_app_fetch_profile($serviceToken, $userId);
       if (is_wp_error($profile) || !is_array($profile)) {
         $status = is_wp_error($profile) ? (int)($profile->get_error_data()['status'] ?? 500) : 404;
         $message = is_wp_error($profile) ? $profile->get_error_message() : 'profile_not_found';
@@ -846,7 +874,7 @@ add_action('rest_api_init', function () {
       }
 
       $profileId = (string)($profile['id'] ?? '');
-      $profilePatch = vp_app_directus_request('PATCH', '/items/vp_user_profiles/' . rawurlencode($profileId), $token, [
+      $profilePatch = vp_app_directus_request('PATCH', '/items/vp_user_profiles/' . rawurlencode($profileId), $serviceToken, [
         'phone' => $phone,
       ]);
       if (is_wp_error($profilePatch)) {
@@ -905,14 +933,21 @@ add_action('rest_api_init', function () {
       $me = vp_app_fetch_me($token);
       if (is_wp_error($me)) {
         $status = (int)($me->get_error_data()['status'] ?? 500);
+        if ($status === 401) {
+          return vp_app_session_expired_response($requestId);
+        }
         vp_app_runtime_log('error', 'avatar_upload_error', $me->get_error_message(), ['request_id' => $requestId, 'status' => $status]);
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $me->get_error_message()], $status);
       }
       $userId = (string)($me['id'] ?? '');
 
-      $serviceToken = vp_app_service_token();
-      $uploadToken = $serviceToken !== '' ? $serviceToken : $token;
-      $upload = vp_app_directus_upload_file($uploadToken, $tmpPath, $name !== '' ? $name : 'avatar', $type);
+      $serviceToken = vp_app_require_service_token($requestId, 'avatar_upload_error');
+      if (is_wp_error($serviceToken)) {
+        $status = (int)($serviceToken->get_error_data()['status'] ?? 500);
+        return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $serviceToken->get_error_message()], $status);
+      }
+
+      $upload = vp_app_directus_upload_file($serviceToken, $tmpPath, $name !== '' ? $name : 'avatar', $type);
       if (is_wp_error($upload)) {
         $status = (int)($upload->get_error_data()['status'] ?? 500);
         vp_app_runtime_log('error', 'avatar_upload_error', $upload->get_error_message(), ['request_id' => $requestId, 'status' => $status, 'user_id' => $userId, 'size' => $size, 'type' => $type]);
@@ -926,21 +961,21 @@ add_action('rest_api_init', function () {
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'file_upload_failed'], 500);
       }
 
-      $profile = vp_app_fetch_profile($token, $userId);
+      $profile = vp_app_fetch_profile($serviceToken, $userId);
       if (is_wp_error($profile) || !is_array($profile)) {
         $status = is_wp_error($profile) ? (int)($profile->get_error_data()['status'] ?? 500) : 404;
         $message = is_wp_error($profile) ? $profile->get_error_message() : 'profile_not_found';
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => $message], $status);
       }
 
-      $avatarField = vp_app_detect_profile_avatar_field($token);
+      $avatarField = vp_app_detect_profile_avatar_field($serviceToken);
       if ($avatarField === '') {
         vp_app_runtime_log('error', 'avatar_upload_error', 'Avatar field is missing in vp_user_profiles', ['request_id' => $requestId, 'user_id' => $userId, 'file_id' => $fileId]);
         return vp_app_json(['ok' => false, 'request_id' => $requestId, 'error' => 'avatar_field_missing'], 400);
       }
 
       $profileId = (string)($profile['id'] ?? '');
-      $patch = vp_app_directus_request('PATCH', '/items/vp_user_profiles/' . rawurlencode($profileId), $token, [
+      $patch = vp_app_directus_request('PATCH', '/items/vp_user_profiles/' . rawurlencode($profileId), $serviceToken, [
         $avatarField => $fileId,
       ]);
       if (is_wp_error($patch)) {

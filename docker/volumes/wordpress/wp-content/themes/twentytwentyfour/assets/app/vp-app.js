@@ -98,6 +98,21 @@ if (!root) {
         body: formData,
       });
     },
+    async logout() {
+      const response = await fetch('/wp-json/vp/v1/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const json = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const err = new Error(json.error || `HTTP ${response.status}`);
+        err.status = response.status;
+        err.body = json;
+        throw err;
+      }
+      return json;
+    },
   };
 
   function setState(partial) {
@@ -233,6 +248,7 @@ if (!root) {
           <span class="vp-badge">type: ${ui.escapeHTML(userType)}</span>
           <span class="vp-badge">tenant: ${ui.escapeHTML(activeTenant)}</span>
           <button id="vpThemeToggle" class="vp-iconbtn" type="button" title="Переключить тему">☀/🌙</button>
+          <button id="vpLogoutBtn" class="vp-btn is-sm" type="button">Выйти</button>
         </div>
       </section>
       <section class="vp-app-grid">
@@ -254,6 +270,22 @@ if (!root) {
       toggle.addEventListener('click', () => {
         const current = document.documentElement.getAttribute('data-theme');
         applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    }
+
+    const logoutBtn = document.getElementById('vpLogoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        logoutBtn.disabled = true;
+        try {
+          await api.logout();
+        } catch (err) {
+          console.error('[vp-app] logout error', err);
+          ui.toast('Не удалось завершить сессию на сервере. Выполнен локальный выход.');
+        } finally {
+          setState({ me: null, activeTenant: null });
+          window.location.href = '/login/';
+        }
       });
     }
   }

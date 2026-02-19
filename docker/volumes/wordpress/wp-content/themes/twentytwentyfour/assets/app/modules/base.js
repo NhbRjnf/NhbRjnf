@@ -1,3 +1,41 @@
+function normalizeUserType(userType) {
+  const type = String(userType || '').trim();
+  if (type === 'location_owner') return 'location';
+  if (type === 'car_owner') return 'car_owner';
+  if (type === 'business_owner') return 'partner';
+  if (type === 'client') return 'auto';
+  return type;
+}
+
+function allowedFileTypesByRole(userType) {
+  const map = {
+    dentist: [
+      'Аватар: JPG/PNG/WebP (до 5MB)',
+      'Кейсы: STL/PLY/OBJ (через кейсы/сканы, не в профиле)',
+      'Документы: PDF (только как вложение к кейсу/инструкции)',
+    ],
+    location: [
+      'Аватар: JPG/PNG/WebP',
+      'Сцены: GLB/GLTF',
+      'Схемы: PDF/PNG',
+    ],
+    auto: [
+      'Аватар: JPG/PNG/WebP',
+      'Фото/видео для обращений: JPG/PNG/WebP, MP4 (лимит будет позже)',
+    ],
+    partner: [
+      'Аватар: JPG/PNG/WebP',
+      'Документы: PDF, изображения (для карточек/инструкций)',
+    ],
+    car_owner: [
+      'Аватар: JPG/PNG/WebP',
+      'Документы по продукту: PDF/изображения (через карточки/QR)',
+    ],
+  };
+
+  return map[normalizeUserType(userType)] || ['Аватар: JPG/PNG/WebP'];
+}
+
 export const moduleId = 'base';
 export const title = 'База';
 
@@ -40,10 +78,19 @@ function renderProfileView(container, ctx) {
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
         ${p.avatar_url ? `<img src="${ctx.ui.escapeHTML(p.avatar_url)}" alt="avatar" style="width:84px;height:84px;border-radius:999px;object-fit:cover;border:1px solid var(--line);"/>` : '<div class="vp-badge">Не загружен</div>'}
         <div>
-          <input id="vpAvatarInput" type="file" accept="image/*" class="vp-input" style="max-width:280px;"/>
+          <input id="vpAvatarInput" type="file" accept="image/jpeg,image/png,image/webp" class="vp-input" style="max-width:280px;"/>
           <div class="vp-cell-muted">JPG/PNG/WEBP, до 5MB</div>
         </div>
       </div>
+    </div>
+    <div class="vp-card is-soft">
+      <div class="vp-toolbar">
+        <div class="vp-toolbar-left"><div class="vp-badge">Разрешённые типы файлов</div></div>
+      </div>
+      <ul class="vp-list" style="margin:0;padding-left:18px;display:grid;gap:6px;">
+        ${allowedFileTypesByRole(p.user_type).map((item) => `<li>${ctx.ui.escapeHTML(item)}</li>`).join('')}
+      </ul>
+      <div class="vp-cell-muted" style="margin-top:8px;">В профиле нет общего файлового менеджера — файлы загружаются только в рамках рабочих сценариев.</div>
     </div>
   `;
 
