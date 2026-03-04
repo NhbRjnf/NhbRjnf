@@ -33,7 +33,7 @@ services:
       - vseponyatno_net
 
   directus:
-    image:  directus/directus:11.15.2
+    image: directus/directus:11.15.4
     container_name: vse_directus
     restart: unless-stopped
     env_file:
@@ -94,6 +94,51 @@ services:
       - mariadb
     volumes:
       - ./volumes/wordpress:/var/www/html
+      - /opt/vseponyatno/runtime:/opt/vseponyatno/runtime
+    networks:
+      - vseponyatno_net
+
+  # === NEW: Redis queue for 3D jobs ===
+  redis:
+    image: redis:7-alpine
+    container_name: vse_redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ./volumes/redis:/data
+    networks:
+      - vseponyatno_net
+
+  # === NEW: 3D Converter worker (STEP/IGES/STL/OBJ -> GLB + preview) ===
+  converter:
+    build:
+      context: ./converter
+      dockerfile: Dockerfile
+    container_name: vse_converter
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TZ: "${TZ}"
+      VP_3D_REDIS_HOST: "${VP_3D_REDIS_HOST}"
+      VP_3D_REDIS_PORT: "${VP_3D_REDIS_PORT}"
+      VP_3D_QUEUE_KEY: "${VP_3D_QUEUE_KEY}"
+
+      VP_DIRECTUS_INTERNAL_URL: "${VP_DIRECTUS_INTERNAL_URL}"
+      VP_DIRECTUS_TOKEN: "${VP_DIRECTUS_TOKEN}"
+
+      VP_3D_MAX_INPUT_MB: "${VP_3D_MAX_INPUT_MB}"
+      VP_3D_MAX_TRIS: "${VP_3D_MAX_TRIS}"
+
+      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "${VP_3D_GLTF_TRANSFORM_OPTIMIZE}"
+      VP_3D_USE_DRACO: "${VP_3D_USE_DRACO}"
+      VP_3D_USE_MESHOPT: "${VP_3D_USE_MESHOPT}"
+
+      VP_3D_LOG_LEVEL: "${VP_3D_LOG_LEVEL}"
+    depends_on:
+      - redis
+      - directus
+    volumes:
       - /opt/vseponyatno/runtime:/opt/vseponyatno/runtime
     networks:
       - vseponyatno_net
