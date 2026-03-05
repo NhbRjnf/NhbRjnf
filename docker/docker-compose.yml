@@ -85,6 +85,8 @@ services:
       WORDPRESS_DB_NAME: "${WP_DB_NAME}"
       WORDPRESS_DB_USER: "${WP_DB_USER}"
       WORDPRESS_DB_PASSWORD: "${WP_DB_PASSWORD}"
+      VP_WP_SERVICE_TOKEN: "${VP_WP_SERVICE_TOKEN}"
+      VP_WP_BASE_URL: "${VP_WP_BASE_URL}"
 
       # VP proxy -> Directus
       DIRECTUS_BASE_URL: "${DIRECTUS_BASE_URL}"
@@ -135,6 +137,9 @@ services:
       VP_3D_USE_MESHOPT: "${VP_3D_USE_MESHOPT}"
 
       VP_3D_LOG_LEVEL: "${VP_3D_LOG_LEVEL}"
+      
+      VP_WP_SERVICE_TOKEN: "${VP_WP_SERVICE_TOKEN}"
+      VP_WP_BASE_URL: "${VP_WP_BASE_URL}"
     depends_on:
       - redis
       - directus

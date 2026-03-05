@@ -324,3 +324,88 @@ Stack trace:
 [03-Mar-2026 18:20:20 UTC] PHP Notice:  _wp_delete_all_temp_backups(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
 [04-Mar-2026 01:12:17 UTC] Automatic updates starting...
 [04-Mar-2026 01:12:18 UTC] Automatic updates complete.
+[04-Mar-2026 10:06:29 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wp_tempnam() in /var/www/html/wp-content/mu-plugins/vp-files.php:285
+Stack trace:
+#0 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1292): vp_files_handle_upload(Object(WP_REST_Request))
+#1 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/vp/v1/upload', Array, NULL)
+#2 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#3 /var/www/html/wp-includes/rest-api.php(467): WP_REST_Server->serve_request('/vp/v1/upload')
+#4 /var/www/html/wp-includes/class-wp-hook.php(341): rest_api_loaded(Object(WP))
+#5 /var/www/html/wp-includes/class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#6 /var/www/html/wp-includes/plugin.php(570): WP_Hook->do_action(Array)
+#7 /var/www/html/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#8 /var/www/html/wp-includes/class-wp.php(821): WP->parse_request('')
+#9 /var/www/html/wp-includes/functions.php(1343): WP->main('')
+#10 /var/www/html/wp-blog-header.php(16): wp()
+#11 /var/www/html/index.php(17): require('/var/www/html/w...')
+#12 {main}
+  thrown in /var/www/html/wp-content/mu-plugins/vp-files.php on line 285
+[04-Mar-2026 10:54:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wp_tempnam() in /var/www/html/wp-content/mu-plugins/vp-files.php:285
+Stack trace:
+#0 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1292): vp_files_handle_upload(Object(WP_REST_Request))
+#1 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/vp/v1/upload', Array, NULL)
+#2 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#3 /var/www/html/wp-includes/rest-api.php(467): WP_REST_Server->serve_request('/vp/v1/upload')
+#4 /var/www/html/wp-includes/class-wp-hook.php(341): rest_api_loaded(Object(WP))
+#5 /var/www/html/wp-includes/class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#6 /var/www/html/wp-includes/plugin.php(570): WP_Hook->do_action(Array)
+#7 /var/www/html/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#8 /var/www/html/wp-includes/class-wp.php(821): WP->parse_request('')
+#9 /var/www/html/wp-includes/functions.php(1343): WP->main('')
+#10 /var/www/html/wp-blog-header.php(16): wp()
+#11 /var/www/html/index.php(17): require('/var/www/html/w...')
+#12 {main}
+  thrown in /var/www/html/wp-content/mu-plugins/vp-files.php on line 285
+[04-Mar-2026 10:54:25 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wp_tempnam() in /var/www/html/wp-content/mu-plugins/vp-files.php:285
+Stack trace:
+#0 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1292): vp_files_handle_upload(Object(WP_REST_Request))
+#1 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/vp/v1/upload', Array, NULL)
+#2 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#3 /var/www/html/wp-includes/rest-api.php(467): WP_REST_Server->serve_request('/vp/v1/upload')
+#4 /var/www/html/wp-includes/class-wp-hook.php(341): rest_api_loaded(Object(WP))
+#5 /var/www/html/wp-includes/class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#6 /var/www/html/wp-includes/plugin.php(570): WP_Hook->do_action(Array)
+#7 /var/www/html/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#8 /var/www/html/wp-includes/class-wp.php(821): WP->parse_request('')
+#9 /var/www/html/wp-includes/functions.php(1343): WP->main('')
+#10 /var/www/html/wp-blog-header.php(16): wp()
+#11 /var/www/html/index.php(17): require('/var/www/html/w...')
+#12 {main}
+  thrown in /var/www/html/wp-content/mu-plugins/vp-files.php on line 285
+[04-Mar-2026 10:57:23 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wp_tempnam() in /var/www/html/wp-content/mu-plugins/vp-files.php:285
+Stack trace:
+#0 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1292): vp_files_handle_upload(Object(WP_REST_Request))
+#1 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/vp/v1/upload', Array, NULL)
+#2 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#3 /var/www/html/wp-includes/rest-api.php(467): WP_REST_Server->serve_request('/vp/v1/upload')
+#4 /var/www/html/wp-includes/class-wp-hook.php(341): rest_api_loaded(Object(WP))
+#5 /var/www/html/wp-includes/class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#6 /var/www/html/wp-includes/plugin.php(570): WP_Hook->do_action(Array)
+#7 /var/www/html/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#8 /var/www/html/wp-includes/class-wp.php(821): WP->parse_request('')
+#9 /var/www/html/wp-includes/functions.php(1343): WP->main('')
+#10 /var/www/html/wp-blog-header.php(16): wp()
+#11 /var/www/html/index.php(17): require('/var/www/html/w...')
+#12 {main}
+  thrown in /var/www/html/wp-content/mu-plugins/vp-files.php on line 285
+[04-Mar-2026 10:57:55 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wp_tempnam() in /var/www/html/wp-content/mu-plugins/vp-files.php:285
+Stack trace:
+#0 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1292): vp_files_handle_upload(Object(WP_REST_Request))
+#1 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/vp/v1/upload', Array, NULL)
+#2 /var/www/html/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#3 /var/www/html/wp-includes/rest-api.php(467): WP_REST_Server->serve_request('/vp/v1/upload')
+#4 /var/www/html/wp-includes/class-wp-hook.php(341): rest_api_loaded(Object(WP))
+#5 /var/www/html/wp-includes/class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#6 /var/www/html/wp-includes/plugin.php(570): WP_Hook->do_action(Array)
+#7 /var/www/html/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#8 /var/www/html/wp-includes/class-wp.php(821): WP->parse_request('')
+#9 /var/www/html/wp-includes/functions.php(1343): WP->main('')
+#10 /var/www/html/wp-blog-header.php(16): wp()
+#11 /var/www/html/index.php(17): require('/var/www/html/w...')
+#12 {main}
+  thrown in /var/www/html/wp-content/mu-plugins/vp-files.php on line 285
+[04-Mar-2026 11:35:20 UTC] PHP Notice:  _wp_delete_all_temp_backups(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[04-Mar-2026 12:32:09 UTC] Automatic updates starting...
+[04-Mar-2026 12:32:09 UTC] Automatic updates complete.
+[05-Mar-2026 00:47:19 UTC] Automatic updates starting...
+[05-Mar-2026 00:47:20 UTC] Automatic updates complete.

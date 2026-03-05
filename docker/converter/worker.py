@@ -4,6 +4,7 @@ import time
 import shutil
 import subprocess
 import tempfile
+import requests
 from datetime import datetime, timezone
 
 from directus import DirectusClient
@@ -23,6 +24,40 @@ def run(cmd, timeout=1800):
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat()
+
+def wp_service_headers():
+    token = os.getenv("VP_WP_SERVICE_TOKEN", "").strip()
+    if not token:
+        raise RuntimeError("VP_WP_SERVICE_TOKEN is empty")
+    return {"Authorization": f"Bearer {token}"}
+
+def download_source_file(source_url: str, out_path: str):
+    with requests.get(source_url, headers=wp_service_headers(), stream=True, timeout=120) as r:
+        r.raise_for_status()
+        with open(out_path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=1024 * 1024):
+                if chunk:
+                    f.write(chunk)
+
+def wp_upload_file(file_path: str) -> dict:
+    wp_base = os.getenv("VP_WP_BASE_URL", "").rstrip("/")
+    if not wp_base:
+        raise RuntimeError("VP_WP_BASE_URL is empty")
+
+    with open(file_path, "rb") as fp:
+        files = {"file": (os.path.basename(file_path), fp)}
+        res = requests.post(
+            f"{wp_base}/wp-json/vp/v1/upload",
+            headers=wp_service_headers(),
+            files=files,
+            timeout=300,
+        )
+
+    res.raise_for_status()
+    payload = res.json()
+    if not payload.get("ok"):
+        raise RuntimeError(f"WordPress upload failed: {json.dumps(payload)}")
+    return payload
 
 def gltf_optimize(glb_path: str):
     if os.getenv("VP_3D_GLTF_TRANSFORM_OPTIMIZE", "1") != "1":
@@ -47,13 +82,13 @@ def main():
         try:
             dx.patch_job(job_id, {"status": "processing", "progress": 1, "error": None, "updated_at": now_iso()})
             job = dx.get_job(job_id)
-            input_file_id = job.get("input_file")
-            if not input_file_id:
-                raise RuntimeError("Job has no input_file")
+            source_file_url = (job.get("source_file_url") or "").strip()
+            if not source_file_url:
+                raise RuntimeError("Job has no source_file_url")
 
             inp_path = os.path.join(tmpdir, "input.bin")
             dx.patch_job(job_id, {"progress": 5, "updated_at": now_iso()})
-            dx.download_file_to(input_file_id, inp_path)
+            download_source_file(source_file_url, inp_path)
 
             size_mb = os.path.getsize(inp_path) / (1024 * 1024)
             max_mb = float(os.getenv("VP_3D_MAX_INPUT_MB", "200"))
@@ -101,12 +136,14 @@ def main():
 
             dx.patch_job(job_id, {"progress": 90, "updated_at": now_iso()})
 
-            # Upload to Directus
-            out_file_id = dx.upload_file(glb_path, title=f"vp3d_{job_id}.glb")
-            prev_file_id = dx.upload_file(png_path, title=f"vp3d_{job_id}.png")
+            # Upload to WordPress file gateway
+            out_upload = wp_upload_file(glb_path)
+            prev_upload = wp_upload_file(png_path)
+            out_file_id = out_upload.get("attachment_id")
+            prev_file_id = prev_upload.get("attachment_id")
 
             meta = {
-                "input_file_id": input_file_id,
+                "source_file_url": source_file_url,
                 "output_file_id": out_file_id,
                 "preview_file_id": prev_file_id,
                 "sizes": {
