@@ -72,7 +72,9 @@ services:
       - vseponyatno_net
 
   wordpress:
-    image: wordpress:php8.2-apache
+    build:
+      context: ./wordpress
+      dockerfile: Dockerfile
     container_name: vse_wordpress
     restart: unless-stopped
     env_file:
