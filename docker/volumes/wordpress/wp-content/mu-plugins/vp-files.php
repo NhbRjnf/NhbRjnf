@@ -272,6 +272,11 @@ if (!function_exists('vp_files_store_file')) {
     $sha256 = hash_file('sha256', $finalPath);
     update_post_meta($attachmentId, '_vp_sha256', $sha256);
 
+    $storedUrl = wp_get_attachment_url($attachmentId);
+    if (!$storedUrl) {
+      $storedUrl = trailingslashit($base['url']) . $ym . '/' . basename($finalPath);
+    }
+
     return [
       'attachment_id' => (int)$attachmentId,
       'sha256' => (string)$sha256,
@@ -279,7 +284,12 @@ if (!function_exists('vp_files_store_file')) {
       'mime' => (string)$mime,
       'original_name' => (string)$originalName,
       'stored_rel_path' => $relPath,
-      'stored_url' => null,
+      'stored_url' => (string)$storedUrl,
+
+      // aliases for worker compatibility
+      'url' => (string)$storedUrl,
+      'file_url' => (string)$storedUrl,
+      'source_url' => (string)$storedUrl,
     ];
   }
 }

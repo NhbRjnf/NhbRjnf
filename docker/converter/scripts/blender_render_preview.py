@@ -1,7 +1,11 @@
-import sys
 import os
-import bpy
+import sys
 import math
+import bpy
+import numpy as np
+
+if not hasattr(np, "bool"):
+    np.bool = np.bool_
 
 # Usage:
 # blender -b -P blender_render_preview.py -- input.glb output.png

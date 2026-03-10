@@ -60,6 +60,12 @@ add_action('rest_api_init', function () {
     'callback' => 'vp_3d_poster_callback',
     'permission_callback' => '__return_true',
   ]);
+  
+  register_rest_route('vp/v1', '/3d/job', [
+    'methods'  => 'POST',
+    'callback' => 'vp_3d_job_create',
+    'permission_callback' => '__return_true',
+  ]);
 });
 
 
@@ -541,9 +547,9 @@ function vp_instruction_fallback_response($code, $row, $reason = 'instruction_ac
   }
 
   return new WP_REST_Response($response, 200);
-}
+  }
 
-function vp_instruction_callback(WP_REST_Request $req) {
+  function vp_instruction_callback(WP_REST_Request $req) {
   $code = trim((string)$req->get_param('code'));
   if ($code === '') {
     return new WP_REST_Response(['error' => 'code_required'], 400);
@@ -665,8 +671,10 @@ function vp_instruction_callback(WP_REST_Request $req) {
   ];
 
   if (array_key_exists('type', $row)) {
-    $response['type'] = $row['type'];
+  $response['type'] = $row['type'];
   }
 
   return new WP_REST_Response($response, 200);
-}
+
+  } // конец функции vp_instruction_callback
+  
