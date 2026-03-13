@@ -7,6 +7,7 @@
   const LOOKUP_URL = CFG.lookupUrl || '/wp-json/vp/v1/lookup';
   const AUTH_URL = CFG.authUrl || '/wp-json/vp/v1/3d/auth';
   const FILE_URL = CFG.fileUrl || '/wp-json/vp/v1/3d/file';
+  const MODEL_VIEWER_URL = String(PREFETCH.modelViewerUrl || '').trim();
 
   const $ = (id) => document.getElementById(id);
 
@@ -24,6 +25,7 @@
   let elPassword;
   let elHint;
   let elViewerWrap;
+  let elViewerMount;
   let elViewer;
   let elPlaceholder;
   let elPreview;
@@ -37,6 +39,7 @@
 
   let currentScene = null;
   let viewerFailureHandlersBound = false;
+  let modelViewerModulePromise = null;
   let viewerBroken = false;
 
   const friendlyErrors = {
@@ -57,6 +60,33 @@
     if (elStatus) elStatus.textContent = text;
   }
 
+  function hasPreview() {
+    return !!(elPreview && !elPreview.hidden && elPreview.getAttribute('src'));
+  }
+
+  function applyPlaceholderMode(useOverlay) {
+    if (!elPlaceholder) return;
+
+    elPlaceholder.style.zIndex = useOverlay ? '3' : '2';
+    elPlaceholder.style.background = useOverlay
+      ? 'linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.18))'
+      : 'transparent';
+    elPlaceholder.style.color = useOverlay ? '#ffffff' : '';
+    elPlaceholder.style.alignItems = useOverlay ? 'end' : 'center';
+  }
+
+  function setPlaceholder(text, useOverlay = hasPreview()) {
+    if (!elPlaceholder) return;
+    elPlaceholder.hidden = false;
+    elPlaceholder.textContent = text;
+    applyPlaceholderMode(useOverlay);
+  }
+
+  function hidePlaceholder() {
+    if (!elPlaceholder) return;
+    elPlaceholder.hidden = true;
+  }
+
   function ensurePreviewEl() {
     if (elPreview || !elViewerWrap) return elPreview;
 
@@ -74,13 +104,10 @@
     elPreview.style.background = 'rgba(255, 255, 255, 0.02)';
     elPreview.style.zIndex = '1';
     elPreview.style.display = 'block';
+    elPreview.style.pointerEvents = 'none';
 
-    elViewerWrap.insertBefore(elPreview, elViewer || elPlaceholder || null);
+    elViewerWrap.insertBefore(elPreview, elPlaceholder || null);
     return elPreview;
-  }
-
-  function hasPreview() {
-    return !!(elPreview && !elPreview.hidden && elPreview.getAttribute('src'));
   }
 
   function showPreview(url) {
@@ -99,36 +126,40 @@
     elPreview.hidden = true;
   }
 
+  function ensureViewerEl() {
+    if (elViewer) return elViewer;
+    if (!elViewerMount) return null;
+
+    elViewer = document.createElement('model-viewer');
+    elViewer.id = 'vp3d-viewer';
+    elViewer.className = 'vp-3d-viewer';
+    elViewer.style.display = 'none';
+    elViewer.setAttribute('ar', '');
+    elViewer.setAttribute('camera-controls', '');
+    elViewer.setAttribute('touch-action', 'pan-y');
+    elViewer.setAttribute('shadow-intensity', '1');
+
+    elViewerMount.appendChild(elViewer);
+    return elViewer;
+  }
+
   function hideViewer() {
     if (!elViewer) return;
     elViewer.style.display = 'none';
     elViewer.removeAttribute('src');
   }
 
-  function showMessage(text, statusText = 'Ошибка') {
-    setStatus(statusText);
-
-    if (elPlaceholder) {
-      elPlaceholder.hidden = false;
-      elPlaceholder.textContent = text;
-      elPlaceholder.style.zIndex = hasPreview() ? '2' : '3';
-      elPlaceholder.style.background = hasPreview()
-        ? 'linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.18))'
-        : 'transparent';
-      elPlaceholder.style.color = hasPreview() ? '#ffffff' : '';
-      elPlaceholder.style.alignItems = 'end';
-    }
-
-    hideViewer();
-  }
-
   function showError(text) {
-    showMessage(text, 'Ошибка');
+    setStatus('Ошибка');
+    setPlaceholder(text, hasPreview());
+    hideViewer();
   }
 
   function showViewerFallback(text) {
     viewerBroken = true;
-    showMessage(text, 'Ограниченный режим');
+    setStatus('Ограниченный режим');
+    setPlaceholder(text, hasPreview());
+    hideViewer();
   }
 
   function resolveError(err) {
@@ -145,7 +176,7 @@
       text.includes('Error creating WebGL context') ||
       text.includes("reading 'xr'") ||
       text.includes('THREE.WebGLRenderer') ||
-      text.includes('Failed to execute "getContext"')
+      text.includes('Failed to execute')
     ) {
       return 'На этом устройстве интерактивный 3D viewer недоступен. Показываем превью модели.';
     }
@@ -182,10 +213,19 @@
       const canvas = document.createElement('canvas');
       if (!window.WebGLRenderingContext) return false;
 
-      return !!(
+      const gl =
         canvas.getContext('webgl', { antialias: false, powerPreference: 'low-power' }) ||
-        canvas.getContext('experimental-webgl', { antialias: false, powerPreference: 'low-power' })
-      );
+        canvas.getContext('experimental-webgl', { antialias: false, powerPreference: 'low-power' });
+
+      if (!gl) return false;
+
+      try {
+        gl.getParameter(gl.VERSION);
+      } catch (_) {
+        return false;
+      }
+
+      return true;
     } catch (_) {
       return false;
     }
@@ -210,6 +250,39 @@
     return json;
   }
 
+  async function ensureModelViewerModule() {
+    if (customElements.get('model-viewer')) return;
+
+    if (modelViewerModulePromise) {
+      await modelViewerModulePromise;
+      return;
+    }
+
+    if (!MODEL_VIEWER_URL) {
+      throw new Error('viewer_not_registered');
+    }
+
+    modelViewerModulePromise = new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-vp-model-viewer="1"]');
+      if (existing) {
+        existing.addEventListener('load', resolve, { once: true });
+        existing.addEventListener('error', () => reject(new Error('viewer_not_registered')), { once: true });
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.src = MODEL_VIEWER_URL;
+      script.async = true;
+      script.dataset.vpModelViewer = '1';
+      script.addEventListener('load', resolve, { once: true });
+      script.addEventListener('error', () => reject(new Error('viewer_not_registered')), { once: true });
+      document.head.appendChild(script);
+    });
+
+    await modelViewerModulePromise;
+  }
+
   async function waitForModelViewer() {
     if (!window.customElements || typeof customElements.whenDefined !== 'function') {
       throw new Error('viewer_not_registered');
@@ -218,6 +291,7 @@
     if (customElements.get('model-viewer')) return;
 
     setStatus('Инициализация 3D viewer…');
+    await ensureModelViewerModule();
 
     await Promise.race([
       customElements.whenDefined('model-viewer'),
@@ -228,7 +302,6 @@
   }
 
   async function attachViewer(src, posterUrl) {
-    if (!elViewer) throw new Error('viewer_not_registered');
     if (!src) throw new Error('scene_model_missing');
 
     const safePosterUrl = String(posterUrl || '').trim();
@@ -241,47 +314,39 @@
       return;
     }
 
-    if (elPlaceholder) {
-      elPlaceholder.hidden = false;
-      elPlaceholder.textContent = 'Инициализация viewer…';
-      elPlaceholder.style.zIndex = '3';
-      elPlaceholder.style.background = 'transparent';
-      elPlaceholder.style.color = '';
-      elPlaceholder.style.alignItems = 'center';
+    const viewer = ensureViewerEl();
+    if (!viewer) {
+      throw new Error('viewer_not_registered');
     }
 
     viewerBroken = false;
+    setPlaceholder('Инициализация viewer…', false);
+
     await waitForModelViewer();
 
     if (safePosterUrl) {
-      elViewer.setAttribute('poster', safePosterUrl);
+      viewer.setAttribute('poster', safePosterUrl);
     } else {
-      elViewer.removeAttribute('poster');
+      viewer.removeAttribute('poster');
     }
 
     setStatus('Загружаем 3D модель…');
-    if (elPlaceholder) {
-      elPlaceholder.hidden = false;
-      elPlaceholder.textContent = 'Загружаем 3D модель…';
-    }
-
-    elViewer.style.display = 'block';
+    setPlaceholder('Загружаем 3D модель…', false);
+    viewer.style.display = 'block';
 
     let done = false;
     const cleanup = (timeoutHandle) => {
       done = true;
       clearTimeout(timeoutHandle);
-      elViewer.removeEventListener('load', onLoad);
-      elViewer.removeEventListener('error', onError);
+      viewer.removeEventListener('load', onLoad);
+      viewer.removeEventListener('error', onError);
     };
 
     const onLoad = () => {
       cleanup(timeout);
       if (viewerBroken) return;
       hidePreview();
-      if (elPlaceholder) {
-        elPlaceholder.hidden = true;
-      }
+      hidePlaceholder();
       setStatus('Сцена загружена.');
     };
 
@@ -296,11 +361,11 @@
       showViewerFallback('Интерактивный viewer не ответил вовремя. Показываем превью модели.');
     }, MODEL_LOAD_TIMEOUT_MS);
 
-    elViewer.addEventListener('load', onLoad, { once: true });
-    elViewer.addEventListener('error', onError, { once: true });
+    viewer.addEventListener('load', onLoad, { once: true });
+    viewer.addEventListener('error', onError, { once: true });
 
-    elViewer.removeAttribute('src');
-    elViewer.setAttribute('src', src);
+    viewer.removeAttribute('src');
+    viewer.setAttribute('src', src);
   }
 
   function fillMeta(item, scene) {
@@ -391,23 +456,12 @@
       if (currentScene.requires_password) {
         if (elAuthWrap) elAuthWrap.hidden = false;
         if (elHint) {
-          const hint = currentScene.password_hint
-            ? `Подсказка: ${currentScene.password_hint}`
-            : 'Введите пароль.';
+          const hint = currentScene.password_hint ? `Подсказка: ${currentScene.password_hint}` : 'Введите пароль.';
           elHint.hidden = false;
           elHint.textContent = hint;
         }
         setStatus('Сцена защищена паролем.');
-        if (elPlaceholder) {
-          elPlaceholder.hidden = false;
-          elPlaceholder.textContent = 'Введите пароль, чтобы открыть сцену.';
-          elPlaceholder.style.zIndex = hasPreview() ? '2' : '3';
-          elPlaceholder.style.background = hasPreview()
-            ? 'linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.18))'
-            : 'transparent';
-          elPlaceholder.style.color = hasPreview() ? '#ffffff' : '';
-          elPlaceholder.style.alignItems = 'end';
-        }
+        setPlaceholder('Введите пароль, чтобы открыть сцену.', hasPreview());
         return;
       }
 
@@ -440,16 +494,7 @@
 
     if (job.status !== 'completed') {
       setStatus(`Job ${job.status || 'pending'}`);
-      if (elPlaceholder) {
-        elPlaceholder.hidden = false;
-        elPlaceholder.textContent = friendlyErrors.job_pending;
-        elPlaceholder.style.zIndex = hasPreview() ? '2' : '3';
-        elPlaceholder.style.background = hasPreview()
-          ? 'linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.18))'
-          : 'transparent';
-        elPlaceholder.style.color = hasPreview() ? '#ffffff' : '';
-        elPlaceholder.style.alignItems = 'end';
-      }
+      setPlaceholder(friendlyErrors.job_pending, hasPreview());
       hideViewer();
       return;
     }
@@ -490,7 +535,7 @@
     elPassword = $('vp3d-password');
     elHint = $('vp3d-hint');
     elViewerWrap = $('vp3d-viewer-wrap');
-    elViewer = $('vp3d-viewer');
+    elViewerMount = $('vp3d-viewer-mount');
     elPlaceholder = $('vp3d-viewer-placeholder');
   }
 
@@ -498,7 +543,7 @@
     bindElements();
     bindViewerFailureHandlers();
 
-    if (!elStatus || !elViewer || !elViewerWrap) return;
+    if (!elStatus || !elViewerWrap || !elViewerMount || !elPlaceholder) return;
 
     if (elAuthForm) {
       elAuthForm.addEventListener('submit', async (e) => {

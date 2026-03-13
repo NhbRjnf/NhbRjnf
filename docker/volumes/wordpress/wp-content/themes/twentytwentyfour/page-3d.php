@@ -1,5 +1,22 @@
 <?php
 /* Template Name: VP 3D Navigation */
+
+$vp3d_job_id = isset($_GET['job_id']) ? (int) $_GET['job_id'] : 0;
+$vp3d_prefetched_job = null;
+
+if ($vp3d_job_id > 0 && function_exists('vp_3d_job_status')) {
+  $vp3d_req = new WP_REST_Request('GET', '/vp/v1/3d/job-status');
+  $vp3d_req->set_param('job_id', $vp3d_job_id);
+
+  $vp3d_res = vp_3d_job_status($vp3d_req);
+  if ($vp3d_res instanceof WP_REST_Response) {
+    $vp3d_data = $vp3d_res->get_data();
+    if (!empty($vp3d_data['ok']) && !empty($vp3d_data['job']) && is_array($vp3d_data['job'])) {
+      $vp3d_prefetched_job = $vp3d_data['job'];
+    }
+  }
+}
+
 get_header();
 ?>
 <main id="vp-3d-page" class="vp-3d-page">
@@ -67,19 +84,10 @@ get_header();
     <h2 class="vp-3d-h2">3D просмотр</h2>
 
     <div id="vp3d-viewer-wrap" class="vp-3d-viewer-wrap">
+      <div id="vp3d-viewer-mount"></div>
       <div id="vp3d-viewer-placeholder" class="vp-3d-placeholder">
         Загружаем 3D модель…
       </div>
-
-      <model-viewer
-        id="vp3d-viewer"
-        class="vp-3d-viewer"
-        style="display:none"
-        ar
-        camera-controls
-        touch-action="pan-y"
-        shadow-intensity="1"
-      ></model-viewer>
     </div>
   </section>
 
@@ -94,7 +102,12 @@ get_header();
     </div>
   </div>
 
-  <script type="module" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/vendor/model-viewer.min.js' ); ?>"></script>
-
+  <script>
+    window.VP_3D_PREFETCH = <?php echo wp_json_encode([
+      'job_id' => $vp3d_job_id > 0 ? $vp3d_job_id : null,
+      'job' => $vp3d_prefetched_job,
+      'modelViewerUrl' => get_stylesheet_directory_uri() . '/assets/vendor/model-viewer.min.js',
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+  </script>
 </main>
 <?php get_footer(); ?>
