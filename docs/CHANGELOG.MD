@@ -1,22 +1,44 @@
+
+### `CHANGELOG.MD`
+
+```md
 # Changelog
 
-All notable changes to this project will be documented in this file.
+Все заметные изменения по проекту «ВсёПонятно» фиксируются здесь.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Формат ориентирован на Keep a Changelog, но записи адаптированы под реальный инженерный workflow проекта.
 
 ## [Unreleased]
 
 ### Added
-- Added dedicated WordPress page `/3d` with template **VP 3D Navigation** (`page-3d.php`) and local assets (`page-3d.css`, `page-3d.js`) for 3D/navigation scenarios.
-- Added project documentation for QR routing flow and acceptance checklist in `docs/scan-routing.md`.
+- Зафиксирован отдельный job-driven viewer flow: `/3d?job_id=...`.
+- Зафиксирован WordPress bridge endpoint `GET /wp-json/vp/v1/3d/job-status?job_id=...`.
+- Зафиксирован signed delivery flow для viewer через `/dl/<token>`.
+- Добавлен отдельный runtime-документированный принцип graceful fallback для `/3d` при отсутствии рабочего WebGL.
+- Обновлена документация по безопасному 3D delivery без raw private URLs.
+- Добавлены runtime-проверки для `job-status` и `/3d?job_id=...`.
 
 ### Changed
-- Updated `/scan` flow to route by QR type after lookup:
-  - `instruction/product/service/manual` → `/instruction?code=...`
-  - `3d/navigation/nav/location` → `/3d?code=...`
-  - unknown type remains on `/scan` with a user-friendly message.
-- Updated README with the new `/3d` route and routing summary.
+- `api-contract.md` обновлён под реальный runtime:
+  - добавлены `POST /wp-json/vp/v1/3d/job`;
+  - добавлен `GET /wp-json/vp/v1/3d/job-status`;
+  - зафиксировано, что viewer получает только WordPress-safe ссылки.
+- `architecture.md` обновлён: теперь отдельно описаны scene mode и job mode для `/3d`.
+- `scan-routing.md` обновлён: code-driven routing отделён от job-driven viewer entry.
+- `runtime-state.md` обновлён: добавлены проверки `job-status`, signed delivery и graceful fallback.
+- `troubleshooting.md` обновлён:
+  - добавлен кейс lookup relation-expansion crash;
+  - добавлен кейс instruction ACL/fallback;
+  - добавлен кейс WebGL context failure на клиенте;
+  - добавлен кейс raw private URL vs signed `/dl/...`.
+- `VP-3D.md` переписан под текущее инженерное состояние scene/job flow.
+- `decision-log.md` дополнен решениями по safe lookup, instruction fallback, job-status bridge и graceful fallback.
 
 ### Fixed
-- Frontend 3D/navigation handling now degrades gracefully when fields are missing in lookup payload (no client-side crash, fallback message shown).
+- В документации больше не подразумевается, что `/3d` существует только в режиме `?code=...`.
+- В документации больше не подразумевается, что raw protected URL допустим как viewer source.
+- Зафиксирован факт, что `/lookup` и `/instruction` должны работать на safe fields и fallback-логике, а не ломаться на хрупких query-полях.
+
+### Notes
+- `data-model.md` и `directus-schema.md` не переписывались под runtime bridge без нового snapshot.
+- `wp-engineering-audit-2026-03-11.md` оставлен как исторический аудит, а не как live runtime source of truth.
