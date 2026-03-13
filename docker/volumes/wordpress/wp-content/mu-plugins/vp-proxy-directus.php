@@ -275,8 +275,16 @@ function vp_lookup_callback(WP_REST_Request $req) {
     'code' => ['_eq' => $code],
   ], JSON_UNESCAPED_UNICODE));
 
-  // product_id.* чтобы сразу отдавать “смысл”
-  $fields = rawurlencode('*,product_id.*,qr_file.*,qr_file_png.*,scene_id.id,scene_id.title,scene_id.kind,scene_id.model_file,scene_id.poster_file,scene_id.viewer_config,scene_id.requires_password,scene_id.password_hint,scene_id.expires_at,scene_id.is_active');
+  // Не разворачиваем qr_file.* / qr_file_png.*:
+  // после перехода на WordPress storage эти relation-expansions валят Directus.
+  // Для lookup фронту достаточно scalar-полей qr_file / qr_file_png и product/scene metadata.
+  $fields = rawurlencode(
+    'id,code,type,title,instruction_url,is_active,notes,location_title,location_payload,service_payload,' .
+    'product_id.*,qr_payload_url,qr_file,qr_file_png,instruction_id,tenant_id,' .
+    'scene_id.id,scene_id.title,scene_id.kind,scene_id.model_file,scene_id.poster_file,' .
+    'scene_id.viewer_config,scene_id.requires_password,scene_id.password_hint,' .
+    'scene_id.expires_at,scene_id.is_active'
+  );
 
   $json = vp_directus_get("/items/qr_codes?limit=1&fields={$fields}&filter={$filter}");
   if (is_wp_error($json)) {
@@ -292,9 +300,11 @@ function vp_lookup_callback(WP_REST_Request $req) {
     foreach ($json['data'] as &$item) {
       $type = $item['type'] ?? '';
       $scene = is_array($item['scene_id'] ?? null) ? $item['scene_id'] : null;
+
       if (vp_scene_type_3d($type) && $scene) {
         $item['scene'] = vp_3d_scene_payload($scene, (string)($item['code'] ?? ''));
       }
+
       unset($item['scene_id']);
     }
     unset($item);
