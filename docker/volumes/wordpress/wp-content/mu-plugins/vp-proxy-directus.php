@@ -598,7 +598,7 @@ function vp_instruction_fallback_response($code, $row, $reason = 'instruction_ac
 
 
   // 2) Забираем instruction_set БЕЗ relation field "steps" (обход Directus ACL на поле steps)
-  $instFields = rawurlencode('id,title,brand,model,level,language,notes,description,source_url,is_published');
+  $instFields = rawurlencode('id,title,brand,model,level,language,notes,source_url,is_published');
   $inst = vp_directus_get("/items/instruction_sets/{$instruction_id}?fields={$instFields}");
   if (is_wp_error($inst)) {
     $d = $inst->get_error_data();
@@ -617,6 +617,10 @@ function vp_instruction_fallback_response($code, $row, $reason = 'instruction_ac
   $instruction = $inst['data'] ?? null;
   if (!$instruction) {
     return new WP_REST_Response(['error' => 'NOT_FOUND'], 404);
+  }
+  
+  if (empty($instruction['description'])) {
+  $instruction['description'] = (string)($row['product_id']['description'] ?? '');
   }
 
   // 3) Забираем steps отдельным запросом из instruction_steps
