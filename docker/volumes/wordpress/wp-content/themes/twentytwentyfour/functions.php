@@ -207,7 +207,14 @@ add_action('wp_enqueue_scripts', function () {
 
   // /3d (просмотр 3D сцен)
   if (is_page('3d')) {
-    $ver3d = '1.1.0';
+    $css3d = get_stylesheet_directory() . '/page-3d.css';
+    $js3d  = get_stylesheet_directory() . '/page-3d.js';
+
+    $ver3d = (string) max(
+      file_exists($css3d) ? (int) filemtime($css3d) : 0,
+      file_exists($js3d) ? (int) filemtime($js3d) : 0,
+      time()
+    );
 
     wp_enqueue_style(
       'vp-3d',

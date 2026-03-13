@@ -26,9 +26,12 @@
   let elHint;
   let elViewerWrap;
   let elViewerMount;
-  let elViewer;
   let elPlaceholder;
+
   let elPreview;
+  let elLaunchPanel;
+  let elLaunchButton;
+  let elViewer = null;
 
   const params = new URLSearchParams(window.location.search);
   const code = String(params.get('code') || '').trim().toUpperCase();
@@ -38,9 +41,11 @@
   const MODEL_LOAD_TIMEOUT_MS = 20000;
 
   let currentScene = null;
-  let viewerFailureHandlersBound = false;
+  let currentInteractiveSrc = '';
+  let currentPosterUrl = '';
   let modelViewerModulePromise = null;
   let viewerBroken = false;
+  let viewerFailureHandlersBound = false;
 
   const friendlyErrors = {
     code_required: 'В URL нет параметра code. Вернитесь на сканер и отсканируйте QR заново.',
@@ -51,7 +56,6 @@
     scene_model_missing: 'Для этой сцены не задан model_url.',
     invalid_password: 'Неверный пароль. Проверьте и попробуйте ещё раз.',
     token_invalid: 'Токен недействителен или устарел. Введите пароль снова.',
-    job_missing: 'Для этого job пока нет viewer-данных.',
     job_pending: 'Модель ещё обрабатывается.',
     job_model_missing: 'Для job не удалось получить ссылку на модель.',
   };
@@ -62,29 +66,6 @@
 
   function hasPreview() {
     return !!(elPreview && !elPreview.hidden && elPreview.getAttribute('src'));
-  }
-
-  function applyPlaceholderMode(useOverlay) {
-    if (!elPlaceholder) return;
-
-    elPlaceholder.style.zIndex = useOverlay ? '3' : '2';
-    elPlaceholder.style.background = useOverlay
-      ? 'linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.18))'
-      : 'transparent';
-    elPlaceholder.style.color = useOverlay ? '#ffffff' : '';
-    elPlaceholder.style.alignItems = useOverlay ? 'end' : 'center';
-  }
-
-  function setPlaceholder(text, useOverlay = hasPreview()) {
-    if (!elPlaceholder) return;
-    elPlaceholder.hidden = false;
-    elPlaceholder.textContent = text;
-    applyPlaceholderMode(useOverlay);
-  }
-
-  function hidePlaceholder() {
-    if (!elPlaceholder) return;
-    elPlaceholder.hidden = true;
   }
 
   function ensurePreviewEl() {
@@ -101,12 +82,11 @@
     elPreview.style.width = '100%';
     elPreview.style.height = '100%';
     elPreview.style.objectFit = 'contain';
-    elPreview.style.background = 'rgba(255, 255, 255, 0.02)';
+    elPreview.style.background = 'rgba(255,255,255,0.02)';
     elPreview.style.zIndex = '1';
-    elPreview.style.display = 'block';
     elPreview.style.pointerEvents = 'none';
 
-    elViewerWrap.insertBefore(elPreview, elPlaceholder || null);
+    elViewerWrap.insertBefore(elPreview, elViewerMount || elPlaceholder || null);
     return elPreview;
   }
 
@@ -126,32 +106,74 @@
     elPreview.hidden = true;
   }
 
-  function ensureViewerEl() {
-    if (elViewer) return elViewer;
-    if (!elViewerMount) return null;
+  function ensureLaunchPanel() {
+    if (elLaunchPanel || !elViewerWrap) return elLaunchPanel;
 
-    elViewer = document.createElement('model-viewer');
-    elViewer.id = 'vp3d-viewer';
-    elViewer.className = 'vp-3d-viewer';
-    elViewer.style.display = 'none';
-    elViewer.setAttribute('ar', '');
-    elViewer.setAttribute('camera-controls', '');
-    elViewer.setAttribute('touch-action', 'pan-y');
-    elViewer.setAttribute('shadow-intensity', '1');
+    elLaunchPanel = document.createElement('div');
+    elLaunchPanel.id = 'vp3d-launch-panel';
+    elLaunchPanel.hidden = true;
+    elLaunchPanel.style.position = 'absolute';
+    elLaunchPanel.style.left = '16px';
+    elLaunchPanel.style.right = '16px';
+    elLaunchPanel.style.bottom = '16px';
+    elLaunchPanel.style.zIndex = '4';
+    elLaunchPanel.style.display = 'flex';
+    elLaunchPanel.style.justifyContent = 'center';
+    elLaunchPanel.style.pointerEvents = 'auto';
 
-    elViewerMount.appendChild(elViewer);
-    return elViewer;
+    elLaunchButton = document.createElement('button');
+    elLaunchButton.type = 'button';
+    elLaunchButton.className = 'vp-3d-btn';
+    elLaunchButton.textContent = 'Открыть интерактивный 3D';
+    elLaunchButton.style.pointerEvents = 'auto';
+
+    elLaunchButton.addEventListener('click', async () => {
+      if (!currentInteractiveSrc) return;
+
+      try {
+        await attachViewer(currentInteractiveSrc, currentPosterUrl);
+      } catch (err) {
+        console.error(err);
+        showViewerFallback('Интерактивный viewer не запустился. Остаёмся в режиме превью.');
+      }
+    });
+
+    elLaunchPanel.appendChild(elLaunchButton);
+    elViewerWrap.appendChild(elLaunchPanel);
+
+    return elLaunchPanel;
   }
 
-  function hideViewer() {
-    if (!elViewer) return;
-    elViewer.style.display = 'none';
-    elViewer.removeAttribute('src');
+  function showLaunchPanel() {
+    const panel = ensureLaunchPanel();
+    if (panel) panel.hidden = false;
+  }
+
+  function hideLaunchPanel() {
+    if (elLaunchPanel) elLaunchPanel.hidden = true;
+  }
+
+  function setPlaceholder(text, overlay = hasPreview()) {
+    if (!elPlaceholder) return;
+    elPlaceholder.hidden = false;
+    elPlaceholder.textContent = text;
+    elPlaceholder.style.zIndex = overlay ? '3' : '2';
+    elPlaceholder.style.background = overlay
+      ? 'linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.18))'
+      : 'transparent';
+    elPlaceholder.style.color = overlay ? '#ffffff' : '';
+    elPlaceholder.style.alignItems = overlay ? 'end' : 'center';
+  }
+
+  function hidePlaceholder() {
+    if (!elPlaceholder) return;
+    elPlaceholder.hidden = true;
   }
 
   function showError(text) {
     setStatus('Ошибка');
     setPlaceholder(text, hasPreview());
+    hideLaunchPanel();
     hideViewer();
   }
 
@@ -159,7 +181,14 @@
     viewerBroken = true;
     setStatus('Ограниченный режим');
     setPlaceholder(text, hasPreview());
+    showLaunchPanel();
     hideViewer();
+  }
+
+  function hideViewer() {
+    if (!elViewer) return;
+    elViewer.style.display = 'none';
+    elViewer.removeAttribute('src');
   }
 
   function resolveError(err) {
@@ -175,10 +204,9 @@
       text.includes('WebGL context could not be created') ||
       text.includes('Error creating WebGL context') ||
       text.includes("reading 'xr'") ||
-      text.includes('THREE.WebGLRenderer') ||
-      text.includes('Failed to execute')
+      text.includes('THREE.WebGLRenderer')
     ) {
-      return 'На этом устройстве интерактивный 3D viewer недоступен. Показываем превью модели.';
+      return 'На этом устройстве интерактивный 3D viewer недоступен. Остаёмся в режиме превью.';
     }
 
     return '';
@@ -208,29 +236,6 @@
     });
   }
 
-  function hasWorkingWebGL() {
-    try {
-      const canvas = document.createElement('canvas');
-      if (!window.WebGLRenderingContext) return false;
-
-      const gl =
-        canvas.getContext('webgl', { antialias: false, powerPreference: 'low-power' }) ||
-        canvas.getContext('experimental-webgl', { antialias: false, powerPreference: 'low-power' });
-
-      if (!gl) return false;
-
-      try {
-        gl.getParameter(gl.VERSION);
-      } catch (_) {
-        return false;
-      }
-
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
   async function apiJson(url, method = 'GET', body) {
     const res = await fetch(url, {
       method,
@@ -250,6 +255,21 @@
     return json;
   }
 
+  function hasWorkingWebGL() {
+    try {
+      const canvas = document.createElement('canvas');
+      if (!window.WebGLRenderingContext) return false;
+
+      const gl =
+        canvas.getContext('webgl', { antialias: false, powerPreference: 'low-power' }) ||
+        canvas.getContext('experimental-webgl', { antialias: false, powerPreference: 'low-power' });
+
+      return !!gl;
+    } catch (_) {
+      return false;
+    }
+  }
+
   async function ensureModelViewerModule() {
     if (customElements.get('model-viewer')) return;
 
@@ -263,13 +283,6 @@
     }
 
     modelViewerModulePromise = new Promise((resolve, reject) => {
-      const existing = document.querySelector('script[data-vp-model-viewer="1"]');
-      if (existing) {
-        existing.addEventListener('load', resolve, { once: true });
-        existing.addEventListener('error', () => reject(new Error('viewer_not_registered')), { once: true });
-        return;
-      }
-
       const script = document.createElement('script');
       script.type = 'module';
       script.src = MODEL_VIEWER_URL;
@@ -288,44 +301,62 @@
       throw new Error('viewer_not_registered');
     }
 
-    if (customElements.get('model-viewer')) return;
+    if (!customElements.get('model-viewer')) {
+      setStatus('Инициализация 3D viewer…');
+      await ensureModelViewerModule();
 
-    setStatus('Инициализация 3D viewer…');
-    await ensureModelViewerModule();
+      await Promise.race([
+        customElements.whenDefined('model-viewer'),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('viewer_not_registered')), MODEL_VIEWER_BOOT_TIMEOUT_MS)
+        ),
+      ]);
+    }
+  }
 
-    await Promise.race([
-      customElements.whenDefined('model-viewer'),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('viewer_not_registered')), MODEL_VIEWER_BOOT_TIMEOUT_MS)
-      ),
-    ]);
+  function ensureViewerEl() {
+    if (elViewer) return elViewer;
+    if (!elViewerMount) return null;
+
+    elViewer = document.createElement('model-viewer');
+    elViewer.id = 'vp3d-viewer';
+    elViewer.className = 'vp-3d-viewer';
+    elViewer.style.display = 'none';
+    elViewer.setAttribute('ar', '');
+    elViewer.setAttribute('camera-controls', '');
+    elViewer.setAttribute('touch-action', 'pan-y');
+    elViewer.setAttribute('shadow-intensity', '1');
+
+    elViewerMount.appendChild(elViewer);
+    return elViewer;
   }
 
   async function attachViewer(src, posterUrl) {
     if (!src) throw new Error('scene_model_missing');
 
-    const safePosterUrl = String(posterUrl || '').trim();
-    if (safePosterUrl) {
-      showPreview(safePosterUrl);
+    const viewer = ensureViewerEl();
+    if (!viewer) throw new Error('viewer_not_registered');
+
+    currentInteractiveSrc = src;
+    currentPosterUrl = posterUrl || '';
+
+    if (posterUrl) {
+      showPreview(posterUrl);
     }
 
     if (!hasWorkingWebGL()) {
-      showViewerFallback('На этом устройстве недоступен WebGL. Показываем превью модели.');
+      showViewerFallback('На этом устройстве недоступен WebGL. Остаёмся в режиме превью.');
       return;
     }
 
-    const viewer = ensureViewerEl();
-    if (!viewer) {
-      throw new Error('viewer_not_registered');
-    }
-
     viewerBroken = false;
+    hideLaunchPanel();
     setPlaceholder('Инициализация viewer…', false);
 
     await waitForModelViewer();
 
-    if (safePosterUrl) {
-      viewer.setAttribute('poster', safePosterUrl);
+    if (posterUrl) {
+      viewer.setAttribute('poster', posterUrl);
     } else {
       viewer.removeAttribute('poster');
     }
@@ -352,13 +383,13 @@
 
     const onError = () => {
       cleanup(timeout);
-      showViewerFallback('Не удалось загрузить интерактивный viewer. Показываем превью модели.');
+      showViewerFallback('Интерактивный viewer не загрузился. Остаёмся в режиме превью.');
     };
 
     const timeout = setTimeout(() => {
       if (done) return;
       cleanup(timeout);
-      showViewerFallback('Интерактивный viewer не ответил вовремя. Показываем превью модели.');
+      showViewerFallback('Интерактивный viewer не ответил вовремя. Остаёмся в режиме превью.');
     }, MODEL_LOAD_TIMEOUT_MS);
 
     viewer.addEventListener('load', onLoad, { once: true });
@@ -366,6 +397,20 @@
 
     viewer.removeAttribute('src');
     viewer.setAttribute('src', src);
+  }
+
+  function offerInteractive(src, posterUrl, message) {
+    currentInteractiveSrc = String(src || '').trim();
+    currentPosterUrl = String(posterUrl || '').trim();
+
+    if (currentPosterUrl) {
+      showPreview(currentPosterUrl);
+    }
+
+    setStatus('Режим превью');
+    setPlaceholder(message || 'Можно открыть интерактивный viewer вручную.', hasPreview());
+    showLaunchPanel();
+    hideViewer();
   }
 
   function fillMeta(item, scene) {
@@ -408,12 +453,6 @@
     return !Number.isNaN(expiresAt) && expiresAt <= Date.now();
   }
 
-  async function loadPublic() {
-    const modelUrl = String(currentScene?.model_url || '').trim();
-    await attachViewer(modelUrl, currentScene?.poster_url || '');
-    if (elAuthWrap) elAuthWrap.hidden = true;
-  }
-
   async function loadProtected(password) {
     setStatus('Проверяем пароль…');
     const auth = await apiJson(AUTH_URL, 'POST', { code, password });
@@ -422,11 +461,13 @@
     if (!token) throw new Error('token_invalid');
 
     const url = `${FILE_URL}?code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
-    await attachViewer(url, currentScene?.poster_url || '');
+    offerInteractive(
+      url,
+      currentScene?.poster_url || '',
+      'Пароль принят. Нажмите кнопку ниже, чтобы открыть интерактивный viewer.'
+    );
+
     if (elAuthWrap) elAuthWrap.hidden = true;
-    if (!viewerBroken) {
-      setStatus('Пароль принят.');
-    }
   }
 
   async function initCodeMode() {
@@ -462,16 +503,17 @@
         }
         setStatus('Сцена защищена паролем.');
         setPlaceholder('Введите пароль, чтобы открыть сцену.', hasPreview());
+        hideLaunchPanel();
         return;
       }
 
-      await loadPublic();
+      offerInteractive(
+        currentScene?.model_url || '',
+        currentScene?.poster_url || '',
+        'Показываем безопасное превью. Интерактивный viewer запускается только по нажатию.'
+      );
     } catch (err) {
       console.error(err);
-      if (err?.message === 'viewer_not_registered') {
-        showViewerFallback('Интерактивный 3D viewer не загрузился. Показываем превью модели.');
-        return;
-      }
       showError(resolveError(err));
     }
   }
@@ -485,7 +527,6 @@
     }
 
     fillJobMeta(job);
-
     if (elAuthWrap) elAuthWrap.hidden = true;
 
     if (job.viewer_preview_url) {
@@ -495,29 +536,28 @@
     if (job.status !== 'completed') {
       setStatus(`Job ${job.status || 'pending'}`);
       setPlaceholder(friendlyErrors.job_pending, hasPreview());
+      hideLaunchPanel();
       hideViewer();
       return;
     }
 
     if (!job.viewer_glb_url) {
       if (job.viewer_preview_url) {
-        showViewerFallback('GLB ещё недоступен. Показываем превью модели.');
+        setStatus('Режим превью');
+        setPlaceholder('GLB ещё недоступен. Показываем только превью.', true);
+        hideLaunchPanel();
+        hideViewer();
         return;
       }
       showError(friendlyErrors.job_model_missing);
       return;
     }
 
-    try {
-      await attachViewer(job.viewer_glb_url, job.viewer_preview_url || '');
-    } catch (err) {
-      console.error(err);
-      if (err?.message === 'viewer_not_registered') {
-        showViewerFallback('Интерактивный 3D viewer не загрузился. Показываем превью модели.');
-        return;
-      }
-      showError(resolveError(err));
-    }
+    offerInteractive(
+      job.viewer_glb_url,
+      job.viewer_preview_url || '',
+      'Показываем безопасное превью. Нажмите кнопку ниже, если хотите попробовать интерактивный viewer.'
+    );
   }
 
   function bindElements() {
@@ -545,6 +585,9 @@
 
     if (!elStatus || !elViewerWrap || !elViewerMount || !elPlaceholder) return;
 
+    ensurePreviewEl();
+    ensureLaunchPanel();
+
     if (elAuthForm) {
       elAuthForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -558,10 +601,6 @@
           await loadProtected(password);
         } catch (err) {
           console.error(err);
-          if (err?.message === 'viewer_not_registered') {
-            showViewerFallback('Интерактивный 3D viewer не загрузился. Показываем превью модели.');
-            return;
-          }
           showError(resolveError(err));
         }
       });
