@@ -108,6 +108,23 @@
   padding: 10px 12px;
 }
 
+
+.vp-3d-upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 520px;
+}
+
+.vp-3d-upload-status {
+  font-size: 0.92rem;
+  color: var(--vp-ui-muted);
+}
+
+.vp-3d-upload-status.is-error {
+  color: #ff6b6b;
+}
+
 .vp-3d-h2 {
   margin: 0 0 10px;
   font-size: 1.25rem;

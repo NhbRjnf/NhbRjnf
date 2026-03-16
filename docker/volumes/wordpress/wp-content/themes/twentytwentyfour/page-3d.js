@@ -7,6 +7,7 @@
   const LOOKUP_URL = CFG.lookupUrl || '/wp-json/vp/v1/lookup';
   const AUTH_URL = CFG.authUrl || '/wp-json/vp/v1/3d/auth';
   const FILE_URL = CFG.fileUrl || '/wp-json/vp/v1/3d/file';
+  const JOB_CREATE_URL = CFG.jobCreateUrl || '/wp-json/vp/v1/3d/job';
   const MODEL_VIEWER_URL = String(PREFETCH.modelViewerUrl || '').trim();
 
   const $ = (id) => document.getElementById(id);
@@ -27,6 +28,11 @@
   let elViewerWrap;
   let elViewerMount;
   let elPlaceholder;
+
+  let elUploadForm;
+  let elUploadFile;
+  let elUploadSubmit;
+  let elUploadStatus;
 
   let elPreview;
   let elLaunchPanel;
@@ -175,6 +181,43 @@
     setPlaceholder(text, hasPreview());
     hideLaunchPanel();
     hideViewer();
+  }
+
+  function setUploadStatus(text, isError = false) {
+    if (!elUploadStatus) return;
+
+    const value = String(text || '').trim();
+    if (!value) {
+      elUploadStatus.hidden = true;
+      elUploadStatus.textContent = '';
+      elUploadStatus.classList.remove('is-error');
+      return;
+    }
+
+    elUploadStatus.hidden = false;
+    elUploadStatus.textContent = value;
+    elUploadStatus.classList.toggle('is-error', !!isError);
+  }
+
+  async function upload3dJob(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch(JOB_CREATE_URL, {
+      method: 'POST',
+      body: formData,
+      cache: 'no-store',
+    });
+
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok || !json?.ok) {
+      const err = new Error(json?.error || 'upload_failed');
+      err.status = res.status;
+      err.payload = json;
+      throw err;
+    }
+
+    return json;
   }
 
   function showViewerFallback(text) {
@@ -577,6 +620,11 @@
     elViewerWrap = $('vp3d-viewer-wrap');
     elViewerMount = $('vp3d-viewer-mount');
     elPlaceholder = $('vp3d-viewer-placeholder');
+
+    elUploadForm = $('vp3d-upload-form');
+    elUploadFile = $('vp3d-upload-file');
+    elUploadSubmit = $('vp3d-upload-submit');
+    elUploadStatus = $('vp3d-upload-status');
   }
 
   function bootstrap() {
@@ -587,6 +635,40 @@
 
     ensurePreviewEl();
     ensureLaunchPanel();
+
+    if (elUploadForm) {
+      elUploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const file = elUploadFile?.files && elUploadFile.files.length ? elUploadFile.files[0] : null;
+        if (!file) {
+          setUploadStatus('Выберите 3D файл перед отправкой.', true);
+          return;
+        }
+
+        setUploadStatus('Загружаем файл и создаём job…');
+        if (elUploadSubmit) elUploadSubmit.disabled = true;
+
+        try {
+          const result = await upload3dJob(file);
+          const nextJobId = Number.parseInt(String(result?.job_id || ''), 10) || 0;
+          if (nextJobId <= 0) {
+            throw new Error('job_create_failed');
+          }
+
+          setUploadStatus('Job создан. Переходим к просмотру…');
+
+          const redirectUrl = new URL(window.location.href);
+          redirectUrl.search = '';
+          redirectUrl.searchParams.set('job_id', String(nextJobId));
+          window.location.assign(redirectUrl.toString());
+        } catch (err) {
+          console.error(err);
+          setUploadStatus('Не удалось создать job. Проверьте файл и попробуйте снова.', true);
+          if (elUploadSubmit) elUploadSubmit.disabled = false;
+        }
+      });
+    }
 
     if (elAuthForm) {
       elAuthForm.addEventListener('submit', async (e) => {
