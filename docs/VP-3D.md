@@ -8,6 +8,7 @@
 - как устроен protected file flow;
 - как связаны WordPress, Directus, Redis и converter worker;
 - как работает job-driven viewer flow;
+- как выглядит текущий рабочий runtime viewer;
 - как должен выглядеть graceful fallback при проблемах WebGL.
 
 Важно:
@@ -69,11 +70,11 @@
 - `assets/vendor/model-viewer.min.js`
 
 Правила:
-- viewer подключается только как `<script type="module">`;
-- никаких CDN;
-- никакого глобального вмешательства в script loader на всём сайте;
-- фронт не получает Directus token;
-- фронт не должен использовать raw private URL как рабочий источник модели.
+- viewer изолирован на `/3d`;
+- frontend не получает Directus token;
+- frontend не должен использовать raw private URL как рабочий источник модели;
+- job-driven runtime использует только signed `/dl/<token>` ссылки;
+- current `model-viewer` runtime считается рабочим, но стратегически временным.
 
 ## 4. Режимы `/3d`
 
@@ -145,6 +146,14 @@ job-status должен:
 
 не заставлять браузер знать внутреннюю схему хранения результатов.
 
+Текущее состояние:
+
+route публичный;
+
+server-side prefetch в page-3d.php работает;
+
+подтверждённый рабочий пример: job_id=15.
+
 7. Signed delivery bridge
 
 Для job-driven viewer используются signed WordPress-safe ссылки вида:
@@ -189,7 +198,39 @@ Converter должен уметь:
 
 не терять связь между job и viewer delivery.
 
-10. Graceful fallback
+Текущее рабочее runtime-состояние:
+
+VP_3D_GLTF_TRANSFORM_OPTIMIZE=0
+
+VP_3D_USE_DRACO=0
+
+VP_3D_USE_MESHOPT=0
+
+Почему:
+
+gltf-transform optimize приводил к meshopt-compressed output;
+
+этот output ломал текущий model-viewer runtime ошибкой про setMeshoptDecoder;
+
+для быстрого стабильного запуска viewer optimize временно отключён.
+
+10. Текущий runtime viewer
+
+На март 2026 текущий рабочий viewer для job_id-режима:
+
+preview-first;
+
+кнопка явного открытия интерактивного viewer;
+
+signed /dl/... links;
+
+обычный GLB без optimize / meshopt;
+
+рабочий подтверждённый пример: job_id=15.
+
+Это временно стабилизированный runtime, но не финальная стратегическая реализация indoor viewer.
+
+11. Graceful fallback
 
 Это обязательная часть 3D runtime.
 
@@ -213,17 +254,7 @@ viewer-only controls должны быть деактивированы или �
 
 пользователь должен получить понятное сообщение.
 
-Минимальная целевая деградация:
-
-visible preview;
-
-отсутствие hard crash;
-
-usable layout;
-
-возможность понять, что модель существует, даже если интерактивный viewer недоступен.
-
-11. Что считается готовностью 3D флоу
+12. Что считается готовностью 3D flow
 
 Минимальный критерий:
 
@@ -245,28 +276,100 @@ protected scene требует пароль;
 
 poster работает;
 
+новый test job после отключения optimize реально грузится во viewer;
+
 при отсутствии WebGL остаётся graceful fallback.
 
-12. Обязательные проверки
+13. Обязательные проверки
 curl -I https://xn--b1awacccnl0jqa.xn--p1ai/3d/
 curl "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/lookup?code=<REAL>"
 curl -X POST "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/auth" -H 'content-type: application/json' -d '{"code":"<REAL>","password":"<PASS>"}'
-curl "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job-status?job_id=<REAL_JOB_ID>"
+curl "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job-status?job_id=15" | jq .
+
+GLB_URL="$(curl -sS 'https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job-status?job_id=15' | jq -r '.job.viewer_glb_url // empty')"
+PNG_URL="$(curl -sS 'https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job-status?job_id=15' | jq -r '.job.viewer_preview_url // empty')"
+
+curl -I "$GLB_URL"
+curl -I "$PNG_URL"
 
 cd /opt/vseponyatno/docker
 docker compose logs --tail=100 converter
 docker compose exec -T redis redis-cli LRANGE vp:3d:jobs 0 10
 docker compose exec -T redis redis-cli LRANGE vp:3d:jobs:processing 0 10
-13. Что больше нельзя путать
+14. Стратегический следующий шаг
 
-vp_3d_scenes.id — integer;
+После стабилизации текущего viewer runtime:
 
-vp_3d_jobs.id — integer;
+не ломаем текущий backend contract;
 
-model_file, poster_file, input_file, output_file, preview_file — file references, не viewer contract;
+отдельным этапом проектируем новый Three.js renderer для более гибкой indoor navigation, этажей, POI и крупных сцен.
+
+15. Что больше нельзя путать
+
+job-status должен быть публичным;
 
 signed /dl/... link — это delivery contract;
 
 raw protected URL — это не публичный контракт;
 
+optimize / meshopt — это часть runtime converter strategy, а не API contract;
+
 runtime bridge поля — не schema truth, пока нет нового snapshot.
+
+
+---
+
+## `docs/CHANGELOG.MD`
+
+```md
+# Changelog
+
+Все заметные изменения по проекту «ВсёПонятно» фиксируются здесь.
+
+Формат ориентирован на Keep a Changelog, но записи адаптированы под реальный инженерный workflow проекта.
+
+## [Unreleased]
+
+### Added
+- Зафиксирован отдельный job-driven viewer flow: `/3d?job_id=...`.
+- Зафиксирован WordPress bridge endpoint `GET /wp-json/vp/v1/3d/job-status?job_id=...`.
+- Зафиксирован signed delivery flow для viewer через `/dl/<token>`.
+- Добавлен отдельный runtime-документированный принцип graceful fallback для `/3d` при отсутствии рабочего WebGL.
+- Обновлена документация по безопасному 3D delivery без raw private URLs.
+- Добавлены runtime-проверки для `job-status`, signed delivery и current viewer runtime config.
+- Зафиксирован подтверждённый рабочий пример job-driven viewer: `job_id=15`.
+
+### Changed
+- `api-contract.md` обновлён под реальный runtime:
+  - `job-status` теперь явно описан как публичный viewer bridge;
+  - подтверждён shape ответа с `job.viewer_glb_url` и `job.viewer_preview_url`;
+  - зафиксировано, что viewer получает только WordPress-safe ссылки.
+- `architecture.md` обновлён:
+  - подтверждён рабочий job-driven viewer flow;
+  - зафиксировано, что signed `/dl/...` — viewer delivery layer.
+- `runtime-state.md` обновлён:
+  - добавлены проверки `job-status`, signed delivery и converter runtime config;
+  - добавлен контроль `VP_3D_GLTF_TRANSFORM_OPTIMIZE=0`.
+- `scan-routing.md` обновлён:
+  - job-driven viewer entry отделён от scan-routing;
+  - подтверждён публичный `job-status`.
+- `troubleshooting.md` обновлён:
+  - добавлен кейс `job-status` 401/403;
+  - добавлен кейс meshopt-compressed GLB;
+  - добавлены пояснения по Draco warning и EGL fallback.
+- `VP-3D.md` обновлён:
+  - зафиксирован текущий рабочий runtime viewer;
+  - добавлен обход через отключение `gltf-transform optimize`;
+  - добавлен стратегический следующий шаг с будущим Three.js renderer.
+- `decision-log.md` дополнен решениями по public `job-status` и временному отключению optimize.
+
+### Fixed
+- Исправлен viewer bridge для `/3d?job_id=...` через публичный `job-status`.
+- Исправлена выдача viewer-safe signed URLs через `/dl/<token>`.
+- Исправлен текущий runtime `model-viewer` за счёт отключения `gltf-transform optimize`.
+- Подтверждено, что новый job после отключения optimize успешно загружается во viewer.
+
+### Notes
+- `data-model.md` и `directus-schema.md` не переписывались, потому что схема Directus не менялась.
+- `wp-engineering-audit-2026-03-11.md` остаётся историческим аудитом, а не live runtime source of truth.
+- Текущий `model-viewer` runtime считается рабочим, но стратегически временным до будущей миграции на более гибкий renderer.

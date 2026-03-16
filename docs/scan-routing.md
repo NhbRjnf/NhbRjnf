@@ -1,4 +1,4 @@
-### `scan-routing.md`
+## `docs/scan-routing.md`
 
 ```md
 # Маршрутизация QR: `/scan` → `/instruction` или `/3d`
@@ -70,7 +70,7 @@ model_url можно отдавать сразу только для публи�
 
 4. Отдельный viewer-режим /3d?job_id=...
 
-Это не scan-routing, а прямой вход в viewer после upload/conversion flow.
+Это не scan-routing, а прямой вход в viewer после upload / conversion flow.
 
 Маршрут:
 
@@ -93,6 +93,12 @@ viewer_glb_url
 viewer_preview_url
 
 страница не должна использовать raw private URLs напрямую.
+
+Текущее состояние:
+
+route публичный;
+
+подтверждённый рабочий пример на март 2026: job_id=15.
 
 5. Protected flow для 3D scene
 Авторизация
@@ -166,17 +172,37 @@ page-3d.css
 
 page-3d.js
 
-assets/vendor/model-viewer.min.js через <script type="module">
+assets/vendor/model-viewer.min.js через lazy runtime load
 
 Почему так:
 
-ESM нельзя безопасно грузить обычным wp_enqueue_script() как классический script;
+3D-движок должен быть строго изолирован на /3d;
 
-не хотим вешать глобальный script_loader_tag и рисковать всем сайтом;
+браузер не должен видеть прямые private URLs;
 
-3D-движок должен быть строго изолирован на /3d.
+viewer должен работать и для code mode, и для job_id mode.
 
-8. Graceful fallback
+8. Текущий runtime viewer
+
+На март 2026 текущий рабочий viewer runtime такой:
+
+preview-first;
+
+кнопка явного открытия интерактивного viewer;
+
+signed /dl/... links;
+
+VP_3D_GLTF_TRANSFORM_OPTIMIZE=0;
+
+VP_3D_USE_DRACO=0;
+
+VP_3D_USE_MESHOPT=0.
+
+Причина:
+
+meshopt-compressed output ломал текущий model-viewer runtime.
+
+9. Graceful fallback
 
 Если у клиента нет рабочего WebGL-контекста:
 
@@ -194,7 +220,7 @@ viewer controls могут быть скрыты;
 
 /3d?job_id=...
 
-9. Минимальные проверки после изменений
+10. Минимальные проверки после изменений
 curl -I https://xn--b1awacccnl0jqa.xn--p1ai/scan/
 curl -I https://xn--b1awacccnl0jqa.xn--p1ai/instruction/
 curl -I https://xn--b1awacccnl0jqa.xn--p1ai/3d/

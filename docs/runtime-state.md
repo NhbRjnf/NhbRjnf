@@ -1,4 +1,4 @@
-### `runtime-state.md`
+## `docs/runtime-state.md`
 
 ```md
 # Runtime state / диагностика
@@ -16,20 +16,21 @@ git status --short
 
 активная ветка work;
 
-рабочее дерево чистое или понятны локальные изменения.
+рабочее дерево может быть грязным, поэтому staging нужно контролировать вручную;
+
+перед docs-коммитом нельзя использовать git add ..
 
 2. Docker-состояние
 cd /opt/vseponyatno/docker
 docker compose ps
 docker compose logs --tail=100 wordpress
 docker compose logs --tail=100 directus
-docker compose logs --tail=100 directus_stage
 docker compose logs --tail=100 redis
 docker compose logs --tail=100 converter
 
 Проверяем:
 
-контейнеры wordpress, directus, directus_stage, redis, converter в статусе Up;
+контейнеры wordpress, directus, redis, converter в статусе Up;
 
 нет повторяющихся 401 / 403 / 5xx;
 
@@ -39,7 +40,7 @@ converter не зациклился на failed job.
 curl -sS -i https://directus.xn--b1awacccnl0jqa.xn--p1ai/server/health
 curl -sS -i "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/lookup?code=VP-PH-EP2231-START"
 curl -sS -i "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/instruction?code=VP-PH-EP2231-START"
-curl -sS -i "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job-status?job_id=14"
+curl -sS "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job-status?job_id=15" | jq .
 
 Проверяем:
 
@@ -47,7 +48,7 @@ Directus отвечает 200;
 
 WordPress endpoint-ы не отдают 5xx;
 
-job-status отдаёт нормализованный JSON, а не raw storage path.
+job-status публично отдаёт нормализованный JSON, а не 401.
 
 4. Runtime snapshots
 
@@ -104,7 +105,7 @@ browser не видит raw private URLs.
 
 страница получает данные через job-status;
 
-для completed job приходят viewer_glb_url и/или viewer_preview_url;
+для completed job приходят viewer_glb_url и viewer_preview_url;
 
 viewer использует signed /dl/..., а не raw protected URL.
 
@@ -118,7 +119,73 @@ signed /dl/<token> должен открываться там, где это з�
 
 фронт не должен хранить или переиспользовать raw private URL как рабочий источник для viewer.
 
-8. Проверка graceful fallback для /3d
+Проверка:
+
+GLB_URL="$(curl -sS 'https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job-status?job_id=15' | jq -r '.job.viewer_glb_url // empty')"
+PNG_URL="$(curl -sS 'https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job-status?job_id=15' | jq -r '.job.viewer_preview_url // empty')"
+
+curl -I "$GLB_URL"
+curl -I "$PNG_URL"
+
+Ожидание:
+
+200 OK для signed links.
+
+8. Проверка текущего runtime-конфига converter
+
+Для текущего рабочего model-viewer runtime на март 2026 должно быть:
+
+cd /opt/vseponyatno/docker
+docker compose config | grep -n "VP_3D_GLTF_TRANSFORM_OPTIMIZE\|VP_3D_USE_DRACO\|VP_3D_USE_MESHOPT"
+
+Ожидание:
+
+VP_3D_GLTF_TRANSFORM_OPTIMIZE: "0"
+
+VP_3D_USE_DRACO: "0"
+
+VP_3D_USE_MESHOPT: "0"
+
+Причина:
+
+gltf-transform optimize в текущем pipeline приводил к meshopt-compressed output;
+
+этот output ломал текущий model-viewer runtime.
+
+9. Проверка converter после нового job
+
+После нового test upload:
+
+cd /opt/vseponyatno/docker
+docker compose logs -f converter
+
+Что должно быть:
+
+загрузка source файла;
+
+Blender export GLB;
+
+preview render;
+
+upload результатов;
+
+DONE job=<ID>
+
+Что не должно быть:
+
+Running glTF optimize
+
+gltf-transform optimize
+
+meshopt
+
+Допустимо:
+
+предупреждение про отсутствие Draco, если VP_3D_USE_DRACO=0;
+
+EGL fallback warning, если preview успешно рендерится и job завершается.
+
+10. Проверка graceful fallback для /3d
 
 Обязательный ручной чек:
 
@@ -136,42 +203,18 @@ signed /dl/<token> должен открываться там, где это з�
 
 UI не уходит в hard crash.
 
-Признаки целевой деградации:
-
-preview остаётся видимым;
-
-сообщение пользователю понятное;
-
-optional viewer controls скрыты или деактивированы;
-
-страница остаётся usable.
-
-9. Проверка актуальности схемы
+11. Типовой безопасный push-flow
 cd /opt/vseponyatno
-ls -lah Data_Model_Directus_snapshot_06_03_26.json
-
-Документацию и генерацию кода сверяем именно с этим snapshot, пока не снят новый.
-
-10. Типовой безопасный push-flow
-cd /opt/vseponyatno
+git restore --staged .
 git status --short
-git diff --stat
 
-Перед коммитом обязательно проверить:
+Перед коммитом docs:
 
-/scan
+staging должен содержать только docs/...;
 
-/instruction?code=<REAL>
+нельзя коммитить uploads, runtime, backup-файлы и WordPress core.
 
-/3d?code=<REAL>
-
-/3d?job_id=<REAL_JOB_ID>
-
-DevTools Console без JS-ошибок
-
-DevTools Network для /lookup, /instruction, /3d/auth, /3d/file, /3d/poster, /3d/job-status
-
-11. Что считать подозрительным
+12. Что считать подозрительным
 
 Подозрительно, если:
 
@@ -181,6 +224,10 @@ DevTools Network для /lookup, /instruction, /3d/auth, /3d/file, /3d/poster, /
 
 /3d пытается открыть raw private URL;
 
-job-status отдаёт внутренний путь хранилища вместо viewer-safe URL;
+job-status отдаёт 401;
 
-WebGL ошибка на клиенте полностью убивает страницу.
+converter снова запускает optimize / meshopt;
+
+browser показывает setMeshoptDecoder must be called before loading compressed files;
+
+/3d превращается в пустой экран без fallback

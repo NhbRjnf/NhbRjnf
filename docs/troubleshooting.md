@@ -1,4 +1,4 @@
-### `troubleshooting.md`
+## `docs/troubleshooting.md`
 
 ```md
 # Troubleshooting (всёпонятно)
@@ -29,12 +29,6 @@ echo "compose config OK"
 
 Причина: файл был сохранён в windows-1251, а не в UTF-8.
 
-Симптом:
-
-в терминале и редакторе видны нечитаемые символы;
-
-git и markdown preview показывают мусор.
-
 Решение:
 
 пересохранить файл в UTF-8;
@@ -43,12 +37,6 @@ git и markdown preview показывают мусор.
 
 не коммитить cp1251 обратно в репозиторий.
 
-Безопасная перекодировка:
-
-cd /opt/vseponyatno
-iconv -f cp1251 -t utf-8 VP-3D.md > VP-3D.md.utf8
-mv VP-3D.md.utf8 VP-3D.md
-file -bi VP-3D.md
 3. 403 при обращении к Directus из WordPress proxy
 
 Симптом:
@@ -67,22 +55,6 @@ Directus token формально валиден, но ответ запрещё
 
 свежие ли runtime snapshots.
 
-Типовые проблемные коллекции:
-
-qr_codes
-
-instruction_sets
-
-instruction_steps
-
-vp_3d_scenes
-
-vp_3d_jobs
-
-vp_onboarding_requests
-
-vp_user_profiles
-
 4. /lookup падает из-за relation expansion файлов QR
 
 Симптом:
@@ -100,17 +72,13 @@ proxy пытается делать relation-expansion qr_file.* или qr_file_
 
 не тянуть эти relation-expansions в lookup;
 
-использовать safe fields и нормализованный ответ;
-
-если нужен URL ассета, добирать его отдельным безопасным способом, а не через опасный relation-expansion в основном lookup.
+использовать safe fields и нормализованный ответ.
 
 5. /instruction падает из-за ACL на instruction_sets.description
 
 Симптом:
 
-/wp-json/vp/v1/instruction?code=... начинает отдавать 401/403/500;
-
-ошибка возникает после добавления instruction_sets.description в query fields.
+/wp-json/vp/v1/instruction?code=... начинает отдавать 401/403/500.
 
 Причина:
 
@@ -120,9 +88,7 @@ endpoint зависит от поля, к которому нет стабиль
 
 убрать instruction_sets.description из safe query;
 
-использовать fallback из product.description;
-
-не делать description обязательным условием успешного ответа instruction endpoint.
+использовать fallback из product.description.
 
 6. 3D converter получает не тот ID из Redis
 
@@ -137,17 +103,6 @@ job остаётся в pending;
 Причина:
 в Redis должен попадать vp_3d_jobs.id как integer, а не UUID входного файла.
 
-Проверка:
-
-cd /opt/vseponyatno/docker
-docker compose exec -T redis redis-cli LRANGE vp:3d:jobs 0 10
-
-Исправление:
-
-в очередь кладём только integer job_id;
-
-проверяем соответствие записи в vp_3d_jobs.
-
 7. /3d или model-viewer падают с Unexpected token 'export'
 
 Причина:
@@ -156,13 +111,6 @@ ESM-скрипт был загружен как обычный классиче�
 Правильно:
 
 <script type="module" src=".../assets/vendor/model-viewer.min.js"></script>
-
-Неправильно:
-
-обычный wp_enqueue_script() без type="module";
-
-глобальный фильтр, который вмешивается во все script tags сайта.
-
 8. /3d на клиенте падает с ошибкой WebGL context
 
 Симптом:
@@ -177,35 +125,37 @@ Cannot read properties of undefined (reading 'xr')
 
 это обычно клиентская проблема WebGL / GPU / драйвера / браузера;
 
-это не обязательно серверная ошибка;
-
-job может быть completed, а файл и signed URL — корректными.
+это не обязательно серверная ошибка.
 
 Что делать:
 
 не ломать backend из-за этого симптома;
 
-не считать raw protected URLs причиной автоматически;
-
 обеспечить graceful fallback:
 
 оставить preview / poster;
 
-не допускать hard crash страницы;
+не допускать hard crash страницы.
 
-скрыть или деактивировать viewer-only controls;
+9. job-status отдаёт 401 / 403
 
-показать понятное сообщение пользователю.
+Симптом:
 
-Проверка:
+/3d?job_id=... не получает viewer данные;
 
-открыть ту же страницу на другой машине / браузере;
+GET /wp-json/vp/v1/3d/job-status?job_id=... возвращает rest_forbidden.
 
-проверить наличие preview через viewer_preview_url;
+Причина:
 
-сравнить поведение на клиенте с нормальным WebGL.
+route ошибочно закрыт через permission callback.
 
-9. job-status отдаёт или фронт использует raw private URL
+Решение:
+
+job-status должен быть публичным;
+
+безопасность viewer обеспечивается signed /dl/... links, а не login-требованием к самому route.
+
+10. job-status отдаёт или фронт использует raw private URL
 
 Симптом:
 
@@ -225,11 +175,70 @@ job может быть completed, а файл и signed URL — коррект�
 
 viewer использует signed /dl/<token> ссылки;
 
-raw protected URLs не являются публичным контрактом;
+raw protected URLs не являются публичным контрактом.
 
-403 на raw private URL сам по себе не баг.
+11. THREE.GLTFLoader: setMeshoptDecoder must be called before loading compressed files
 
-10. Protected 3D сцена не открывается
+Симптом:
+
+current model-viewer runtime не открывает GLB;
+
+в консоли появляется ошибка про setMeshoptDecoder.
+
+Причина:
+
+output GLB после gltf-transform optimize содержит meshopt compression;
+
+текущая конфигурация viewer не инициализирует meshopt decoder.
+
+Быстрый runtime fix:
+
+в .env выставить:
+
+VP_3D_GLTF_TRANSFORM_OPTIMIZE=0
+
+VP_3D_USE_DRACO=0
+
+VP_3D_USE_MESHOPT=0
+
+пересоздать только converter
+
+создать новый test job
+
+Проверка:
+
+в логах converter не должно быть:
+
+Running glTF optimize
+
+meshopt
+
+12. Предупреждение про Draco в converter
+
+Симптом:
+
+в логах Blender есть строка:
+Draco mesh compression is not available...
+
+Текущее значение:
+
+если VP_3D_USE_DRACO=0, это warning не блокирует pipeline;
+
+job может успешно завершиться.
+
+13. EGL / surfaceless rendering warnings при preview render
+
+Симптом:
+
+в логах preview render видны EGL warnings и сообщение про fallback to surfaceless EGL rendering.
+
+Текущее значение:
+
+если preview.png успешно создаётся и job завершается как DONE, эти warnings допустимы;
+
+они сами по себе не считаются поломкой.
+
+14. Protected 3D сцена не открывается
 
 Проверяем:
 
@@ -245,35 +254,7 @@ WordPress выдаёт short-lived token;
 
 /wp-json/vp/v1/3d/file реально стримит файл.
 
-11. Onboarding approve / reject не записывается
-
-Проверяем:
-
-VP_SERVICE_USER_TOKEN;
-
-DIRECTUS_PUBLIC_URL;
-
-не включён ли VP_ONBOARDING_DRY_RUN=1;
-
-есть ли права на:
-
-vp_onboarding_requests
-
-vp_user_profiles
-
-directus_users
-
-грузятся ли vp-onboarding-admin.js и CSS с корректным ?ver=.
-
-12. Документация расходится со схемой
-
-Симптом:
-
-markdown описывает поля, которых нет;
-
-типы ID указаны как uuid, хотя в snapshot они integer;
-
-кодогенерация едет не туда.
+15. Документация расходится со схемой
 
 Правило:
 при любом споре источником истины считается Data_Model_Directus_snapshot_06_03_26.json.
@@ -282,4 +263,4 @@ markdown описывает поля, которых нет;
 
 runtime bridge поля и WordPress-safe URLs не нужно автоматически переносить в schema-docs;
 
-сначала снимаем новый snapshot, потом меняем data-model.md и directus-schema.md.
+сначала снимаем новый snapshot, потом меняем data-model.md и directus-schema.md

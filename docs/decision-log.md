@@ -1,4 +1,7 @@
-### `decision-log.md`
+
+---
+
+## `docs/decision-log.md`
 
 ```md
 # Decision log
@@ -47,3 +50,15 @@
 
 ## 2026-03-13 — Schema-docs не переписываем по runtime bridge без нового snapshot
 Причина: runtime может эволюционировать быстрее, чем snapshot. Сначала снимаем новый snapshot, потом меняем `data-model.md` и `directus-schema.md`.
+
+## 2026-03-16 — `job-status` route делаем публичным
+Причина: `/3d?job_id=...` является публичным viewer entry. Без публичного `job-status` page template и viewer bridge расходятся с реальным контрактом.
+
+## 2026-03-16 — Для текущего `model-viewer` runtime отключаем `gltf-transform optimize`
+Причина: optimize-прогон приводил к meshopt-compressed GLB, который ломал текущий viewer ошибкой про `setMeshoptDecoder`. Для быстрого рабочего runtime принимаем:
+- `VP_3D_GLTF_TRANSFORM_OPTIMIZE=0`
+- `VP_3D_USE_DRACO=0`
+- `VP_3D_USE_MESHOPT=0`
+
+## 2026-03-16 — Текущий viewer считаем временно стабилизированным, но стратегически планируем Three.js
+Причина: текущий `model-viewer` уже доведён до рабочего состояния для job-driven flow, но долгосрочно проекту нужен более гибкий renderer для indoor navigation, этажей, POI и крупных сцен.

@@ -1,3 +1,6 @@
+## `docs/api-contract.md`
+
+```md
 # API контракт WordPress ↔ Directus
 
 ## 1. Базовый принцип
@@ -50,7 +53,7 @@
 - вернуть данные для `/instruction`;
 - собрать товар, описание, ссылки, шаги и вложенные instruction-данные в одном ответе.
 
-Используется там, где сценарий должен быть показан карточно, без model viewer.
+Используется там, где сценарий должен быть показан карточно, без viewer.
 
 Важно по текущему runtime:
 - endpoint не должен зависеть от ACL на `instruction_sets.description`;
@@ -59,6 +62,7 @@
 ## 4. 3D endpoints через WordPress proxy
 
 ### `POST /wp-json/vp/v1/3d/auth`
+
 Body:
 ```json
 {
@@ -125,7 +129,7 @@ endpoint существует и работает;
 
 {
   "ok": true,
-  "job_id": 14
+  "job_id": 15
 }
 GET /wp-json/vp/v1/3d/job-status?job_id=...
 
@@ -137,15 +141,23 @@ GET /wp-json/vp/v1/3d/job-status?job_id=...
 
 отдать только viewer-safe ссылки.
 
-Минимально ожидаемые поля ответа:
+Текущее состояние:
+
+route публичный;
+
+используется и как REST bridge, и как server-side prefetch источник для page-3d.php.
+
+Минимально ожидаемый ответ:
 
 {
   "ok": true,
-  "job_id": 14,
-  "status": "completed",
-  "progress": 100,
-  "viewer_glb_url": "https://.../dl/<token>",
-  "viewer_preview_url": "https://.../dl/<token>"
+  "job": {
+    "id": 15,
+    "status": "completed",
+    "progress": 100,
+    "viewer_glb_url": "https://.../dl/<token>",
+    "viewer_preview_url": "https://.../dl/<token>"
+  }
 }
 
 Допустимы также:
@@ -166,7 +178,7 @@ raw private URLs не являются частью публичного кон�
 
 5. Входные режимы страницы /3d
 
-Страница /3d поддерживает два режима:
+Страница /3d поддерживает два режима.
 
 5.1 Code-driven scene flow
 
@@ -276,4 +288,4 @@ shape ответов для /lookup, /instruction, /3d/auth, /3d/file, /3d/poste
 
 способ хранения производных файлов;
 
-внутренняя организация Redis / worker, если фронт этого не видит.
+внутренняя организация Redis / worker, если фронт этого не видит

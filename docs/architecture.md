@@ -1,4 +1,3 @@
-```md
 # Архитектура проекта «ВсёПонятно»
 
 ## 1. Назначение проекта
@@ -18,7 +17,7 @@
 4. converter обрабатывает задачу;
 5. `/3d?job_id=...` показывает статус и результат через WordPress bridge.
 
-Главный принцип проекта: не плодить страницы и сценарии вручную, а вести поведение через данные и прокси-слой WordPress.
+Главный принцип проекта: не плодить страницы и сценарии вручную, а вести поведение через данные и proxy-слой WordPress.
 
 ## 2. Среды и источник истины
 
@@ -134,13 +133,13 @@ browser
   -> /3d/file or /3d/poster
 3D job-driven flow
 browser
-  -> /3d/job (upload)
+  -> POST /wp-json/vp/v1/3d/job
   -> Directus job
   -> Redis queue
   -> converter worker
   -> runtime result
   -> /3d?job_id=...
-  -> /3d/job-status
+  -> GET /wp-json/vp/v1/3d/job-status
   -> signed /dl/<token> viewer links
 7. Core data blocks
 Catalog / content
@@ -237,7 +236,9 @@ multi-tenant ядро;
 
 Redis + converter pipeline;
 
-job-driven viewer bridge через signed URLs.
+job-driven viewer bridge через signed URLs;
+
+рабочий текущий runtime viewer для job_id-режима.
 
 10. Что считать поломкой
 
@@ -251,4 +252,8 @@ job-driven viewer bridge через signed URLs.
 
 hard crash /3d на клиенте без graceful fallback;
 
-зависимость viewer от raw protected URL вместо WordPress bridge.
+зависимость viewer от raw protected URL вместо WordPress bridge;
+
+закрытый job-status route, если /3d?job_id=... должен быть публичным;
+
+meshopt-compressed GLB в текущем model-viewer runtime, если viewer из-за этого не загружается.
