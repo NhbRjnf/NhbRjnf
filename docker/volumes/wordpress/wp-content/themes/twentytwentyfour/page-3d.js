@@ -199,6 +199,50 @@
     elUploadStatus.classList.toggle('is-error', !!isError);
   }
 
+  function formatMaxBytes(bytes) {
+    const value = Number(bytes || 0);
+    if (!Number.isFinite(value) || value <= 0) return '';
+    const mb = value / (1024 * 1024);
+    if (mb >= 1) {
+      return `${Math.round(mb)} МБ`;
+    }
+    const kb = value / 1024;
+    return `${Math.round(kb)} КБ`;
+  }
+
+  function resolveUploadError(err) {
+    const payload = err?.payload || {};
+    const key = payload?.error || err?.message || 'upload_failed';
+
+    if (typeof payload?.message === 'string' && payload.message.trim()) {
+      if (key === 'file_too_large' && payload?.max_bytes) {
+        return `${payload.message} Максимум: ${formatMaxBytes(payload.max_bytes)}.`;
+      }
+      if (key === 'rate_limited' && payload?.retry_after) {
+        return `${payload.message} Повторите через ${payload.retry_after} сек.`;
+      }
+      return payload.message;
+    }
+
+    if (key === 'file_required') return 'Выберите 3D файл перед отправкой.';
+    if (key === 'file_type_not_allowed') return 'Разрешены только .stl, .obj, .glb и .gltf.';
+    if (key === 'file_too_large') {
+      return payload?.max_bytes
+        ? `Файл слишком большой. Максимум: ${formatMaxBytes(payload.max_bytes)}.`
+        : 'Файл слишком большой.';
+    }
+    if (key === 'rate_limited') {
+      return payload?.retry_after
+        ? `Слишком много попыток загрузки. Повторите через ${payload.retry_after} сек.`
+        : 'Слишком много попыток загрузки. Попробуйте позже.';
+    }
+    if (key === 'queue_unavailable') return 'Сервис очереди временно недоступен. Попробуйте позже.';
+    if (key === 'directus_request_failed') return 'Не удалось создать job в backend.';
+    if (key === 'job_create_failed') return 'Не удалось создать job.';
+    if (key === 'upload_failed') return 'Не удалось загрузить файл.';
+    return 'Не удалось создать job. Проверьте файл и попробуйте снова.';
+  }
+
   async function upload3dJob(file) {
     const formData = new FormData();
     formData.append('file', file);
@@ -664,7 +708,7 @@
           window.location.assign(redirectUrl.toString());
         } catch (err) {
           console.error(err);
-          setUploadStatus('Не удалось создать job. Проверьте файл и попробуйте снова.', true);
+          setUploadStatus(resolveUploadError(err), true);
           if (elUploadSubmit) elUploadSubmit.disabled = false;
         }
       });

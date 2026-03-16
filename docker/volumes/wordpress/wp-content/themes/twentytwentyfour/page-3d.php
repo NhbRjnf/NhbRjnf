@@ -30,7 +30,6 @@ get_header();
     <a class="vp-3d-back" href="<?php echo esc_url(home_url('/scan/')); ?>">Назад на сканер</a>
   </header>
 
-
   <section class="vp-3d-card vp-3d-upload" aria-labelledby="vp3d-upload-title">
     <h2 id="vp3d-upload-title" class="vp-3d-h2">Загрузить 3D файл</h2>
     <form id="vp3d-upload-form" class="vp-3d-upload-form" enctype="multipart/form-data">
@@ -40,9 +39,10 @@ get_header();
         class="vp-3d-input"
         type="file"
         name="file"
-        accept=".glb,.gltf,.obj,.stl,.fbx"
+        accept=".stl,.obj,.glb,.gltf"
         required
       />
+      <div class="vp-3d-hint">Поддерживаются: .stl, .obj, .glb, .gltf</div>
       <button id="vp3d-upload-submit" class="vp-3d-btn" type="submit">Загрузить и открыть</button>
       <div id="vp3d-upload-status" class="vp-3d-upload-status" hidden></div>
     </form>
