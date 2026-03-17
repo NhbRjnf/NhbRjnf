@@ -18,6 +18,28 @@
 - Обновлена документация по безопасному 3D delivery без raw private URLs.
 - Добавлены runtime-проверки для `job-status` и `/3d?job_id=...`.
 
+
+- Зафиксирован новый schema snapshot: `Data_Model_Directus_snapshot_ADD_LOCATION__17_03_26.json`.
+- Зафиксирован indoor-navigation schema layer:
+  - `vp_locations`
+  - `vp_location_levels`
+  - `vp_location_zones`
+  - `vp_location_nodes`
+  - `vp_location_edges`
+  - `vp_location_pois`
+  - `vp_location_anchors`
+
+### Changed
+- `CODEX_RULES.md` переведён на новый snapshot `17_03_26`.
+- `architecture.md` дополнен indoor-navigation data block.
+- `data-model.md` дополнен отдельным indoor-navigation разделом.
+- `directus-schema.md` синхронизирован с location-коллекциями из нового snapshot.
+- `decision-log.md` дополнен решением о том, что indoor-navigation теперь зафиксирован как реальный schema-layer.
+
+### Notes
+- `api-contract.md` не должен обещать жёсткий shape location-runtime до отдельной фиксации публичного lookup-контракта.
+- routing `location -> /3d` остаётся актуальным, но schema за ним теперь шире, чем просто `scene_id`.
+
 ### Changed
 - `api-contract.md` обновлён под реальный runtime:
   - добавлены `POST /wp-json/vp/v1/3d/job`;

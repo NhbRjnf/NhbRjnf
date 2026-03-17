@@ -44,9 +44,20 @@
 5. `runtime-state.md`
 6. `troubleshooting.md`
 7. `decision-log.md`
-8. актуальный snapshot `Data_Model_Directus_snapshot_06_03_26.json`
+8. актуальный snapshot `Data_Model_Directus_snapshot_ADD_LOCATION__17_03_26.json`
 
 Если markdown расходится со snapshot, верить snapshot.
+
+Важно:
+- snapshot `17_03_26` уже включает indoor-navigation коллекции:
+  - `vp_locations`
+  - `vp_location_levels`
+  - `vp_location_zones`
+  - `vp_location_nodes`
+  - `vp_location_edges`
+  - `vp_location_pois`
+  - `vp_location_anchors`
+- нельзя продолжать описывать схему так, будто этих коллекций ещё нет.
 
 ## 4. Текущие продуктовые принципы
 

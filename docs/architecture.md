@@ -35,7 +35,10 @@
 - используется для инженерной валидации.
 
 ### Источник истины
-- по схеме Directus источником истины считается `Data_Model_Directus_snapshot_06_03_26.json`;
+- по схеме Directus источником истины считается `Data_Model_Directus_snapshot_ADD_LOCATION__17_03_26.json`;
+- по текущему runtime-поведению источником истины являются актуальные WordPress proxy endpoints и рабочие flows;
+- если schema-docs и runtime-docs расходятся, schema-docs не переписываются без нового snapshot.### Источник истины
+- по схеме Directus источником истины считается `Data_Model_Directus_snapshot_ADD_LOCATION__17_03_26.json`;
 - по текущему runtime-поведению источником истины являются актуальные WordPress proxy endpoints и рабочие flows;
 - если schema-docs и runtime-docs расходятся, schema-docs не переписываются без нового snapshot.
 
@@ -141,56 +144,48 @@ browser
   -> /3d?job_id=...
   -> GET /wp-json/vp/v1/3d/job-status
   -> signed /dl/<token> viewer links
-7. Core data blocks
-Catalog / content
+  
+  
+## 7. Core data blocks
 
-products
+### Catalog / content
+- `products`
+- `instruction_sets`
+- `instruction_steps`
+- `instruction_assets`
+- `qr_codes`
+- `vp_cards`
 
-instruction_sets
+### 3D
+- `vp_3d_scenes`
+- `vp_3d_jobs`
+- `vp_case_scans`
 
-instruction_steps
+### Indoor navigation
+- `vp_locations`
+- `vp_location_levels`
+- `vp_location_zones`
+- `vp_location_nodes`
+- `vp_location_edges`
+- `vp_location_pois`
+- `vp_location_anchors`
 
-instruction_assets
+### SaaS / tenant
+- `vp_tenants`
+- `vp_memberships`
+- `vp_invites`
+- `vp_user_profiles`
+- `vp_share_links`
 
-qr_codes
+### Dental / domain
+- `vp_clinics`
+- `vp_patients`
+- `vp_cases`
+- `vp_case_scans`
 
-vp_cards
-
-3D
-
-vp_3d_scenes
-
-vp_3d_jobs
-
-vp_case_scans
-
-SaaS / tenant
-
-vp_tenants
-
-vp_memberships
-
-vp_invites
-
-vp_user_profiles
-
-vp_share_links
-
-Dental / domain
-
-vp_clinics
-
-vp_patients
-
-vp_cases
-
-vp_case_scans
-
-Onboarding / moderation
-
-vp_onboarding_requests
-
-vp_allowlist_domains
+### Onboarding / moderation
+- `vp_onboarding_requests`
+- `vp_allowlist_domains`
 
 8. Архитектурные правила
 
@@ -212,33 +207,36 @@ graceful fallback для /3d обязателен: отсутствие WebGL н
 
 schema-docs меняются только вместе с новым snapshot.
 
-9. Текущий статус
+## 9. Текущий статус
 
 На март 2026 проект включает:
 
-Docker stack;
+- Docker stack;
+- Nginx reverse proxy;
+- SSL;
+- WordPress frontend;
+- Directus backend;
+- `/scan`, `/instruction`, `/3d`;
+- onboarding moderation;
+- multi-tenant ядро;
+- 3D collections и routing;
+- Redis + converter pipeline;
+- job-driven viewer bridge через signed URLs;
+- indoor-navigation schema layer:
+  - locations
+  - levels
+  - zones
+  - nodes
+  - edges
+  - POI
+  - anchors;
+- рабочий текущий runtime viewer для job_id-режима.
 
-Nginx reverse proxy;
+Важно:
+- наличие indoor-navigation слоя в схеме не означает, что весь frontend-контракт уже должен быть жёстко описан в `api-contract.md`;
+- но архитектурно этот слой уже часть проекта и должен быть отражён в docs.
 
-SSL;
 
-WordPress frontend;
-
-Directus backend;
-
-/scan, /instruction, /3d;
-
-onboarding moderation;
-
-multi-tenant ядро;
-
-3D collections и routing;
-
-Redis + converter pipeline;
-
-job-driven viewer bridge через signed URLs;
-
-рабочий текущий runtime viewer для job_id-режима.
 
 10. Что считать поломкой
 

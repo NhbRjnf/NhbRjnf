@@ -1,8 +1,8 @@
 # Directus Schema — ПРОЕКТ «ВСЁ ПОНЯТНО»
 
-Версия документа: 2.0  
-Дата фиксации: 2026-03-06  
-Источник истины: `Data_Model_Directus_snapshot_06_03_26.json`
+Версия документа: 2.1
+Дата фиксации: 2026-03-17
+Источник истины: `Data_Model_Directus_snapshot_ADD_LOCATION__17_03_26.json`
 
 ## Назначение документа
 
@@ -38,6 +38,13 @@
 - `vp_case_scans`
 - `vp_share_links`
 - `vp_cards`
+- `vp_locations`
+- `vp_location_levels`
+- `vp_location_zones`
+- `vp_location_nodes`
+- `vp_location_edges`
+- `vp_location_pois`
+- `vp_location_anchors`
 
 Также присутствуют:
 - `directus_sync_id_map`
@@ -136,6 +143,170 @@
 | `instruction_id` | `integer` | нет | instruction_sets.id |
 | `scene_id` | `integer` | нет | vp_3d_scenes.id |
 | `tenant_id` | `integer` | нет | vp_tenants.id |
+
+
+
+
+## `vp_locations`
+Описание: Объекты indoor-навигации: ТЦ, аэропорт, вокзал, гипермаркет, клиника, здание
+
+| Поле | Тип | Обяз. | Связь / примечание |
+|---|---|---:|---|
+| `id` | `integer` | нет |  |
+| `title` | `string` | да | Название объекта навигации |
+| `slug` | `string` | да | Стабильный slug для интеграций и поиска |
+| `kind` | `string` | да | mall / hypermarket / airport / station / clinic / building / other |
+| `description` | `text` | нет | Описание объекта |
+| `is_active` | `boolean` | да | Показывать объект в runtime |
+| `address` | `string` | нет |  |
+| `city` | `string` | нет |  |
+| `country` | `string` | нет |  |
+| `timezone` | `string` | нет |  |
+| `default_language` | `string` | нет |  |
+| `cover_image` | `uuid` | нет | directus_files.id |
+| `logo` | `uuid` | нет | directus_files.id |
+| `tenant_id` | `integer` | нет | vp_tenants.id |
+| `scene_id` | `integer` | нет | vp_3d_scenes.id |
+| `meta_json` | `json` | нет | JSON-настройки объекта |
+| `sort` | `integer` | нет |  |
+| `created_at` | `timestamp` | нет |  |
+| `updated_at` | `timestamp` | нет |  |
+
+## `vp_location_levels`
+Описание: Этажи / уровни объекта indoor-навигации
+
+| Поле | Тип | Обяз. | Связь / примечание |
+|---|---|---:|---|
+| `id` | `integer` | нет |  |
+| `location_id` | `integer` | да | vp_locations.id |
+| `tenant_id` | `integer` | нет | vp_tenants.id |
+| `code` | `string` | да | Короткий код уровня |
+| `title` | `string` | да | Название уровня |
+| `sort` | `integer` | нет | Порядок |
+| `is_active` | `boolean` | да |  |
+| `z_index` | `integer` | нет | Порядок наложения |
+| `floor_plan_image` | `uuid` | нет | directus_files.id |
+| `floor_plan_svg` | `uuid` | нет | directus_files.id |
+| `floor_plan_geojson` | `json` | нет | Геометрия / слой плана |
+| `meta_json` | `json` | нет |  |
+| `created_at` | `timestamp` | нет |  |
+| `updated_at` | `timestamp` | нет |  |
+
+## `vp_location_zones`
+Описание: Зоны внутри объекта indoor-навигации
+
+| Поле | Тип | Обяз. | Связь / примечание |
+|---|---|---:|---|
+| `id` | `integer` | нет |  |
+| `location_id` | `integer` | да | vp_locations.id |
+| `level_id` | `integer` | нет | vp_location_levels.id |
+| `tenant_id` | `integer` | нет | vp_tenants.id |
+| `parent_zone_id` | `integer` | нет | vp_location_zones.id |
+| `title` | `string` | да |  |
+| `slug` | `string` | нет |  |
+| `kind` | `string` | нет | Тип зоны |
+| `description` | `text` | нет |  |
+| `polygon_json` | `json` | нет | Полигон зоны |
+| `center_x` | `integer` | нет |  |
+| `center_y` | `integer` | нет |  |
+| `is_active` | `boolean` | да |  |
+| `sort` | `integer` | нет |  |
+| `meta_json` | `json` | нет |  |
+
+## `vp_location_nodes`
+Описание: Узлы графа маршрутизации indoor-навигации
+
+| Поле | Тип | Обяз. | Связь / примечание |
+|---|---|---:|---|
+| `id` | `integer` | нет |  |
+| `location_id` | `integer` | да | vp_locations.id |
+| `level_id` | `integer` | да | vp_location_levels.id |
+| `zone_id` | `integer` | нет | vp_location_zones.id |
+| `tenant_id` | `integer` | нет | vp_tenants.id |
+| `title` | `string` | нет |  |
+| `kind` | `string` | да | Тип узла |
+| `x` | `integer` | да | Координата X |
+| `y` | `integer` | да | Координата Y |
+| `z` | `integer` | нет | Координата Z |
+| `is_active` | `boolean` | да |  |
+| `is_public` | `boolean` | да |  |
+| `accessibility_tags` | `json` | нет | Accessibility-теги |
+| `meta_json` | `json` | нет |  |
+
+## `vp_location_edges`
+Описание: Связи между узлами графа indoor-навигации
+
+| Поле | Тип | Обяз. | Связь / примечание |
+|---|---|---:|---|
+| `id` | `integer` | нет |  |
+| `location_id` | `integer` | да | vp_locations.id |
+| `tenant_id` | `integer` | нет | vp_tenants.id |
+| `from_node_id` | `integer` | да | vp_location_nodes.id |
+| `to_node_id` | `integer` | да | vp_location_nodes.id |
+| `kind` | `string` | да | walk / stairs / elevator / escalator / ramp / service |
+| `distance_m` | `integer` | нет | Длина ребра в метрах |
+| `duration_s` | `integer` | нет | Оценка длительности в секундах |
+| `is_bidirectional` | `boolean` | да |  |
+| `is_active` | `boolean` | да |  |
+| `is_accessible` | `boolean` | да | Безбарьерный маршрут |
+| `level_change` | `integer` | нет | Смена уровня |
+| `restrictions_json` | `json` | нет | Ограничения |
+| `meta_json` | `json` | нет |  |
+
+## `vp_location_pois`
+Описание: Точки интереса и цели маршрута indoor-навигации
+
+| Поле | Тип | Обяз. | Связь / примечание |
+|---|---|---:|---|
+| `id` | `integer` | нет |  |
+| `location_id` | `integer` | да | vp_locations.id |
+| `level_id` | `integer` | да | vp_location_levels.id |
+| `zone_id` | `integer` | нет | vp_location_zones.id |
+| `node_id` | `integer` | да | vp_location_nodes.id |
+| `tenant_id` | `integer` | нет | vp_tenants.id |
+| `title` | `string` | да |  |
+| `slug` | `string` | нет |  |
+| `kind` | `string` | да | Тип POI |
+| `brand` | `string` | нет |  |
+| `is_active` | `boolean` | да |  |
+| `is_public` | `boolean` | да |  |
+| `x` | `integer` | нет |  |
+| `y` | `integer` | нет |  |
+| `description` | `text` | нет |  |
+| `card_id` | `integer` | нет | vp_cards.id |
+| `scene_id` | `integer` | нет | vp_3d_scenes.id |
+| `instruction_id` | `integer` | нет | instruction_sets.id |
+| `icon` | `string` | нет |  |
+| `sort` | `integer` | нет |  |
+| `keywords` | `json` | нет | Поисковые ключи |
+| `opening_hours` | `string` | нет |  |
+| `phone` | `string` | нет |  |
+| `url` | `string` | нет |  |
+| `meta_json` | `json` | нет |  |
+
+## `vp_location_anchors`
+Описание: QR-якоря текущего положения indoor-навигации
+
+| Поле | Тип | Обяз. | Связь / примечание |
+|---|---|---:|---|
+| `id` | `integer` | нет |  |
+| `location_id` | `integer` | да | vp_locations.id |
+| `level_id` | `integer` | да | vp_location_levels.id |
+| `zone_id` | `integer` | нет | vp_location_zones.id |
+| `node_id` | `integer` | да | vp_location_nodes.id |
+| `qr_code_id` | `integer` | нет | qr_codes.id |
+| `tenant_id` | `integer` | нет | vp_tenants.id |
+| `title` | `string` | да |  |
+| `code` | `string` | да | Внутренний код якоря |
+| `kind` | `string` | да | Тип якоря |
+| `x` | `integer` | нет |  |
+| `y` | `integer` | нет |  |
+| `heading_deg` | `integer` | нет | Направление пользователя |
+| `is_active` | `boolean` | да |  |
+| `meta_json` | `json` | нет |  |
+
+
+
 
 
 ## `vp_3d_scenes`

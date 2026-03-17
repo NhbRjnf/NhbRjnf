@@ -68,3 +68,13 @@
 
 ## 2026-03-16 — Server-side message для hardening endpoint может быть ASCII/English
 Причина: в runtime был замечен риск битой кодировки в ответах API. Локализацию пользовательского текста оставляем на frontend, а серверный message допускается в ASCII/English для стабильности transport-слоя.
+
+
+## 2026-03-17 — Snapshot `Data_Model_Directus_snapshot_ADD_LOCATION__17_03_26.json` считаем новым источником истины по схеме
+Причина: появился новый фактический snapshot, который уже включает indoor-navigation коллекции. После его появления `data-model.md`, `directus-schema.md` и правила проекта должны быть синхронизированы именно с ним.
+
+## 2026-03-17 — Indoor navigation фиксируем как отдельный schema-layer проекта
+Причина: схема теперь содержит самостоятельный навигационный граф: `vp_locations`, `vp_location_levels`, `vp_location_zones`, `vp_location_nodes`, `vp_location_edges`, `vp_location_pois`, `vp_location_anchors`. Это уже не “будущий концепт”, а реальный слой данных.
+
+## 2026-03-17 — `location` больше нельзя документировать как просто частный случай 3D scene
+Причина: runtime routing по-прежнему может вести `location` на `/3d`, но на уровне данных сценарий location теперь может опираться на anchors / levels / nodes / edges / POI, а не только на `scene_id`.

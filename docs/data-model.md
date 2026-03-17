@@ -1,6 +1,6 @@
 # Модель данных Directus (всёпонятно)
 
-Источник истины для этого файла: `Data_Model_Directus_snapshot_06_03_26.json`.
+Источник истины для этого файла: `Data_Model_Directus_snapshot_ADD_LOCATION__17_03_26.json`.
 
 ## 1. Общий принцип
 
@@ -100,7 +100,179 @@ Directus в проекте используется как:
 - product / service / manual обычно ведут к `/instruction`;
 - 3d / navigation / location могут вести к `/3d` по текущему routing.
 
-## 4. 3D слой
+
+
+
+
+
+## 4. Indoor navigation layer
+
+### `vp_locations`
+Корневой объект indoor-навигации: ТЦ, гипермаркет, аэропорт, вокзал, клиника, здание.
+
+Поля:
+- `id` — integer
+- `title`
+- `slug`
+- `kind`
+- `description`
+- `is_active`
+- `address`
+- `city`
+- `country`
+- `timezone`
+- `default_language`
+- `cover_image` → `directus_files.id`
+- `logo` → `directus_files.id`
+- `tenant_id` → `vp_tenants.id`
+- `scene_id` → `vp_3d_scenes.id`
+- `meta_json` — json
+- `sort`
+- `created_at`
+- `updated_at`
+
+### `vp_location_levels`
+Уровни / этажи внутри объекта.
+
+Поля:
+- `id` — integer
+- `location_id` → `vp_locations.id`
+- `tenant_id` → `vp_tenants.id`
+- `code`
+- `title`
+- `sort`
+- `is_active`
+- `z_index`
+- `floor_plan_image` → `directus_files.id`
+- `floor_plan_svg` → `directus_files.id`
+- `floor_plan_geojson` — json
+- `meta_json` — json
+- `created_at`
+- `updated_at`
+
+### `vp_location_zones`
+Зоны внутри уровня или объекта.
+
+Поля:
+- `id` — integer
+- `location_id` → `vp_locations.id`
+- `level_id` → `vp_location_levels.id`
+- `tenant_id` → `vp_tenants.id`
+- `parent_zone_id` → `vp_location_zones.id`
+- `title`
+- `slug`
+- `kind`
+- `description`
+- `polygon_json` — json
+- `center_x`
+- `center_y`
+- `is_active`
+- `sort`
+- `meta_json` — json
+
+### `vp_location_nodes`
+Узлы графа маршрутизации.
+
+Поля:
+- `id` — integer
+- `location_id` → `vp_locations.id`
+- `level_id` → `vp_location_levels.id`
+- `zone_id` → `vp_location_zones.id`
+- `tenant_id` → `vp_tenants.id`
+- `title`
+- `kind`
+- `x`
+- `y`
+- `z`
+- `is_active`
+- `is_public`
+- `accessibility_tags` — json
+- `meta_json` — json
+
+### `vp_location_edges`
+Рёбра графа маршрутизации между узлами.
+
+Поля:
+- `id` — integer
+- `location_id` → `vp_locations.id`
+- `tenant_id` → `vp_tenants.id`
+- `from_node_id` → `vp_location_nodes.id`
+- `to_node_id` → `vp_location_nodes.id`
+- `kind`
+- `distance_m`
+- `duration_s`
+- `is_bidirectional`
+- `is_active`
+- `is_accessible`
+- `level_change`
+- `restrictions_json` — json
+- `meta_json` — json
+
+### `vp_location_pois`
+Точки интереса / цели маршрута.
+
+Поля:
+- `id` — integer
+- `location_id` → `vp_locations.id`
+- `level_id` → `vp_location_levels.id`
+- `zone_id` → `vp_location_zones.id`
+- `node_id` → `vp_location_nodes.id`
+- `tenant_id` → `vp_tenants.id`
+- `title`
+- `slug`
+- `kind`
+- `brand`
+- `is_active`
+- `is_public`
+- `x`
+- `y`
+- `description`
+- `card_id` → `vp_cards.id`
+- `scene_id` → `vp_3d_scenes.id`
+- `instruction_id` → `instruction_sets.id`
+- `icon`
+- `sort`
+- `keywords` — json
+- `opening_hours`
+- `phone`
+- `url`
+- `meta_json` — json
+
+### `vp_location_anchors`
+QR-якоря текущего положения пользователя.
+
+Поля:
+- `id` — integer
+- `location_id` → `vp_locations.id`
+- `level_id` → `vp_location_levels.id`
+- `zone_id` → `vp_location_zones.id`
+- `node_id` → `vp_location_nodes.id`
+- `qr_code_id` → `qr_codes.id`
+- `tenant_id` → `vp_tenants.id`
+- `title`
+- `code`
+- `kind`
+- `x`
+- `y`
+- `heading_deg`
+- `is_active`
+- `meta_json` — json
+
+Логика:
+- `qr_codes` по-прежнему остаётся маршрутизатором сценария;
+- для indoor navigation QR может быть связан не только через `scene_id`, но и через `vp_location_anchors.qr_code_id`;
+- объект навигации описывается через `vp_locations`;
+- этажи, зоны, узлы, рёбра и POI составляют граф маршрута;
+- `location` как тип сценария теперь должен восприниматься не как “синоним scene”, а как отдельный навигационный слой поверх данных.
+
+
+
+
+
+
+
+
+## 5. 3D слой
 
 ### `vp_3d_scenes`
 Универсальная 3D сцена.
@@ -157,7 +329,7 @@ Directus в проекте используется как:
 - `conversion_error`
 - `created_at`
 
-## 5. SaaS / tenant layer
+## 6. SaaS / tenant layer
 
 ### `vp_tenants`
 Организация или tenant.
@@ -268,7 +440,7 @@ Directus в проекте используется как:
 - `partner_website`
 - `partner_about`
 
-## 6. Onboarding / moderation
+## 7. Onboarding / moderation
 
 ### `vp_onboarding_requests`
 Заявка на регистрацию / onboarding.
