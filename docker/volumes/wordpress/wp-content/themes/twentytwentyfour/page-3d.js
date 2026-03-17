@@ -41,6 +41,9 @@
   let elViewer = null;
   let elLocationPanel = null;
 
+  let elLocationCanvas = null;
+  let currentLocationPayload = null;
+
   const params = new URLSearchParams(window.location.search);
   const code = String(params.get('code') || '').trim().toUpperCase();
   const jobId = Number.parseInt(String(params.get('job_id') || ''), 10) || 0;
@@ -67,7 +70,7 @@
     job_pending: 'Модель ещё обрабатывается.',
     job_model_missing: 'Для job не удалось получить ссылку на модель.',
     location_not_found: 'Локация по этому коду не найдена.',
-    anchor_not_found: 'Для этого кода не найден indoor-якорь.',
+    anchor_not_found: 'Для этого кода не найден indoor-якорь',
   };
 
   function setStatus(text) {
@@ -208,9 +211,7 @@
     const value = Number(bytes || 0);
     if (!Number.isFinite(value) || value <= 0) return '';
     const mb = value / (1024 * 1024);
-    if (mb >= 1) {
-      return `${Math.round(mb)} МБ`;
-    }
+    if (mb >= 1) return `${Math.round(mb)} МБ`;
     const kb = value / 1024;
     return `${Math.round(kb)} КБ`;
   }
@@ -237,9 +238,7 @@
     if (key === 'upload_incomplete') return 'Файл загрузился не полностью. Повторите попытку.';
     if (key === 'empty_file') return 'Файл пустой.';
     if (key === 'upload_failed') return 'Не удалось загрузить файл.';
-    if (typeof payload?.message === 'string' && payload.message.trim()) {
-      return payload.message;
-    }
+    if (typeof payload?.message === 'string' && payload.message.trim()) return payload.message;
     return 'Не удалось создать job. Проверьте файл и попробуйте снова.';
   }
 
@@ -307,9 +306,7 @@
       'error',
       (event) => {
         const msg = viewerFailureMessageFrom(event?.message || event?.error?.message || '');
-        if (msg) {
-          showViewerFallback(msg);
-        }
+        if (msg) showViewerFallback(msg);
       },
       true
     );
@@ -317,9 +314,7 @@
     window.addEventListener('unhandledrejection', (event) => {
       const reason = event?.reason;
       const msg = viewerFailureMessageFrom(reason?.message || reason || '');
-      if (msg) {
-        showViewerFallback(msg);
-      }
+      if (msg) showViewerFallback(msg);
     });
   }
 
@@ -368,9 +363,7 @@
       return;
     }
 
-    if (!MODEL_VIEWER_URL) {
-      throw new Error('viewer_not_registered');
-    }
+    if (!MODEL_VIEWER_URL) throw new Error('viewer_not_registered');
 
     modelViewerModulePromise = new Promise((resolve, reject) => {
       const existing = document.querySelector('script[data-vp-model-viewer="1"]');
@@ -413,6 +406,13 @@
 
   function ensureViewerEl() {
     if (elViewer) return elViewer;
+
+    const existingViewer = document.getElementById('vp3d-viewer');
+    if (existingViewer) {
+      elViewer = existingViewer;
+      return elViewer;
+    }
+
     if (!elViewerMount) return null;
 
     elViewer = document.createElement('model-viewer');
@@ -437,9 +437,7 @@
     currentInteractiveSrc = src;
     currentPosterUrl = posterUrl || '';
 
-    if (posterUrl) {
-      showPreview(posterUrl);
-    }
+    if (posterUrl) showPreview(posterUrl);
 
     if (!hasWorkingWebGL()) {
       showViewerFallback('На этом устройстве недоступен WebGL. Остаёмся в режиме превью.');
@@ -453,11 +451,8 @@
 
     await waitForModelViewer();
 
-    if (posterUrl) {
-      viewer.setAttribute('poster', posterUrl);
-    } else {
-      viewer.removeAttribute('poster');
-    }
+    if (posterUrl) viewer.setAttribute('poster', posterUrl);
+    else viewer.removeAttribute('poster');
 
     setStatus('Загружаем 3D модель…');
     setPlaceholder('Загружаем 3D модель…', false);
@@ -501,9 +496,7 @@
     currentInteractiveSrc = String(src || '').trim();
     currentPosterUrl = String(posterUrl || '').trim();
 
-    if (currentPosterUrl) {
-      showPreview(currentPosterUrl);
-    }
+    if (currentPosterUrl) showPreview(currentPosterUrl);
 
     setStatus('Режим превью');
     setPlaceholder(message || 'Можно открыть интерактивный viewer вручную.', hasPreview());
@@ -616,6 +609,7 @@
     elLocationPanel.hidden = true;
     elLocationPanel.style.display = 'none';
     elLocationPanel.innerHTML = '';
+    hideLocationCanvas();
   }
 
   function renderLocationPanel(payload) {
@@ -628,17 +622,19 @@
     const pois = Array.isArray(payload?.pois) ? payload.pois : [];
 
     const poiItems = pois.length
-      ? pois.map((poi) => {
-          const title = escapeHtml(String(poi.title || 'POI'));
-          const kind = escapeHtml(String(poi.kind || 'point'));
-          const coord = formatPoiCoord(poi);
-          return `
-            <div class="vp-3d-field" style="margin-bottom:12px;">
-              <div class="vp-3d-label">${kind}</div>
-              <div class="vp-3d-value"><strong>${title}</strong>${coord ? ` · ${coord}` : ''}</div>
-            </div>
-          `;
-        }).join('')
+      ? pois
+          .map((poi) => {
+            const title = escapeHtml(String(poi.title || 'POI'));
+            const kind = escapeHtml(String(poi.kind || 'point'));
+            const coord = formatPoiCoord(poi);
+            return `
+              <div class="vp-3d-field" style="margin-bottom:12px;">
+                <div class="vp-3d-label">${kind}</div>
+                <div class="vp-3d-value"><strong>${title}</strong>${coord ? ` · ${coord}` : ''}</div>
+              </div>
+            `;
+          })
+          .join('')
       : `<div class="vp-3d-field"><div class="vp-3d-value">На этом уровне пока нет доступных POI.</div></div>`;
 
     panel.innerHTML = `
@@ -695,11 +691,11 @@
 
   function escapeHtml(value) {
     return String(value)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#39;');
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   async function loadLocationBootstrap() {
@@ -724,8 +720,10 @@
       if (elAuthWrap) elAuthWrap.hidden = true;
 
       const payload = await loadLocationBootstrap();
+      currentLocationPayload = payload;
       fillLocationMeta(payload);
       renderLocationPanel(payload);
+      renderLocationCanvas(payload);
       hidePlaceholder();
       setStatus('Indoor bootstrap загружен.');
     } catch (err) {
@@ -850,12 +848,128 @@
     elHint = $('vp3d-hint');
     elViewerWrap = $('vp3d-viewer-wrap');
     elViewerMount = $('vp3d-viewer-mount');
+    if (!elViewerMount && elViewerWrap) {
+      elViewerMount = elViewerWrap;
+    }
     elPlaceholder = $('vp3d-viewer-placeholder');
 
     elUploadForm = $('vp3d-upload-form');
     elUploadFile = $('vp3d-upload-file');
     elUploadSubmit = $('vp3d-upload-submit');
     elUploadStatus = $('vp3d-upload-status');
+  }
+
+  function ensureLocationCanvas() {
+    if (!elViewerWrap) return null;
+    if (!elLocationCanvas) {
+      elLocationCanvas = document.createElement('canvas');
+      elLocationCanvas.id = 'vp3d-location-canvas';
+      elLocationCanvas.style.position = 'absolute';
+      elLocationCanvas.style.inset = '0';
+      elLocationCanvas.style.width = '100%';
+      elLocationCanvas.style.height = '100%';
+      elLocationCanvas.style.pointerEvents = 'none';
+      elLocationCanvas.style.zIndex = '2';
+      elLocationCanvas.hidden = true;
+      elViewerWrap.appendChild(elLocationCanvas);
+    }
+    return elLocationCanvas;
+  }
+
+  function hideLocationCanvas() {
+    if (elLocationCanvas) elLocationCanvas.hidden = true;
+  }
+
+  function renderLocationCanvas(payload) {
+    const canvas = ensureLocationCanvas();
+    if (!canvas) return;
+
+    canvas.hidden = false;
+
+    const width = Math.max(canvas.clientWidth || 0, 320);
+    const height = Math.max(canvas.clientHeight || 0, 240);
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const anchor = payload?.anchor || {};
+    const pois = Array.isArray(payload?.pois) ? payload.pois : [];
+
+    const anchorX = Number.isFinite(Number(anchor.x)) ? Number(anchor.x) : 0;
+    const anchorY = Number.isFinite(Number(anchor.y)) ? Number(anchor.y) : 0;
+
+    const points = pois.map((p) => {
+      const px = Number.isFinite(Number(p.x)) ? Number(p.x) - anchorX : NaN;
+      const py = Number.isFinite(Number(p.y)) ? Number(p.y) - anchorY : NaN;
+      return {
+        x: px,
+        y: py,
+        title: p.title || 'POI',
+      };
+    });
+
+    let maxAbs = 0;
+    points.forEach((p) => {
+      if (Number.isFinite(p.x) && Number.isFinite(p.y)) {
+        maxAbs = Math.max(maxAbs, Math.abs(p.x), Math.abs(p.y));
+      }
+    });
+
+    const margin = 40;
+    const usableHalfW = Math.max((width - margin * 2) / 2, 1);
+    const usableHalfH = Math.max((height - margin * 2) / 2, 1);
+    const scale = maxAbs > 0 ? Math.min(usableHalfW / maxAbs, usableHalfH / maxAbs) : 1;
+
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.strokeStyle = '#d1d5db';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(centerX, margin / 2);
+    ctx.lineTo(centerX, height - margin / 2);
+    ctx.moveTo(margin / 2, centerY);
+    ctx.lineTo(width - margin / 2, centerY);
+    ctx.stroke();
+
+    ctx.fillStyle = '#2563eb';
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '12px sans-serif';
+    ctx.fillStyle = '#1d4ed8';
+    ctx.fillText(anchor?.title || 'Вы здесь', centerX + 10, centerY - 10);
+
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 2;
+    ctx.fillStyle = '#dc2626';
+
+    points.forEach((p) => {
+      if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) return;
+
+      const px = centerX + p.x * scale;
+      const py = centerY - p.y * scale;
+
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(px, py);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(px, py, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.font = '12px sans-serif';
+      ctx.fillText(String(p.title), px + 8, py - 8);
+    });
   }
 
   function bootstrap() {
@@ -867,6 +981,10 @@
     ensurePreviewEl();
     ensureLaunchPanel();
     ensureLocationPanel();
+
+    window.addEventListener('resize', () => {
+      if (currentLocationPayload) renderLocationCanvas(currentLocationPayload);
+    });
 
     if (elUploadForm) {
       elUploadForm.addEventListener('submit', async (e) => {
@@ -884,9 +1002,7 @@
         try {
           const result = await upload3dJob(file);
           const nextJobId = Number.parseInt(String(result?.job_id || ''), 10) || 0;
-          if (nextJobId <= 0) {
-            throw new Error('job_create_failed');
-          }
+          if (nextJobId <= 0) throw new Error('job_create_failed');
 
           setUploadStatus('Job создан. Переходим к просмотру…');
 
