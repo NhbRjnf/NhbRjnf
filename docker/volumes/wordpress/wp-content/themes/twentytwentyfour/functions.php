@@ -126,26 +126,64 @@ endif;
 
 add_action( 'init', 'twentytwentyfour_pattern_categories' );
 
+if (!function_exists('vp_theme_asset_version')) {
+  function vp_theme_asset_version($relative_path, $fallback = '1.0.0') {
+    $relative_path = ltrim((string) $relative_path, '/');
+    if ($relative_path === '') {
+      return (string) $fallback;
+    }
+
+    $absolute_path = get_stylesheet_directory() . '/' . $relative_path;
+    if (!file_exists($absolute_path)) {
+      return (string) $fallback;
+    }
+
+    $mtime = (int) filemtime($absolute_path);
+    if ($mtime <= 0) {
+      return (string) $fallback;
+    }
+
+    return (string) $mtime;
+  }
+}
+
+if (!function_exists('vp_theme_asset_url')) {
+  function vp_theme_asset_url($relative_path) {
+    $relative_path = ltrim((string) $relative_path, '/');
+    return get_stylesheet_directory_uri() . '/' . $relative_path;
+  }
+}
+
+if (!function_exists('vp_service_worker_version')) {
+  function vp_service_worker_version() {
+    $file = ABSPATH . 'service-worker.js';
+    if (!file_exists($file)) {
+      return '1.0.0';
+    }
+
+    $mtime = (int) filemtime($file);
+    return $mtime > 0 ? (string) $mtime : '1.0.0';
+  }
+}
+
 /**
  * VP: assets for /scan and /3d pages
  */
 add_action('wp_enqueue_scripts', function () {
 
   if (is_page(array('scan', 'instruction', '3d'))) {
-    $uiVer = '1.0.0';
-
     wp_enqueue_style(
       'vp-ui',
-      get_stylesheet_directory_uri() . '/assets/vp-ui.css',
+      vp_theme_asset_url('assets/vp-ui.css'),
       [],
-      $uiVer
+      vp_theme_asset_version('assets/vp-ui.css')
     );
 
     wp_enqueue_script(
       'vp-menu',
-      get_stylesheet_directory_uri() . '/assets/vp-menu.js',
+      vp_theme_asset_url('assets/vp-menu.js'),
       [],
-      $uiVer,
+      vp_theme_asset_version('assets/vp-menu.js'),
       true
     );
 
@@ -157,41 +195,37 @@ add_action('wp_enqueue_scripts', function () {
   }
 
   if (is_page('instruction')) {
-    $verInstruction = '1.0.0';
     wp_enqueue_style(
       'vp-instruction',
-      get_stylesheet_directory_uri() . '/instruction.css',
+      vp_theme_asset_url('instruction.css'),
       array('vp-ui'),
-      $verInstruction
+      vp_theme_asset_version('instruction.css')
     );
   }
 
   // /scan (PWA-сканер)
   if (is_page('scan')) {
-    // меняй при правках, чтобы сбивать кэш
-    $ver = '1.4.6';
-
     wp_enqueue_style(
       'vp-scan',
-      get_stylesheet_directory_uri() . '/assets/vp-scan.css',
+      vp_theme_asset_url('assets/vp-scan.css'),
       array('vp-ui'),
-      $ver
+      vp_theme_asset_version('assets/vp-scan.css')
     );
 
     // ВАЖНО: только локальная библиотека (самохост)
     wp_enqueue_script(
       'html5-qrcode',
-      get_stylesheet_directory_uri() . '/assets/vendor/html5-qrcode.min.js',
+      vp_theme_asset_url('assets/vendor/html5-qrcode.min.js'),
       [],
-      '2.3.8',
+      vp_theme_asset_version('assets/vendor/html5-qrcode.min.js'),
       true
     );
 
     wp_enqueue_script(
       'vp-scan',
-      get_stylesheet_directory_uri() . '/assets/vp-scan.js',
+      vp_theme_asset_url('assets/vp-scan.js'),
       ['html5-qrcode'],
-      $ver,
+      vp_theme_asset_version('assets/vp-scan.js'),
       true
     );
 
@@ -207,27 +241,18 @@ add_action('wp_enqueue_scripts', function () {
 
   // /3d (просмотр 3D сцен)
   if (is_page('3d')) {
-    $css3d = get_stylesheet_directory() . '/page-3d.css';
-    $js3d  = get_stylesheet_directory() . '/page-3d.js';
-
-    $ver3d = (string) max(
-      file_exists($css3d) ? (int) filemtime($css3d) : 0,
-      file_exists($js3d) ? (int) filemtime($js3d) : 0,
-      time()
-    );
-
     wp_enqueue_style(
       'vp-3d',
-      get_stylesheet_directory_uri() . '/page-3d.css',
+      vp_theme_asset_url('page-3d.css'),
       array('vp-ui'),
-      $ver3d
+      vp_theme_asset_version('page-3d.css')
     );
 
     wp_enqueue_script(
       'vp-3d',
-      get_stylesheet_directory_uri() . '/page-3d.js',
+      vp_theme_asset_url('page-3d.js'),
       [],
-      $ver3d,
+      vp_theme_asset_version('page-3d.js'),
       true
     );
 
@@ -251,6 +276,26 @@ add_action('wp_head', function () {
     echo '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">';
   }
 });
+
+add_action('wp_footer', function () {
+  if (!is_page('scan')) {
+    return;
+  }
+
+  $sw_version = vp_service_worker_version();
+  ?>
+  <script>
+    (function () {
+      if (!('serviceWorker' in navigator)) {
+        return;
+      }
+
+      var swUrl = <?php echo wp_json_encode(home_url('/service-worker.js?v=' . rawurlencode($sw_version))); ?>;
+      navigator.serviceWorker.register(swUrl, { scope: '/' }).catch(function () {});
+    })();
+  </script>
+  <?php
+}, 50);
 /**
  * VP: assets for /dentist cabinet pages
  */
@@ -259,19 +304,18 @@ add_action('wp_enqueue_scripts', function () {
     return;
   }
 
-  $uiVer = '1.0.0';
   wp_enqueue_style(
     'vp-ui',
-    get_stylesheet_directory_uri() . '/assets/vp-ui.css',
+    vp_theme_asset_url('assets/vp-ui.css'),
     [],
-    $uiVer
+    vp_theme_asset_version('assets/vp-ui.css')
   );
 
   wp_enqueue_script(
     'vp-menu',
-    get_stylesheet_directory_uri() . '/assets/vp-menu.js',
+    vp_theme_asset_url('assets/vp-menu.js'),
     [],
-    $uiVer,
+    vp_theme_asset_version('assets/vp-menu.js'),
     true
   );
 
@@ -281,19 +325,18 @@ add_action('wp_enqueue_scripts', function () {
     'threeDUrl' => home_url('/3d/'),
   ]);
 
-  $verDentist = '1.0.0';
   wp_enqueue_style(
     'vp-dentist',
-    get_stylesheet_directory_uri() . '/assets/vp-dentist.css',
+    vp_theme_asset_url('assets/vp-dentist.css'),
     ['vp-ui'],
-    $verDentist
+    vp_theme_asset_version('assets/vp-dentist.css')
   );
 
   wp_enqueue_script(
     'vp-dentist',
-    get_stylesheet_directory_uri() . '/assets/vp-dentist.js',
+    vp_theme_asset_url('assets/vp-dentist.js'),
     ['vp-menu'],
-    $verDentist,
+    vp_theme_asset_version('assets/vp-dentist.js'),
     true
   );
 });
@@ -306,33 +349,32 @@ add_action('wp_enqueue_scripts', function () {
     return;
   }
 
-  $uiVer = '1.0.0';
   wp_enqueue_style(
     'vp-ui',
-    get_stylesheet_directory_uri() . '/assets/vp-ui.css',
+    vp_theme_asset_url('assets/vp-ui.css'),
     [],
-    $uiVer
+    vp_theme_asset_version('assets/vp-ui.css')
   );
 
   wp_enqueue_style(
     'vp-dentist',
-    get_stylesheet_directory_uri() . '/assets/vp-dentist.css',
+    vp_theme_asset_url('assets/vp-dentist.css'),
     ['vp-ui'],
-    '1.0.0'
+    vp_theme_asset_version('assets/vp-dentist.css')
   );
 
   wp_enqueue_style(
     'vp-login',
-    get_stylesheet_directory_uri() . '/assets/login.css',
+    vp_theme_asset_url('assets/login.css'),
     ['vp-dentist'],
-    '1.0.0'
+    vp_theme_asset_version('assets/login.css')
   );
 
   wp_enqueue_script(
     'vp-login',
-    get_stylesheet_directory_uri() . '/assets/vp-login.js',
+    vp_theme_asset_url('assets/vp-login.js'),
     [],
-    '1.0.0',
+    vp_theme_asset_version('assets/vp-login.js'),
     true
   );
 });
@@ -357,7 +399,7 @@ if (!function_exists('vp_app_asset_version')) {
       }
     }
 
-    return '1.0.' . (string) $maxMtime;
+    return $maxMtime > 0 ? (string) $maxMtime : '1.0.0';
   }
 }
 
@@ -372,14 +414,14 @@ add_action('wp_enqueue_scripts', function () {
 
   wp_enqueue_style(
     'vp-app',
-    get_stylesheet_directory_uri() . '/assets/vp-app.css',
+    vp_theme_asset_url('assets/vp-app.css'),
     [],
     VP_APP_ASSET_VERSION
   );
 
   wp_enqueue_script(
     'vp-app',
-    get_stylesheet_directory_uri() . '/assets/app/vp-app.js',
+    vp_theme_asset_url('assets/app/vp-app.js'),
     [],
     VP_APP_ASSET_VERSION,
     true

@@ -146,6 +146,6 @@ get_header();
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
   </script>
 
-  <script type="module" src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/vendor/model-viewer.min.js'); ?>"></script>
+  <script type="module" src="<?php echo esc_url(vp_theme_asset_url('assets/vendor/model-viewer.min.js') . '?ver=' . rawurlencode(vp_theme_asset_version('assets/vendor/model-viewer.min.js'))); ?>"></script>
 </main>
 <?php get_footer(); ?>
