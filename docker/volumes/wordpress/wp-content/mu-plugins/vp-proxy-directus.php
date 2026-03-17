@@ -24,6 +24,299 @@ if (!function_exists('vp_directus_token')) {
   }
 }
 
+
+if (!function_exists('vp_location_bootstrap_callback')) {
+    function vp_location_bootstrap_callback(WP_REST_Request $request) {
+        $code = strtoupper(trim((string) $request->get_param('code')));
+        if ($code === '') {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'code_required',
+            ], 400);
+        }
+
+        if (!function_exists('vp_directus_base_url') || !function_exists('vp_directus_token')) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'directus_not_available',
+            ], 500);
+        }
+
+        $base = rtrim((string) vp_directus_base_url(), '/');
+        $token = (string) vp_directus_token();
+
+        if ($base === '' || $token === '') {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'directus_not_available',
+            ], 500);
+        }
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+        ];
+
+        // 1. qr_codes by code
+        $qrFields = implode(',', [
+            'id',
+            'code',
+            'title',
+            'type',
+            'is_active',
+        ]);
+
+        $qrUrl = $base . '/items/qr_codes'
+            . '?filter[code][_eq]=' . rawurlencode($code)
+            . '&limit=1'
+            . '&fields=' . rawurlencode($qrFields);
+
+        $qrRes = wp_remote_get($qrUrl, [
+            'headers' => $headers,
+            'timeout' => 20,
+        ]);
+
+        if (is_wp_error($qrRes)) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'qr_request_failed',
+                'message' => $qrRes->get_error_message(),
+            ], 502);
+        }
+
+        $qrBody = json_decode(wp_remote_retrieve_body($qrRes), true);
+        $qrItem = $qrBody['data'][0] ?? null;
+
+        if (!$qrItem || !is_array($qrItem)) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'lookup_empty',
+            ], 404);
+        }
+
+        if (empty($qrItem['is_active'])) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'qr_inactive',
+            ], 403);
+        }
+
+        if (strtolower((string) ($qrItem['type'] ?? '')) !== 'location') {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'location_not_linked',
+            ], 400);
+        }
+
+        $qrId = (int) ($qrItem['id'] ?? 0);
+        if ($qrId <= 0) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'anchor_not_found',
+            ], 404);
+        }
+
+        // 2. anchor by qr_code_id
+        $anchorFields = implode(',', [
+            'id',
+            'title',
+            'code',
+            'kind',
+            'x',
+            'y',
+            'node_id',
+            'location_id',
+            'level_id',
+            'is_active',
+        ]);
+
+        $anchorUrl = $base . '/items/vp_location_anchors'
+            . '?filter[qr_code_id][_eq]=' . rawurlencode((string) $qrId)
+            . '&filter[is_active][_eq]=true'
+            . '&limit=1'
+            . '&fields=' . rawurlencode($anchorFields);
+
+        $anchorRes = wp_remote_get($anchorUrl, [
+            'headers' => $headers,
+            'timeout' => 20,
+        ]);
+
+        if (is_wp_error($anchorRes)) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'anchor_request_failed',
+                'message' => $anchorRes->get_error_message(),
+            ], 502);
+        }
+
+        $anchorBody = json_decode(wp_remote_retrieve_body($anchorRes), true);
+        $anchor = $anchorBody['data'][0] ?? null;
+
+        if (!$anchor || !is_array($anchor)) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'anchor_not_found',
+            ], 404);
+        }
+
+        $locationId = (int) ($anchor['location_id'] ?? 0);
+        $levelId = (int) ($anchor['level_id'] ?? 0);
+
+        if ($locationId <= 0 || $levelId <= 0) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'location_not_linked',
+            ], 400);
+        }
+
+        // 3. location
+        $locationFields = implode(',', [
+            'id',
+            'title',
+            'kind',
+            'is_active',
+        ]);
+
+        $locationUrl = $base . '/items/vp_locations/' . $locationId
+            . '?fields=' . rawurlencode($locationFields);
+
+        $locationRes = wp_remote_get($locationUrl, [
+            'headers' => $headers,
+            'timeout' => 20,
+        ]);
+
+        if (is_wp_error($locationRes)) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'location_request_failed',
+                'message' => $locationRes->get_error_message(),
+            ], 502);
+        }
+
+        $locationBody = json_decode(wp_remote_retrieve_body($locationRes), true);
+        $location = $locationBody['data'] ?? null;
+
+        if (!$location || !is_array($location)) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'location_not_found',
+            ], 404);
+        }
+
+        // 4. level
+        $levelFields = implode(',', [
+            'id',
+            'code',
+            'title',
+            'is_active',
+        ]);
+
+        $levelUrl = $base . '/items/vp_location_levels/' . $levelId
+            . '?fields=' . rawurlencode($levelFields);
+
+        $levelRes = wp_remote_get($levelUrl, [
+            'headers' => $headers,
+            'timeout' => 20,
+        ]);
+
+        if (is_wp_error($levelRes)) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'level_request_failed',
+                'message' => $levelRes->get_error_message(),
+            ], 502);
+        }
+
+        $levelBody = json_decode(wp_remote_retrieve_body($levelRes), true);
+        $level = $levelBody['data'] ?? null;
+
+        if (!$level || !is_array($level)) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'level_not_found',
+            ], 404);
+        }
+
+        // 5. pois on same location + level
+        $poiFields = implode(',', [
+            'id',
+            'title',
+            'kind',
+            'brand',
+            'description',
+            'opening_hours',
+            'node_id',
+            'x',
+            'y',
+            'is_active',
+            'is_public',
+        ]);
+
+        $poiUrl = $base . '/items/vp_location_pois'
+            . '?filter[location_id][_eq]=' . rawurlencode((string) $locationId)
+            . '&filter[level_id][_eq]=' . rawurlencode((string) $levelId)
+            . '&filter[is_active][_eq]=true'
+            . '&filter[is_public][_eq]=true'
+            . '&limit=100'
+            . '&sort=sort,title'
+            . '&fields=' . rawurlencode($poiFields);
+
+        $poiRes = wp_remote_get($poiUrl, [
+            'headers' => $headers,
+            'timeout' => 20,
+        ]);
+
+        if (is_wp_error($poiRes)) {
+            return new WP_REST_Response([
+                'ok' => false,
+                'error' => 'poi_request_failed',
+                'message' => $poiRes->get_error_message(),
+            ], 502);
+        }
+
+        $poiBody = json_decode(wp_remote_retrieve_body($poiRes), true);
+        $pois = is_array($poiBody['data'] ?? null) ? $poiBody['data'] : [];
+
+        return new WP_REST_Response([
+            'ok' => true,
+            'mode' => 'location',
+            'location' => [
+                'id' => (int) ($location['id'] ?? 0),
+                'title' => (string) ($location['title'] ?? ''),
+                'kind' => (string) ($location['kind'] ?? ''),
+            ],
+            'level' => [
+                'id' => (int) ($level['id'] ?? 0),
+                'code' => (string) ($level['code'] ?? ''),
+                'title' => (string) ($level['title'] ?? ''),
+            ],
+            'anchor' => [
+                'id' => (int) ($anchor['id'] ?? 0),
+                'title' => (string) ($anchor['title'] ?? ''),
+                'code' => (string) ($anchor['code'] ?? ''),
+                'kind' => (string) ($anchor['kind'] ?? ''),
+                'node_id' => isset($anchor['node_id']) ? (int) $anchor['node_id'] : null,
+                'x' => isset($anchor['x']) ? $anchor['x'] : null,
+                'y' => isset($anchor['y']) ? $anchor['y'] : null,
+            ],
+            'pois' => array_map(function ($poi) {
+                return [
+                    'id' => (int) ($poi['id'] ?? 0),
+                    'title' => (string) ($poi['title'] ?? ''),
+                    'kind' => (string) ($poi['kind'] ?? ''),
+                    'brand' => (string) ($poi['brand'] ?? ''),
+                    'description' => (string) ($poi['description'] ?? ''),
+                    'opening_hours' => (string) ($poi['opening_hours'] ?? ''),
+                    'node_id' => isset($poi['node_id']) ? (int) $poi['node_id'] : null,
+                    'x' => isset($poi['x']) ? $poi['x'] : null,
+                    'y' => isset($poi['y']) ? $poi['y'] : null,
+                ];
+            }, $pois),
+        ], 200);
+    }
+}
+
+
 add_action('rest_api_init', function () {
   register_rest_route('vp/v1', '/lookup', [
     'methods'  => 'GET',
