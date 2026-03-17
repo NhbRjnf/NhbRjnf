@@ -1,0 +1,10 @@
+# cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose ps
+# time: 2026-03-11T10:26:59+00:00
+
+NAME            IMAGE                       COMMAND                  SERVICE     CREATED        STATUS        PORTS
+vse_converter   docker-converter            "python3 -u worker.py"   converter   21 hours ago   Up 21 hours   
+vse_directus    directus/directus:11.15.4   "docker-entrypoint.s…"   directus    5 days ago     Up 5 days     [REDACTED_IP]:8055->8055/tcp
+vse_mariadb     mariadb:10.11               "docker-entrypoint.s…"   mariadb     5 days ago     Up 5 days     3306/tcp
+vse_postgres    postgres:15                 "docker-entrypoint.s…"   postgres    5 days ago     Up 5 days     5432/tcp
+vse_redis       redis:7-alpine              "docker-entrypoint.s…"   redis       5 days ago     Up 5 days     6379/tcp
+vse_wordpress   docker-wordpress            "docker-entrypoint.s…"   wordpress   5 days ago     Up 21 hours   [REDACTED_IP]:8080->80/tcp

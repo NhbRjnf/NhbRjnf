@@ -1,7 +1,35 @@
-# cmd: docker logs --tail 36 vse_wordpress
-# time: 2026-02-18T20:56:44+00:00
+# cmd: docker logs --tail 32 vse_wordpress
+# time: 2026-03-11T10:27:00+00:00
 
-AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using [REDACTED_IP]. Set the 'ServerName' directive globally to suppress this message
-AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using [REDACTED_IP]. Set the 'ServerName' directive globally to suppress this message
-[Wed Feb 18 22:56:44.643893 2026] [mpm_prefork:notice] [pid 1:tid 1] AH00163: Apache/2.4.66 (Debian) PHP/8.2.30 configured -- resuming normal operations
-[Wed Feb 18 22:56:44.644223 2026] [core:notice] [pid 1:tid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[REDACTED_IP] - - [11/Mar/2026:09:51:14 +0200] "POST /wp-cron.php?doing_wp_cron=1773215473.9496309757232666015625 HTTP/1.1" 200 285 "-" "WordPress/6.9.3; https://xn--b1awacccnl0jqa.xn--p1ai"
+[REDACTED_IP] - - [11/Mar/2026:09:51:13 +0200] "GET /wp-login.php HTTP/1.1" 200 3847 "-" "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36"
+[REDACTED_IP] - - [11/Mar/2026:09:51:14 +0200] "POST /wp-login.php HTTP/1.1" 200 3990 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php" "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36"
+[REDACTED_IP] - - [11/Mar/2026:10:04:51 +0200] "HEAD /3d HTTP/1.1" 301 265 "-" "curl/7.81.0"
+[REDACTED_IP] - - [11/Mar/2026:10:04:51 +0200] "GET /wp-json/ HTTP/1.1" 200 429424 "-" "curl/7.81.0"
+[REDACTED_IP] - - [11/Mar/2026:10:08:26 +0200] "GET /3d/ HTTP/1.1" 200 36952 "-" "curl/7.81.0"
+[REDACTED_IP] - - [11/Mar/2026:10:09:24 +0200] "GET /3d/ HTTP/1.1" 200 36952 "-" "curl/7.81.0"
+[REDACTED_IP] - - [11/Mar/2026:10:09:41 +0200] "GET /wp-json/ HTTP/1.1" 200 429424 "-" "curl/7.81.0"
+[REDACTED_IP] - - [11/Mar/2026:10:10:01 +0200] "GET /wp-json/vp/v1/lookup?code=VP-PH-EP2231-START HTTP/1.1" 500 740 "-" "curl/7.81.0"
+[REDACTED_IP] - - [11/Mar/2026:10:10:11 +0200] "GET /wp-login.php HTTP/1.1" 200 3847 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; EIE10;ENCAWOL; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:10:10:11 +0200] "POST /wp-login.php HTTP/1.1" 200 3990 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php" "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; EIE10;ENCAWOL; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:10:30:35 +0200] "GET /wp-login.php HTTP/1.1" 200 3847 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; NP08; NP08; MAAU; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:10:30:35 +0200] "POST /wp-login.php HTTP/1.1" 200 3990 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php" "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; NP08; NP08; MAAU; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:10:51:29 +0200] "POST /wp-cron.php?doing_wp_cron=1773219089.5279738903045654296875 HTTP/1.1" 200 285 "-" "WordPress/6.9.3; https://xn--b1awacccnl0jqa.xn--p1ai"
+[REDACTED_IP] - - [11/Mar/2026:10:51:28 +0200] "GET /wp-login.php HTTP/1.1" 200 3847 "-" "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; yie11; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:10:51:31 +0200] "POST /wp-login.php HTTP/1.1" 200 3990 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php" "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; yie11; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:11:10:10 +0200] "GET /wp-login.php HTTP/1.1" 200 3847 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/603.1.20 (KHTML, like Gecko) Version/10.1 Safari/603.1.20"
+[REDACTED_IP] - - [11/Mar/2026:11:10:10 +0200] "POST /wp-login.php HTTP/1.1" 200 3990 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/603.1.20 (KHTML, like Gecko) Version/10.1 Safari/603.1.20"
+[REDACTED_IP] - - [11/Mar/2026:11:29:27 +0200] "GET /wp-login.php HTTP/1.1" 200 3847 "-" "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.2; WOW64; Trident/7.0)"
+[REDACTED_IP] - - [11/Mar/2026:11:29:27 +0200] "POST /wp-login.php HTTP/1.1" 200 3990 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php" "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.2; WOW64; Trident/7.0)"
+[REDACTED_IP] - - [11/Mar/2026:11:48:20 +0200] "POST /wp-cron.php?doing_wp_cron=1773222500.4964430332183837890625 HTTP/1.1" 200 285 "-" "WordPress/6.9.3; https://xn--b1awacccnl0jqa.xn--p1ai"
+[REDACTED_IP] - - [11/Mar/2026:11:48:20 +0200] "GET /wp-login.php HTTP/1.1" 200 3847 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.79 Safari/537.36"
+[REDACTED_IP] - - [11/Mar/2026:11:48:20 +0200] "POST /wp-login.php HTTP/1.1" 200 3990 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.79 Safari/537.36"
+[REDACTED_IP] - - [11/Mar/2026:12:05:23 +0200] "GET / HTTP/1.1" 200 107977 "https://xn--b1awacccnl0jqa.xn--p1ai/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/[REDACTED_IP] Safari/537.36 Avast/[REDACTED_IP]"
+[REDACTED_IP] - - [11/Mar/2026:12:05:23 +0200] "GET /wp-login.php?action=register HTTP/1.1" 302 625 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php?action=register" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/[REDACTED_IP] Safari/537.36 Avast/[REDACTED_IP]"
+[REDACTED_IP] - - [11/Mar/2026:12:05:24 +0200] "GET /wp-login.php?registration=disabled HTTP/1.1" 200 11338 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php?registration=disabled" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/[REDACTED_IP] Safari/537.36 Avast/[REDACTED_IP]"
+[REDACTED_IP] - - [11/Mar/2026:12:07:03 +0200] "GET /wp-login.php HTTP/1.1" 200 3847 "-" "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; MASMJS; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:12:07:03 +0200] "POST /wp-login.php HTTP/1.1" 200 3990 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php" "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; MASMJS; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:12:26:39 +0200] "GET /wp-login.php HTTP/1.1" 200 3847 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; ASJB; ASJB; MAAU; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:12:26:39 +0200] "POST /wp-login.php HTTP/1.1" 200 3990 "https://xn--b1awacccnl0jqa.xn--p1ai/wp-login.php" "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; ASJB; ASJB; MAAU; rv:11.0) like Gecko"
+[REDACTED_IP] - - [11/Mar/2026:12:26:46 +0200] "HEAD /dentist-login/ HTTP/1.1" 301 268 "-" "curl/7.81.0"
+[REDACTED_IP] - - [11/Mar/2026:12:26:46 +0200] "HEAD /login/ HTTP/1.1" 200 443 "-" "curl/7.81.0"

@@ -1,47 +1,381 @@
-# Модель данных Directus
+# Модель данных Directus (всёпонятно)
 
-Directus используется как backend и админка.
+Источник истины для этого файла: `Data_Model_Directus_snapshot_06_03_26.json`.
 
----
+## 1. Общий принцип
 
-## products
-Карточка товара (канонический объект).
+Directus в проекте используется как:
+- backend и data layer;
+- файловое хранилище через `directus_files`;
+- multi-tenant ядро;
+- административный слой для инструкций, QR, onboarding и 3D.
 
-- id
-- title
-- brand
-- model
-- sku
-- description
-- instruction_url
-- cover
+Важно:
+- почти все пользовательские коллекции имеют `integer` primary key;
+- связи на `directus_users` и `directus_files` идут через `uuid`.
 
-products — НЕ знает о QR-кодах.
+## 2. Контент и инструкции
 
----
+### `products`
+Карточка товара.
 
-## qr_codes
-Маршрутизатор сценариев.
+Поля:
+- `id` — integer
+- `title`
+- `brand`
+- `model`
+- `sku`
+- `instruction_url`
+- `description`
+- `instruction_id` → `instruction_sets.id`
+- `tenant_id` → `vp_tenants.id`
 
-- id
-- code (unique)
-- title
-- type (product | service | location | navigation)
-- product_id (nullable)
-- instruction_url (override)
-- is_active
-- notes
+### `instruction_sets`
+Корневая инструкция / набор инструкции.
 
-Payload (JSON, nullable):
-- service_payload
-- location_payload
-- navigation_payload
+Поля:
+- `id` — integer
+- `title`
+- `brand`
+- `model`
+- `level`
+- `language`
+- `source_file` → `directus_files.id`
+- `source_url`
+- `notes`
+- `is_published`
+- `tenant_id` → `vp_tenants.id`
 
-Файлы:
-- qr_file (svg/png)
+### `instruction_steps`
+Шаги инструкции.
 
----
+Поля:
+- `id` — integer
+- `instruction_id` → `instruction_sets.id`
+- `step_no`
+- `title`
+- `body`
+- `image_file` → `directus_files.id`
+- `hotspots` — json
+- `tenant_id` → `vp_tenants.id`
 
-## Принцип
-- products = «что это»
-- qr_codes = «куда вести и как показать»
+### `instruction_assets`
+Связанные ассеты инструкции.
+
+Поля:
+- `id` — integer
+- `instruction_id` → `instruction_sets.id`
+- `title`
+- `kind`
+- `file` → `directus_files.id`
+- `meta` — json
+- `tenant_id` → `vp_tenants.id`
+
+## 3. QR и маршрутизация
+
+### `qr_codes`
+Маршрутизатор сценариев по коду.
+
+Поля:
+- `id` — integer
+- `code`
+- `type`
+- `title`
+- `instruction_url`
+- `is_active`
+- `notes`
+- `location_title`
+- `location_payload` — json
+- `service_payload` — json
+- `product_id` → `products.id`
+- `qr_payload_url`
+- `qr_file` → `directus_files.id`
+- `qr_file_png` → `directus_files.id`
+- `instruction_id` → `instruction_sets.id`
+- `scene_id` → `vp_3d_scenes.id`
+- `tenant_id` → `vp_tenants.id`
+
+Логика:
+- код определяет сценарий;
+- product / service / manual обычно ведут к `/instruction`;
+- 3d / navigation / location могут вести к `/3d` по текущему routing.
+
+## 4. 3D слой
+
+### `vp_3d_scenes`
+Универсальная 3D сцена.
+
+Поля:
+- `id` — integer
+- `title`
+- `kind`
+- `description`
+- `is_active`
+- `requires_password`
+- `password_hash`
+- `password_hint`
+- `expires_at`
+- `model_file` → `directus_files.id`
+- `poster_file` → `directus_files.id`
+- `viewer_config` — json
+- `created_at`
+- `updated_at`
+- `tenant_id` → `vp_tenants.id`
+- `case_scan_id` → `vp_case_scans.id`
+
+### `vp_3d_jobs`
+Очередь конвертации 3D.
+
+Поля:
+- `id` — integer
+- `status`
+- `progress`
+- `error`
+- `meta` — json
+- `completed_at`
+- `input_file` → `directus_files.id`
+- `output_file` → `directus_files.id`
+- `preview_file` → `directus_files.id`
+
+Важно:
+- в Redis кладём именно `vp_3d_jobs.id`, не UUID файла.
+
+### `vp_case_scans`
+Сканы / модели, связанные с кейсом.
+
+Поля:
+- `id` — integer
+- `tenant_id` → `vp_tenants.id`
+- `case_id` → `vp_cases.id`
+- `kind`
+- `source_format`
+- `source_file` → `directus_files.id`
+- `converted_file` → `directus_files.id`
+- `preview_image` → `directus_files.id`
+- `metadata` — json
+- `conversion_status`
+- `conversion_error`
+- `created_at`
+
+## 5. SaaS / tenant layer
+
+### `vp_tenants`
+Организация или tenant.
+
+Поля:
+- `id` — integer
+- `slug`
+- `name`
+- `type`
+- `status`
+- `plan`
+- `settings` — json
+- `created_at`
+- `updated_at`
+
+### `vp_memberships`
+Связь пользователь ↔ tenant.
+
+Поля:
+- `id` — integer
+- `tenant_id` → `vp_tenants.id`
+- `user_id` → `directus_users.id`
+- `role`
+- `status`
+- `created_at`
+
+### `vp_invites`
+Инвайты в tenant.
+
+Поля:
+- `id` — integer
+- `tenant_id` → `vp_tenants.id`
+- `email`
+- `role`
+- `token`
+- `expires_at`
+- `accepted_at`
+- `created_by` → `directus_users.id`
+- `created_at`
+
+### `vp_share_links`
+Публичные или временные ссылки.
+
+Поля:
+- `id` — integer
+- `tenant_id` → `vp_tenants.id`
+- `token`
+- `resource_type`
+- `resource_id`
+- `permissions` — json
+- `expires_at`
+- `created_at`
+
+### `vp_user_profiles`
+Единый профиль пользователя.
+
+Базовые поля:
+- `id` — integer
+- `user_id` → `directus_users.id`
+- `user_type`
+- `status`
+- `phone`
+- `locale`
+- `timezone`
+- `notes`
+- `created_at`
+- `updated_at`
+- `avatar_file` → `directus_files.id`
+
+Поля для dentist:
+- `dentist_license`
+- `dentist_specialty`
+- `dentist_clinic_name`
+- `dentist_clinic_address`
+- `dentist_clinic_phone`
+- `dentist_bio`
+- `clinic_role`
+- `clinic_position`
+
+Поля для auto / car owner:
+- `car_make`
+- `car_model`
+- `car_year`
+- `car_plate`
+- `car_vin_last4`
+- `car_emergency_contact`
+- `car_insurance_phone`
+
+Поля для business:
+- `biz_name`
+- `biz_type`
+- `biz_tax_id`
+- `biz_website`
+- `biz_support_phone`
+- `biz_address`
+
+Поля для location:
+- `loc_name`
+- `loc_type`
+- `loc_address`
+- `loc_city`
+- `loc_country`
+- `loc_contact_person`
+
+Поля для partner:
+- `partner_brand`
+- `partner_categories`
+- `partner_website`
+- `partner_about`
+
+## 6. Onboarding / moderation
+
+### `vp_onboarding_requests`
+Заявка на регистрацию / onboarding.
+
+Поля:
+- `id` — integer
+- `email`
+- `phone`
+- `first_name`
+- `last_name`
+- `user_type`
+- `status`
+- `auto_approve_method`
+- `invite_code`
+- `requested_tenant_name`
+- `requested_tenant_slug`
+- `evidence_note`
+- `source_ip`
+- `user_agent`
+- `created_user_id` → `directus_users.id`
+- `created_profile_id` → `vp_user_profiles.id`
+- `reviewed_by` → `directus_users.id`
+- `decision_reason`
+- `created_at`
+- `updated_at`
+- `reviewed_at`
+- `reviewed_by_email`
+- `reviewed_by_wp_id`
+- `reviewed_by_wp_login`
+
+### `vp_allowlist_domains`
+Allowlist доменов для auto-approve.
+
+Поля:
+- `id` — integer
+- `domain`
+- `is_active`
+- `auto_approve_method`
+- `notes`
+- `sort`
+- `created_at`
+
+## 7. Доменный слой стоматологии и кейсов
+
+### `vp_clinics`
+- `id`
+- `tenant_id`
+- `name`
+- `city`
+- `address`
+- `phone`
+- `website`
+- `timezone`
+- `branding`
+- `created_at`
+
+### `vp_patients`
+- `id`
+- `tenant_id`
+- `clinic_id`
+- `external_id`
+- `initials`
+- `birth_year`
+- `notes`
+- `consent`
+- `created_at`
+
+### `vp_cases`
+- `id`
+- `tenant_id`
+- `clinic_id`
+- `patient_id`
+- `case_code`
+- `title`
+- `status`
+- `description`
+- `created_at`
+- `updated_at`
+
+## 8. Прочие коллекции
+
+### `vp_cards`
+Карточки / визитки / информационные карточки.
+
+Поля:
+- `id`
+- `title`
+- `position`
+- `avatar_url` → `directus_files.id`
+- `description`
+- `color`
+- `links`
+- `tenant_id`
+
+### `directus_sync_id_map`
+Служебная коллекция синхронизации ID.
+
+### `Existing_Table`
+Техническая или историческая таблица, не являющаяся частью ключевой бизнес-модели проекта.
+
+## 9. Главное, что больше нельзя путать
+
+- `products.id` — integer, не uuid;
+- `instruction_sets.id` — integer;
+- `qr_codes.id` — integer;
+- `vp_3d_scenes.id` — integer;
+- `vp_tenants.id` — integer;
+- `vp_user_profiles.id` — integer;
+- `user_id`, `created_user_id`, `reviewed_by`, `created_by` — это uuid Directus users;
+- `source_file`, `image_file`, `model_file`, `poster_file`, `input_file` и подобные file-поля — это uuid Directus files.

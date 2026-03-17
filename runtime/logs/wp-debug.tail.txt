@@ -1,36 +1,32 @@
-[18-Feb-2026 11:14:35 UTC] PHP Fatal error:  Cannot redeclare vp_onboarding_admin_get_env() (previously declared in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php:12) in /var/www/html/wp-content/mu-plugins/vp-onboarding-admin.php on line 12
-[18-Feb-2026 11:23:42 UTC] [VP Onboarding] approve user_type_raw=car_owner normalized=car_owner
-[18-Feb-2026 11:23:42 UTC] [VP Onboarding] {"context":"approve_user_failed","error":"Directus HTTP 403: You don't have permission to access collection \"directus_users\" or it does not exist. Queried in root.","http_code":403,"directus_message":"You don't have permission to access collection \"directus_users\" or it does not exist. Queried in root.","path":"/users","method":"POST","request_id":"15","email":"[REDACTED_EMAIL]"}
-[18-Feb-2026 11:24:38 UTC] [VP Onboarding] approve user_type_raw=car_owner normalized=car_owner
-[18-Feb-2026 11:24:38 UTC] [VP Onboarding] {"context":"approve_user_failed","error":"Directus HTTP 403: You don't have permission to access collection \"directus_users\" or it does not exist. Queried in root.","http_code":403,"directus_message":"You don't have permission to access collection \"directus_users\" or it does not exist. Queried in root.","path":"/users","method":"POST","request_id":"15","email":"[REDACTED_EMAIL]"}
-[18-Feb-2026 11:33:37 UTC] PHP Notice:  _wp_delete_all_temp_backups(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
-[18-Feb-2026 11:34:26 UTC] [VP Onboarding] approve user_type_raw=car_owner normalized=car_owner
-[18-Feb-2026 11:34:26 UTC] [VP Onboarding] {"context":"decide_patch_failed","error":"Directus HTTP 500: An unexpected error occurred.","http_code":500,"directus_message":"An unexpected error occurred.","path":"/items/vp_onboarding_requests/15","method":"PATCH","request_id":"15","decision":"approve"}
-[18-Feb-2026 11:35:15 UTC] [VP Onboarding] approve user_type_raw=car_owner normalized=car_owner
-[18-Feb-2026 11:35:15 UTC] [VP Onboarding] {"context":"decide_patch_failed","error":"Directus HTTP 500: An unexpected error occurred.","http_code":500,"directus_message":"An unexpected error occurred.","path":"/items/vp_onboarding_requests/15","method":"PATCH","request_id":"15","decision":"approve"}
-[18-Feb-2026 11:35:18 UTC] [VP Onboarding] approve user_type_raw=car_owner normalized=car_owner
-[18-Feb-2026 11:35:18 UTC] [VP Onboarding] {"context":"decide_patch_failed","error":"Directus HTTP 500: An unexpected error occurred.","http_code":500,"directus_message":"An unexpected error occurred.","path":"/items/vp_onboarding_requests/15","method":"PATCH","request_id":"15","decision":"approve"}
-[18-Feb-2026 11:35:22 UTC] [VP Onboarding] {"context":"approve_email_invalid","error":"Email не прошёл валидацию Directus. Используйте адрес с корректным публичным доменом (например [REDACTED_EMAIL]).","http_code":422,"directus_message":"Validation failed for field \"email\"","path":"","method":"","request_id":"14","email":"[REDACTED_EMAIL]"}
-[18-Feb-2026 11:35:35 UTC] [VP Onboarding] {"context":"approve_email_invalid","error":"Email не прошёл валидацию Directus. Используйте адрес с корректным публичным доменом (например [REDACTED_EMAIL]).","http_code":422,"directus_message":"Validation failed for field \"email\"","path":"","method":"","request_id":"13","email":"[REDACTED_EMAIL]"}
-[18-Feb-2026 11:35:48 UTC] [VP Onboarding] {"context":"approve_email_invalid","error":"Email не прошёл валидацию Directus. Используйте адрес с корректным публичным доменом (например [REDACTED_EMAIL]).","http_code":422,"directus_message":"Validation failed for field \"email\"","path":"","method":"","request_id":"14","email":"[REDACTED_EMAIL]"}
-[18-Feb-2026 11:35:52 UTC] [VP Onboarding] approve user_type_raw=car_owner normalized=car_owner
-[18-Feb-2026 11:35:52 UTC] [VP Onboarding] {"context":"decide_patch_failed","error":"Directus HTTP 500: An unexpected error occurred.","http_code":500,"directus_message":"An unexpected error occurred.","path":"/items/vp_onboarding_requests/15","method":"PATCH","request_id":"15","decision":"approve"}
-[18-Feb-2026 11:42:45 UTC] [VP Onboarding] approve user_type_raw=car_owner normalized=car_owner
-[18-Feb-2026 11:42:45 UTC] [VP Onboarding] {"context":"decide_patch_failed","error":"Directus HTTP 500: An unexpected error occurred.","http_code":500,"directus_message":"An unexpected error occurred.","path":"/items/vp_onboarding_requests/15","method":"PATCH","request_id":"15","decision":"approve"}
-[18-Feb-2026 11:43:28 UTC] [VP Onboarding] approve user_type_raw=car_owner normalized=car_owner
-[18-Feb-2026 11:43:28 UTC] [VP Onboarding] {"context":"decide_patch_failed","error":"Directus HTTP 500: An unexpected error occurred.","http_code":500,"directus_message":"An unexpected error occurred.","path":"/items/vp_onboarding_requests/15","method":"PATCH","request_id":"15","decision":"approve"}
-[18-Feb-2026 11:52:43 UTC] [VP Onboarding] approve user_type_raw=car_owner normalized=car_owner
-[18-Feb-2026 12:02:24 UTC] [VP Onboarding] {"context":"approve_email_invalid","error":"Email не прошёл валидацию Directus. Используйте адрес с корректным публичным доменом (например [REDACTED_EMAIL]).","http_code":422,"directus_message":"Validation failed for field \"email\"","path":"","method":"","request_id":"14","email":"[REDACTED_EMAIL]"}
-[18-Feb-2026 12:05:03 UTC] [VP Onboarding] approve user_type_raw=location_owner normalized=location_owner
-[18-Feb-2026 12:05:03 UTC] [VP Onboarding] {"context":"approve_role_missing","error":"Directus role is not configured for user_type: location_owner. Set env VP_DX_ROLE_LOCATION_OWNER (or VP_DX_ROLE_CAR_OWNER / VP_DX_ROLE_API_PUBLIC).","http_code":422,"directus_message":"","path":"","method":"","request_id":"16","user_type":"location_owner"}
-[18-Feb-2026 12:05:08 UTC] [VP Onboarding] approve user_type_raw=location_owner normalized=location_owner
-[18-Feb-2026 12:05:08 UTC] [VP Onboarding] {"context":"approve_role_missing","error":"Directus role is not configured for user_type: location_owner. Set env VP_DX_ROLE_LOCATION_OWNER (or VP_DX_ROLE_CAR_OWNER / VP_DX_ROLE_API_PUBLIC).","http_code":422,"directus_message":"","path":"","method":"","request_id":"16","user_type":"location_owner"}
-[18-Feb-2026 12:08:25 UTC] [VP Onboarding] approve user_type_raw=location_owner normalized=location_owner
-[18-Feb-2026 12:08:25 UTC] [VP Onboarding] {"context":"approve_role_missing","error":"Directus role is not configured for user_type: location_owner. Set env VP_DX_ROLE_LOCATION_OWNER (or VP_DX_ROLE_CAR_OWNER / VP_DX_ROLE_API_PUBLIC).","http_code":422,"directus_message":"","path":"","method":"","request_id":"16","user_type":"location_owner"}
-[18-Feb-2026 12:19:02 UTC] [VP Onboarding] approve user_type_raw=location_owner normalized=location_owner
-[18-Feb-2026 12:32:49 UTC] Automatic updates starting...
-[18-Feb-2026 12:32:50 UTC] Automatic updates complete.
-[18-Feb-2026 13:09:20 UTC] [VP Onboarding] approve user_type_raw=dentist normalized=dentist
-[18-Feb-2026 13:09:21 UTC] [VP Onboarding] {"context":"approve_profile_failed","error":"Directus HTTP 500: An unexpected error occurred.","http_code":500,"directus_message":"An unexpected error occurred.","path":"/items/vp_user_profiles","method":"POST","request_id":"17","user_id":"1203f3e9-349c-46b3-b23e-67756e860e6a","user_type":"dentist"}
-[18-Feb-2026 13:27:00 UTC] [VP Onboarding] approve user_type_raw=dentist normalized=dentist
-[18-Feb-2026 20:54:33 UTC] [VP Onboarding] approve user_type_raw=dentist normalized=dentist
+[10-Mar-2026 10:33:25 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:25 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:25 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:26 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:26 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:26 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:26 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:28 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:28 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:29 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:29 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:30 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:30 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:30 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:30 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:31 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:32 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:32 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:32 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
+[10-Mar-2026 10:33:47 UTC] Automatic updates starting...
+[10-Mar-2026 10:33:48 UTC] Automatic updates complete.
+[10-Mar-2026 12:31:53 UTC] Automatic updates starting...
+[10-Mar-2026 12:31:53 UTC] Automatic updates complete.
+[11-Mar-2026 00:50:40 UTC] Automatic updates starting...
+[11-Mar-2026 00:50:41 UTC] Automatic updates complete.
+[11-Mar-2026 00:50:41 UTC] PHP Notice:  maintenance_mode(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[11-Mar-2026 00:50:41 UTC] PHP Warning:  chmod(): Operation not permitted in /var/www/html/wp-admin/includes/class-wp-filesystem-direct.php on line 173

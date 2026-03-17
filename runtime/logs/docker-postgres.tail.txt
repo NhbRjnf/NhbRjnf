@@ -1,39 +1,35 @@
-# cmd: docker logs --tail 36 vse_postgres
-# time: 2026-02-18T20:56:44+00:00
+# cmd: docker logs --tail 32 vse_postgres
+# time: 2026-03-11T10:27:00+00:00
 
-2026-02-18 14:08:29.755 EET [27] LOG:  checkpoint starting: time
-2026-02-18 14:08:30.766 EET [27] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.006 s, sync=0.002 s, total=1.012 s; sync files=11, longest=0.002 s, average=0.001 s; distance=37 kB, estimate=216 kB
-2026-02-18 14:23:29.969 EET [27] LOG:  checkpoint starting: time
-2026-02-18 14:23:31.783 EET [27] LOG:  checkpoint complete: wrote 19 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.808 s, sync=0.002 s, total=1.814 s; sync files=19, longest=0.001 s, average=0.001 s; distance=43 kB, estimate=199 kB
-2026-02-18 14:28:29.881 EET [27] LOG:  checkpoint starting: time
-2026-02-18 14:28:35.005 EET [27] LOG:  checkpoint complete: wrote 52 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.119 s, sync=0.003 s, total=5.125 s; sync files=45, longest=0.001 s, average=0.001 s; distance=254 kB, estimate=254 kB
-2026-02-18 14:33:29.036 EET [27] LOG:  checkpoint starting: time
-2026-02-18 14:33:30.045 EET [27] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.004 s, sync=0.002 s, total=1.010 s; sync files=5, longest=0.001 s, average=0.001 s; distance=63 kB, estimate=235 kB
-2026-02-18 14:38:29.137 EET [27] LOG:  checkpoint starting: time
-2026-02-18 14:38:29.245 EET [27] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.102 s, sync=0.002 s, total=0.108 s; sync files=2, longest=0.002 s, average=0.001 s; distance=6 kB, estimate=212 kB
-2026-02-18 14:48:29.373 EET [27] LOG:  checkpoint starting: time
-2026-02-18 14:48:29.581 EET [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.002 s, total=0.208 s; sync files=3, longest=0.001 s, average=0.001 s; distance=12 kB, estimate=192 kB
-2026-02-18 14:53:29.679 EET [27] LOG:  checkpoint starting: time
-2026-02-18 14:53:29.785 EET [27] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.102 s, sync=0.002 s, total=0.107 s; sync files=2, longest=0.001 s, average=0.001 s; distance=9 kB, estimate=174 kB
-2026-02-18 14:58:31.712 EET [3735] ERROR:  column "type" does not exist at character 16
-2026-02-18 14:58:31.712 EET [3735] STATEMENT:  
-	SELECT field, type, meta, schema
-	FROM directus_fields
-	WHERE collection='vp_user_profiles' AND field='user_id';
-	
-2026-02-18 15:08:30.019 EET [27] LOG:  checkpoint starting: time
-2026-02-18 15:08:31.932 EET [27] LOG:  checkpoint complete: wrote 20 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.908 s, sync=0.002 s, total=1.914 s; sync files=14, longest=0.001 s, average=0.001 s; distance=102 kB, estimate=166 kB
-2026-02-18 15:13:31.005 EET [27] LOG:  checkpoint starting: time
-2026-02-18 15:13:34.925 EET [27] LOG:  checkpoint complete: wrote 40 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.914 s, sync=0.003 s, total=3.920 s; sync files=30, longest=0.002 s, average=0.001 s; distance=50 kB, estimate=155 kB
-2026-02-18 15:28:32.182 EET [27] LOG:  checkpoint starting: time
-2026-02-18 15:28:33.594 EET [27] LOG:  checkpoint complete: wrote 15 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.407 s, sync=0.003 s, total=1.412 s; sync files=15, longest=0.002 s, average=0.001 s; distance=36 kB, estimate=143 kB
-2026-02-18 15:33:32.685 EET [27] LOG:  checkpoint starting: time
-2026-02-18 15:33:32.793 EET [27] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.102 s, sync=0.002 s, total=0.108 s; sync files=2, longest=0.002 s, average=0.001 s; distance=6 kB, estimate=129 kB
-2026-02-18 19:43:35.793 EET [27] LOG:  checkpoint starting: time
-2026-02-18 19:43:36.501 EET [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.704 s, sync=0.002 s, total=0.709 s; sync files=5, longest=0.002 s, average=0.001 s; distance=33 kB, estimate=120 kB
-2026-02-18 19:48:35.565 EET [27] LOG:  checkpoint starting: time
-2026-02-18 19:48:35.672 EET [27] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.002 s, total=0.107 s; sync files=2, longest=0.002 s, average=0.001 s; distance=3 kB, estimate=108 kB
-2026-02-18 21:23:36.784 EET [27] LOG:  checkpoint starting: time
-2026-02-18 21:23:37.392 EET [27] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.604 s, sync=0.002 s, total=0.608 s; sync files=7, longest=0.001 s, average=0.001 s; distance=29 kB, estimate=100 kB
-2026-02-18 21:33:36.556 EET [27] LOG:  checkpoint starting: time
-2026-02-18 21:33:36.764 EET [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.002 s, total=0.208 s; sync files=3, longest=0.002 s, average=0.001 s; distance=4 kB, estimate=91 kB
+2026-03-10 12:44:11.493 EET [26] LOG:  checkpoint starting: time
+2026-03-10 12:44:12.606 EET [26] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.002 s, total=1.115 s; sync files=12, longest=0.001 s, average=0.001 s; distance=28 kB, estimate=56 kB
+2026-03-10 12:49:11.629 EET [26] LOG:  checkpoint starting: time
+2026-03-10 12:49:12.739 EET [26] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.105 s, sync=0.002 s, total=1.110 s; sync files=12, longest=0.001 s, average=0.001 s; distance=23 kB, estimate=53 kB
+2026-03-10 13:04:12.039 EET [26] LOG:  checkpoint starting: time
+2026-03-10 13:04:13.052 EET [26] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.007 s, sync=0.002 s, total=1.014 s; sync files=11, longest=0.001 s, average=0.001 s; distance=30 kB, estimate=51 kB
+2026-03-10 13:33:19.838 EET [7267] ERROR:  invalid input syntax for type uuid: "49"
+2026-03-10 13:33:19.838 EET [7267] CONTEXT:  unnamed portal parameter $5 = '...'
+2026-03-10 13:33:19.838 EET [7267] STATEMENT:  update "vp_3d_jobs" set "status" = $1, "progress" = $2, "meta" = $3, "completed_at" = $4, "output_file" = $5, "preview_file" = $6 where "id" in ($7)
+2026-03-10 13:34:12.543 EET [26] LOG:  checkpoint starting: time
+2026-03-10 13:34:14.158 EET [26] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.608 s, sync=0.003 s, total=1.615 s; sync files=13, longest=0.002 s, average=0.001 s; distance=61 kB, estimate=61 kB
+2026-03-10 13:37:26.889 EET [7267] ERROR:  invalid input syntax for type uuid: "51"
+2026-03-10 13:37:26.889 EET [7267] CONTEXT:  unnamed portal parameter $5 = '...'
+2026-03-10 13:37:26.889 EET [7267] STATEMENT:  update "vp_3d_jobs" set "status" = $1, "progress" = $2, "meta" = $3, "completed_at" = $4, "output_file" = $5, "preview_file" = $6 where "id" in ($7)
+2026-03-10 13:39:12.255 EET [26] LOG:  checkpoint starting: time
+2026-03-10 13:39:13.366 EET [26] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.002 s, total=1.112 s; sync files=12, longest=0.001 s, average=0.001 s; distance=29 kB, estimate=58 kB
+2026-03-10 14:09:12.939 EET [26] LOG:  checkpoint starting: time
+2026-03-10 14:09:14.152 EET [26] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.207 s, sync=0.002 s, total=1.214 s; sync files=12, longest=0.001 s, average=0.001 s; distance=33 kB, estimate=56 kB
+2026-03-10 14:14:12.237 EET [26] LOG:  checkpoint starting: time
+2026-03-10 14:14:13.247 EET [26] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.005 s, sync=0.002 s, total=1.011 s; sync files=11, longest=0.001 s, average=0.001 s; distance=28 kB, estimate=53 kB
+2026-03-10 14:19:12.335 EET [26] LOG:  checkpoint starting: time
+2026-03-10 14:19:13.344 EET [26] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.004 s, sync=0.002 s, total=1.009 s; sync files=11, longest=0.001 s, average=0.001 s; distance=35 kB, estimate=51 kB
+2026-03-10 14:24:12.361 EET [26] LOG:  checkpoint starting: time
+2026-03-10 14:24:13.672 EET [26] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.002 s, total=1.311 s; sync files=12, longest=0.001 s, average=0.001 s; distance=43 kB, estimate=50 kB
+2026-03-10 14:29:12.768 EET [26] LOG:  checkpoint starting: time
+2026-03-10 14:29:13.376 EET [26] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.002 s, total=0.609 s; sync files=5, longest=0.001 s, average=0.001 s; distance=28 kB, estimate=48 kB
+2026-03-10 14:34:12.459 EET [26] LOG:  checkpoint starting: time
+2026-03-10 14:34:13.772 EET [26] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.002 s, total=1.314 s; sync files=12, longest=0.001 s, average=0.001 s; distance=47 kB, estimate=48 kB
+2026-03-10 15:19:13.221 EET [26] LOG:  checkpoint starting: time
+2026-03-10 15:19:14.434 EET [26] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.207 s, sync=0.002 s, total=1.214 s; sync files=12, longest=0.001 s, average=0.001 s; distance=45 kB, estimate=48 kB
+2026-03-10 15:29:13.554 EET [26] LOG:  checkpoint starting: time
+2026-03-10 15:29:14.765 EET [26] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.206 s, sync=0.002 s, total=1.211 s; sync files=12, longest=0.001 s, average=0.001 s; distance=42 kB, estimate=47 kB

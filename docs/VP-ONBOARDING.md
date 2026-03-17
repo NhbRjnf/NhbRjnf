@@ -1,22 +1,63 @@
-# VP Onboarding moderation workflow (REST-only critical path)
+# VP Onboarding moderation workflow
 
-## Prerequisites
+## 1. Назначение
 
-Inside the WordPress container/environment, ensure env vars are set:
+Этот документ фиксирует критичный путь модерации onboarding в проекте «ВсёПонятно».
 
-- `DIRECTUS_PUBLIC_URL` (fallback: `DIRECTUS_BASE_URL`)
+Текущий подход:
+- пользователь создаёт заявку;
+- заявка попадает в `vp_onboarding_requests`;
+- WordPress admin UI модерирует заявку;
+- WordPress server-to-server работает с Directus;
+- при approve создаются или переиспользуются Directus user и `vp_user_profiles`.
+
+## 2. Переменные окружения
+
+Внутри WordPress container / environment должны быть доступны:
+
+- `DIRECTUS_PUBLIC_URL`
+- `DIRECTUS_BASE_URL` как fallback
 - `VP_SERVICE_USER_TOKEN`
-- optional: `VP_ONBOARDING_DRY_RUN=1` (WP will not perform Directus writes, only read/check and report what would happen)
+- `VP_ONBOARDING_DRY_RUN=1` — опционально, только для безопасной проверки без записи
 
-> Security: never print tokens to logs, Git history, or screenshots.
+Безопасность:
+- токены не логировать;
+- токены не показывать на скриншотах;
+- токены не коммитить в git.
 
-## 1) Create a test onboarding request
+## 3. Коллекция `vp_onboarding_requests`
+
+По актуальному snapshot заявка содержит, среди прочего:
+
+- `id`
+- `email`
+- `phone`
+- `first_name`
+- `last_name`
+- `user_type`
+- `status`
+- `auto_approve_method`
+- `invite_code`
+- `requested_tenant_name`
+- `requested_tenant_slug`
+- `evidence_note`
+- `source_ip`
+- `user_agent`
+- `created_user_id`
+- `created_profile_id`
+- `reviewed_by`
+- `decision_reason`
+- `reviewed_at`
+- `reviewed_by_email`
+- `reviewed_by_wp_id`
+- `reviewed_by_wp_login`
+- `created_at`
+- `updated_at`
+
+## 4. Создание тестовой заявки
 
 ```bash
-curl -sS -X POST "$DIRECTUS_PUBLIC_URL/items/vp_onboarding_requests" \
-  -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
+curl -sS -X POST "$DIRECTUS_PUBLIC_URL/items/vp_onboarding_requests"   -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN"   -H "Content-Type: application/json"   -d '{
     "email": "test.onboarding@example.com",
     "phone": "+10000000000",
     "first_name": "Test",
@@ -27,98 +68,76 @@ curl -sS -X POST "$DIRECTUS_PUBLIC_URL/items/vp_onboarding_requests" \
   }'
 ```
 
-## 2) Approve via WP admin UI
+## 5. Approve через WordPress admin UI
 
-1. Open `wp-admin/admin.php?page=vp-onboarding-admin`.
-2. Click **Approve** for the request.
-3. Wait for success notice (`User created/reused`, `Profile created/reused`).
+1. Открыть `wp-admin/admin.php?page=vp-onboarding-admin`.
+2. Найти заявку со статусом `pending`.
+3. Нажать **Approve**.
+4. Дождаться успешного результата:
+   - user created / reused;
+   - profile created / reused;
+   - заявка обновлена полями аудита.
 
-What WP does through Directus REST:
+WordPress при этом делает через Directus REST:
 
 - `GET /users?filter[email][_eq]=...&limit=1`
-- if missing user: `POST /users`
+- `POST /users` при отсутствии пользователя
 - `GET /items/vp_user_profiles?filter[user_id][_eq]=...&limit=1`
-- if missing profile: `POST /items/vp_user_profiles`
-- `PATCH /items/vp_onboarding_requests/{id}` with audit + linkage fields
+- `POST /items/vp_user_profiles` при отсутствии профиля
+- `PATCH /items/vp_onboarding_requests/{id}`
 
-## 3) Verify approve result with curl
+## 6. Что должно записаться при approve
+
+В самой заявке должны обновиться:
+- `status = approved`
+- `reviewed_at`
+- `reviewed_by_email`
+- `reviewed_by_wp_id`
+- `reviewed_by_wp_login`
+- `created_user_id`
+- `created_profile_id`
+- `decision_reason` может быть `null` или содержать комментарий
+
+## 7. Проверка approve через curl
 
 ```bash
-# Onboarding request should now be approved and audited
-curl -sS "$DIRECTUS_PUBLIC_URL/items/vp_onboarding_requests?filter[email][_eq]=test.onboarding@example.com&limit=1&fields=id,status,reviewed_at,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,decision_reason,created_user_id,created_profile_id" \
-  -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN"
+curl -sS "$DIRECTUS_PUBLIC_URL/items/vp_onboarding_requests?filter[email][_eq]=test.onboarding@example.com&limit=1&fields=id,status,reviewed_at,reviewed_by_email,reviewed_by_wp_id,reviewed_by_wp_login,decision_reason,created_user_id,created_profile_id"   -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN"
 
-# Directus user should exist once by email
-curl -sS "$DIRECTUS_PUBLIC_URL/users?filter[email][_eq]=test.onboarding@example.com&limit=5&fields=id,email,status,role" \
-  -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN"
+curl -sS "$DIRECTUS_PUBLIC_URL/users?filter[email][_eq]=test.onboarding@example.com&limit=5&fields=id,email,status,role"   -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN"
 
-# Replace <DIRECTUS_USER_ID> with created_user_id from previous response
-curl -sS "$DIRECTUS_PUBLIC_URL/items/vp_user_profiles?filter[user_id][_eq]=<DIRECTUS_USER_ID>&limit=5&fields=id,user_id,user_type,created_at" \
-  -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN"
+curl -sS "$DIRECTUS_PUBLIC_URL/items/vp_user_profiles?filter[user_id][_eq]=<DIRECTUS_USER_ID>&limit=5&fields=id,user_id,user_type,status,phone,created_at"   -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN"
 ```
 
-## 4) Reject via WP admin UI
+## 8. Reject через WordPress admin UI
 
-1. Click **Reject**.
-2. Enter non-empty reason in prompt.
-3. WP sends `PATCH /items/vp_onboarding_requests/{id}` with:
-   - `status=rejected`
-   - `reviewed_at` (ISO8601)
-   - reviewer fields (`reviewed_by_email`, `reviewed_by_wp_id`, `reviewed_by_wp_login`)
+1. Нажать **Reject**.
+2. Ввести непустую причину.
+3. WordPress должен сделать `PATCH` в `vp_onboarding_requests/{id}` и записать:
+   - `status = rejected`
+   - `reviewed_at`
+   - `reviewed_by_email`
+   - `reviewed_by_wp_id`
+   - `reviewed_by_wp_login`
    - `decision_reason`
 
-No user/profile creation is performed on reject.
+При reject:
+- новый user не создаётся;
+- новый profile не создаётся.
 
-## 5) Verify reject result with curl
+## 9. Проверка reject
 
 ```bash
-curl -sS "$DIRECTUS_PUBLIC_URL/items/vp_onboarding_requests?filter[email][_eq]=test.onboarding@example.com&limit=1&fields=id,status,reviewed_at,reviewed_by_email,decision_reason,created_user_id,created_profile_id" \
-  -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN"
+curl -sS "$DIRECTUS_PUBLIC_URL/items/vp_onboarding_requests?filter[email][_eq]=test.onboarding@example.com&limit=1&fields=id,status,reviewed_at,reviewed_by_email,decision_reason,created_user_id,created_profile_id"   -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN"
 ```
 
-Expected for reject:
-
+Ожидание:
 - `status = rejected`
-- non-empty `decision_reason`
-- `created_user_id` / `created_profile_id` unchanged (no new linkage created by reject)
+- `decision_reason` заполнен
+- `created_user_id` и `created_profile_id` не меняются из-за reject
 
-## 6) Optional: direct PATCH examples (manual moderation outside WP)
+## 10. Что ещё обязательно учитывать
 
-These examples are useful for diagnostics and emergency operations.
-
-```bash
-# Approve a request directly in Directus (replace values)
-curl -sS -X PATCH "$DIRECTUS_PUBLIC_URL/items/vp_onboarding_requests/<REQUEST_ID>" \
-  -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "status": "approved",
-    "reviewed_at": "2026-02-17T12:00:00Z",
-    "reviewed_by_email": "moderator@example.com",
-    "reviewed_by_wp_id": 1,
-    "reviewed_by_wp_login": "admin",
-    "decision_reason": null,
-    "created_user_id": "<DIRECTUS_USER_UUID>",
-    "created_profile_id": 123
-  }'
-
-# Reject a request directly in Directus (replace values)
-curl -sS -X PATCH "$DIRECTUS_PUBLIC_URL/items/vp_onboarding_requests/<REQUEST_ID>" \
-  -H "Authorization: Bearer $VP_SERVICE_USER_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "status": "rejected",
-    "reviewed_at": "2026-02-17T12:05:00Z",
-    "reviewed_by_email": "moderator@example.com",
-    "reviewed_by_wp_id": 1,
-    "reviewed_by_wp_login": "admin",
-    "decision_reason": "Not enough verification data"
-  }'
-```
-
-## Troubleshooting checklist
-
-- Confirm `admin.php?page=vp-onboarding-admin` loads `vp-onboarding-admin.js` and `.css` with `?ver=<filemtime>` in DevTools Network.
-- Confirm `GET /items/vp_onboarding_requests` includes `reviewed_by_email` and `reviewed_at` fields.
-- If approve/reject fails, inspect WordPress `error_log` for concise Directus diagnostics: endpoint, HTTP code, Directus message.
-- If `VP_ONBOARDING_DRY_RUN=1`, writes are intentionally skipped.
+- `VP_ONBOARDING_DRY_RUN=1` намеренно отключает запись;
+- profile должен создаваться по актуальной схеме `vp_user_profiles`, а не по старым полям;
+- при multi-tenant развитии следующим шагом обычно становится создание `vp_tenants` и `vp_memberships` после approve;
+- если поля reviewer не появляются в API, значит ACL или `fields=` в запросе не соответствует схеме.

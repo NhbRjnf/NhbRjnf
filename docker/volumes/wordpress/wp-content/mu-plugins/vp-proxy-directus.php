@@ -66,6 +66,12 @@ add_action('rest_api_init', function () {
     'callback' => 'vp_3d_job_create',
     'permission_callback' => '__return_true',
   ]);
+
+  register_rest_route('vp/v1', '/location/bootstrap', [
+    'methods'  => 'GET',
+    'callback' => 'vp_location_bootstrap_callback',
+    'permission_callback' => '__return_true',
+  ]);
 });
 
 
@@ -692,3 +698,233 @@ function vp_instruction_fallback_response($code, $row, $reason = 'instruction_ac
 
   } // конец функции vp_instruction_callback
   
+
+
+function vp_location_safe_int($value) {
+  if (is_numeric($value)) {
+    return (int) $value;
+  }
+  return null;
+}
+
+function vp_location_safe_text($value) {
+  return is_scalar($value) ? trim((string) $value) : '';
+}
+
+function vp_location_safe_bool($value) {
+  return !empty($value);
+}
+
+function vp_location_extract_relation($value) {
+  if (is_array($value) && array_key_exists('id', $value)) {
+    return $value;
+  }
+
+  if (is_numeric($value)) {
+    return ['id' => (int) $value];
+  }
+
+  return null;
+}
+
+function vp_location_fetch_qr_by_code($code) {
+  $filter = rawurlencode(json_encode([
+    'code' => ['_eq' => $code],
+  ], JSON_UNESCAPED_UNICODE));
+
+  $fields = rawurlencode('id,code,title,type,is_active,location_title,location_payload,tenant_id');
+  $json = vp_directus_get("/items/qr_codes?limit=1&fields={$fields}&filter={$filter}");
+  if (is_wp_error($json)) {
+    return $json;
+  }
+
+  $rows = $json['data'] ?? [];
+  if (!is_array($rows) || count($rows) === 0) {
+    return new WP_Error('lookup_empty', 'QR code not found', ['status' => 404]);
+  }
+
+  return $rows[0];
+}
+
+function vp_location_fetch_anchor_by_qr_id($qrId) {
+  $filter = rawurlencode(json_encode([
+    '_and' => [
+      ['qr_code_id' => ['_eq' => (int) $qrId]],
+      ['is_active' => ['_eq' => true]],
+    ],
+  ], JSON_UNESCAPED_UNICODE));
+
+  $fields = rawurlencode(
+    'id,title,code,kind,x,y,heading_deg,meta_json,is_active,' .
+    'location_id.id,location_id.title,location_id.slug,location_id.kind,location_id.description,location_id.is_active,' .
+    'level_id.id,level_id.code,level_id.title,level_id.z_index,level_id.is_active,level_id.meta_json'
+  );
+
+  $json = vp_directus_get("/items/vp_location_anchors?limit=1&fields={$fields}&filter={$filter}");
+  if (is_wp_error($json)) {
+    return $json;
+  }
+
+  $rows = $json['data'] ?? [];
+  if (!is_array($rows) || count($rows) === 0) {
+    return new WP_Error('anchor_not_found', 'Location anchor not found', ['status' => 404]);
+  }
+
+  return $rows[0];
+}
+
+function vp_location_fetch_pois($locationId, $levelId) {
+  $and = [
+    ['location_id' => ['_eq' => (int) $locationId]],
+    ['is_active' => ['_eq' => true]],
+  ];
+
+  if ($levelId !== null) {
+    $and[] = ['level_id' => ['_eq' => (int) $levelId]];
+  }
+
+  $filter = rawurlencode(json_encode([
+    '_and' => $and,
+  ], JSON_UNESCAPED_UNICODE));
+
+  $fields = rawurlencode('id,title,slug,kind,brand,description,icon,x,y,url,phone,opening_hours,sort,is_public');
+  $json = vp_directus_get("/items/vp_location_pois?limit=100&sort=sort,title&fields={$fields}&filter={$filter}");
+  if (is_wp_error($json)) {
+    return $json;
+  }
+
+  $rows = $json['data'] ?? [];
+  return is_array($rows) ? $rows : [];
+}
+
+function vp_location_normalize_payload($qr, $anchor, $pois) {
+  $location = vp_location_extract_relation($anchor['location_id'] ?? null);
+  $level = vp_location_extract_relation($anchor['level_id'] ?? null);
+
+  $locationPayload = [
+    'id' => vp_location_safe_int($location['id'] ?? null),
+    'title' => vp_location_safe_text($location['title'] ?? ($qr['location_title'] ?? '')),
+    'slug' => vp_location_safe_text($location['slug'] ?? ''),
+    'kind' => vp_location_safe_text($location['kind'] ?? 'location'),
+    'description' => vp_location_safe_text($location['description'] ?? ''),
+    'is_active' => vp_location_safe_bool($location['is_active'] ?? true),
+  ];
+
+  $levelPayload = [
+    'id' => vp_location_safe_int($level['id'] ?? null),
+    'code' => vp_location_safe_text($level['code'] ?? ''),
+    'title' => vp_location_safe_text($level['title'] ?? ''),
+    'z_index' => vp_location_safe_int($level['z_index'] ?? null),
+    'is_active' => vp_location_safe_bool($level['is_active'] ?? true),
+  ];
+
+  $anchorPayload = [
+    'id' => vp_location_safe_int($anchor['id'] ?? null),
+    'title' => vp_location_safe_text($anchor['title'] ?? ''),
+    'code' => vp_location_safe_text($anchor['code'] ?? ''),
+    'kind' => vp_location_safe_text($anchor['kind'] ?? 'anchor'),
+    'x' => vp_location_safe_int($anchor['x'] ?? null),
+    'y' => vp_location_safe_int($anchor['y'] ?? null),
+    'heading_deg' => vp_location_safe_int($anchor['heading_deg'] ?? null),
+  ];
+
+  $poiPayload = [];
+  foreach ($pois as $poi) {
+    if (!is_array($poi)) {
+      continue;
+    }
+
+    $poiPayload[] = [
+      'id' => vp_location_safe_int($poi['id'] ?? null),
+      'title' => vp_location_safe_text($poi['title'] ?? ''),
+      'slug' => vp_location_safe_text($poi['slug'] ?? ''),
+      'kind' => vp_location_safe_text($poi['kind'] ?? ''),
+      'brand' => vp_location_safe_text($poi['brand'] ?? ''),
+      'description' => vp_location_safe_text($poi['description'] ?? ''),
+      'icon' => vp_location_safe_text($poi['icon'] ?? ''),
+      'x' => vp_location_safe_int($poi['x'] ?? null),
+      'y' => vp_location_safe_int($poi['y'] ?? null),
+      'url' => vp_location_safe_text($poi['url'] ?? ''),
+      'phone' => vp_location_safe_text($poi['phone'] ?? ''),
+      'opening_hours' => vp_location_safe_text($poi['opening_hours'] ?? ''),
+      'sort' => vp_location_safe_int($poi['sort'] ?? null),
+    ];
+  }
+
+  return [
+    'ok' => true,
+    'mode' => 'location',
+    'qr' => [
+      'id' => vp_location_safe_int($qr['id'] ?? null),
+      'code' => vp_location_safe_text($qr['code'] ?? ''),
+      'title' => vp_location_safe_text($qr['title'] ?? ''),
+      'type' => vp_location_safe_text($qr['type'] ?? 'location'),
+    ],
+    'location' => $locationPayload,
+    'level' => $levelPayload,
+    'anchor' => $anchorPayload,
+    'pois' => $poiPayload,
+  ];
+}
+
+function vp_location_bootstrap_callback(WP_REST_Request $request) {
+  $code = strtoupper(trim((string) $request->get_param('code')));
+  if ($code === '') {
+    return new WP_REST_Response([
+      'ok' => false,
+      'error' => 'code_required',
+    ], 400);
+  }
+
+  $qr = vp_location_fetch_qr_by_code($code);
+  if (is_wp_error($qr)) {
+    return new WP_REST_Response([
+      'ok' => false,
+      'error' => $qr->get_error_code(),
+    ], (int) ($qr->get_error_data()['status'] ?? 404));
+  }
+
+  if (strtolower((string) ($qr['type'] ?? '')) !== 'location') {
+    return new WP_REST_Response([
+      'ok' => false,
+      'error' => 'location_type_required',
+    ], 400);
+  }
+
+  if (empty($qr['is_active'])) {
+    return new WP_REST_Response([
+      'ok' => false,
+      'error' => 'scene_disabled',
+    ], 404);
+  }
+
+  $anchor = vp_location_fetch_anchor_by_qr_id((int) $qr['id']);
+  if (is_wp_error($anchor)) {
+    return new WP_REST_Response([
+      'ok' => false,
+      'error' => $anchor->get_error_code(),
+    ], (int) ($anchor->get_error_data()['status'] ?? 404));
+  }
+
+  $location = vp_location_extract_relation($anchor['location_id'] ?? null);
+  $level = vp_location_extract_relation($anchor['level_id'] ?? null);
+  $locationId = vp_location_safe_int($location['id'] ?? null);
+  $levelId = vp_location_safe_int($level['id'] ?? null);
+
+  if (!$locationId) {
+    return new WP_REST_Response([
+      'ok' => false,
+      'error' => 'location_not_linked',
+    ], 404);
+  }
+
+  $pois = vp_location_fetch_pois($locationId, $levelId);
+  if (is_wp_error($pois)) {
+    return new WP_REST_Response([
+      'ok' => false,
+      'error' => $pois->get_error_code(),
+    ], (int) ($pois->get_error_data()['status'] ?? 502));
+  }
+
+  return new WP_REST_Response(vp_location_normalize_payload($qr, $anchor, $pois), 200);
+}
