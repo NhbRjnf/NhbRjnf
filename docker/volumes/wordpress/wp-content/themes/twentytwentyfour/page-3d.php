@@ -39,10 +39,10 @@ get_header();
         class="vp-3d-input"
         type="file"
         name="file"
-        accept=".stl,.obj,.glb,.gltf"
+        accept=".stl,.obj"
         required
       />
-      <div class="vp-3d-hint">Поддерживаются: .stl, .obj, .glb, .gltf</div>
+      <div class="vp-3d-hint">Поддерживаются: .stl, .obj</div>
       <button id="vp3d-upload-submit" class="vp-3d-btn" type="submit">Загрузить и открыть</button>
       <div id="vp3d-upload-status" class="vp-3d-upload-status" hidden></div>
     </form>

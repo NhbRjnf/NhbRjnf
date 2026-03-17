@@ -214,18 +214,8 @@
     const payload = err?.payload || {};
     const key = payload?.error || err?.message || 'upload_failed';
 
-    if (typeof payload?.message === 'string' && payload.message.trim()) {
-      if (key === 'file_too_large' && payload?.max_bytes) {
-        return `${payload.message} Максимум: ${formatMaxBytes(payload.max_bytes)}.`;
-      }
-      if (key === 'rate_limited' && payload?.retry_after) {
-        return `${payload.message} Повторите через ${payload.retry_after} сек.`;
-      }
-      return payload.message;
-    }
-
     if (key === 'file_required') return 'Выберите 3D файл перед отправкой.';
-    if (key === 'file_type_not_allowed') return 'Разрешены только .stl, .obj, .glb и .gltf.';
+    if (key === 'file_type_not_allowed') return 'Разрешены только .stl и .obj.';
     if (key === 'file_too_large') {
       return payload?.max_bytes
         ? `Файл слишком большой. Максимум: ${formatMaxBytes(payload.max_bytes)}.`
@@ -239,7 +229,12 @@
     if (key === 'queue_unavailable') return 'Сервис очереди временно недоступен. Попробуйте позже.';
     if (key === 'directus_request_failed') return 'Не удалось создать job в backend.';
     if (key === 'job_create_failed') return 'Не удалось создать job.';
+    if (key === 'upload_incomplete') return 'Файл загрузился не полностью. Повторите попытку.';
+    if (key === 'empty_file') return 'Файл пустой.';
     if (key === 'upload_failed') return 'Не удалось загрузить файл.';
+    if (typeof payload?.message === 'string' && payload.message.trim()) {
+      return payload.message;
+    }
     return 'Не удалось создать job. Проверьте файл и попробуйте снова.';
   }
 

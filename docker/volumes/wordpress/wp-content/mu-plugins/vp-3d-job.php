@@ -90,17 +90,15 @@ if (!function_exists('vp_3d_jobs_directus_get')) {
 
 if (!function_exists('vp_3d_job_allowed_extensions')) {
     function vp_3d_job_allowed_extensions() {
-        return ['stl', 'obj', 'glb', 'gltf'];
+        return ['stl', 'obj'];
     }
 }
 
 if (!function_exists('vp_3d_job_allowed_mimes')) {
     function vp_3d_job_allowed_mimes() {
         return [
-            'stl'  => 'model/stl',
-            'obj'  => 'text/plain',
-            'glb'  => 'model/gltf-binary',
-            'gltf' => 'model/gltf+json',
+            'stl' => 'model/stl',
+            'obj' => 'text/plain',
         ];
     }
 }
@@ -194,7 +192,7 @@ if (!function_exists('vp_3d_job_check_and_hit_rate_limit')) {
 
         if ((int) $state['count'] >= $max) {
             $retryAfter = max(1, $window - (time() - (int) $state['start']));
-            return new WP_Error('rate_limited', 'Слишком много попыток загрузки. Попробуйте позже.', [
+            return new WP_Error('rate_limited', 'Too many upload attempts. Try again later.', [
                 'status' => 429,
                 'retry_after' => $retryAfter,
             ]);
@@ -214,21 +212,21 @@ if (!function_exists('vp_3d_job_upload_error_to_wp_error')) {
         switch ($code) {
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-                return new WP_Error('file_too_large', 'Файл слишком большой.', [
+                return new WP_Error('file_too_large', 'File is too large.', [
                     'status' => 413,
                     'max_bytes' => vp_3d_job_max_upload_bytes(),
                 ]);
 
             case UPLOAD_ERR_PARTIAL:
-                return new WP_Error('upload_incomplete', 'Файл загружен не полностью.', ['status' => 400]);
+                return new WP_Error('upload_incomplete', 'File was only partially uploaded.', ['status' => 400]);
 
             case UPLOAD_ERR_NO_FILE:
-                return new WP_Error('file_required', 'Файл не передан.', ['status' => 400]);
+                return new WP_Error('file_required', 'File is required.', ['status' => 400]);
 
             case UPLOAD_ERR_NO_TMP_DIR:
             case UPLOAD_ERR_CANT_WRITE:
             case UPLOAD_ERR_EXTENSION:
-                return new WP_Error('upload_failed', 'Не удалось сохранить загруженный файл.', ['status' => 500]);
+                return new WP_Error('upload_failed', 'Failed to save uploaded file.', ['status' => 500]);
 
             case UPLOAD_ERR_OK:
             default:
@@ -240,7 +238,7 @@ if (!function_exists('vp_3d_job_upload_error_to_wp_error')) {
 if (!function_exists('vp_3d_job_validate_upload_file')) {
     function vp_3d_job_validate_upload_file($file) {
         if (!is_array($file) || empty($file)) {
-            return new WP_Error('file_required', 'Файл не передан.', ['status' => 400]);
+            return new WP_Error('file_required', 'File is required.', ['status' => 400]);
         }
 
         $uploadError = isset($file['error']) ? (int) $file['error'] : UPLOAD_ERR_NO_FILE;
@@ -256,16 +254,16 @@ if (!function_exists('vp_3d_job_validate_upload_file')) {
         $size = isset($file['size']) ? (int) $file['size'] : 0;
 
         if ($tmpName === '' || !file_exists($tmpName)) {
-            return new WP_Error('file_required', 'Временный файл не найден.', ['status' => 400]);
+            return new WP_Error('file_required', 'Temporary upload file was not found.', ['status' => 400]);
         }
 
         if ($size <= 0) {
-            return new WP_Error('empty_file', 'Файл пустой.', ['status' => 400]);
+            return new WP_Error('empty_file', 'File is empty.', ['status' => 400]);
         }
 
         $maxBytes = vp_3d_job_max_upload_bytes();
         if ($size > $maxBytes) {
-            return new WP_Error('file_too_large', 'Файл слишком большой.', [
+            return new WP_Error('file_too_large', 'File is too large.', [
                 'status' => 413,
                 'max_bytes' => $maxBytes,
             ]);
@@ -274,7 +272,7 @@ if (!function_exists('vp_3d_job_validate_upload_file')) {
         $allowedExtensions = vp_3d_job_allowed_extensions();
         $ext = strtolower((string) pathinfo($name, PATHINFO_EXTENSION));
         if ($ext === '' || !in_array($ext, $allowedExtensions, true)) {
-            return new WP_Error('file_type_not_allowed', 'Разрешены только .stl, .obj, .glb и .gltf.', [
+            return new WP_Error('file_type_not_allowed', 'Only .stl and .obj are allowed.', [
                 'status' => 415,
                 'allowed_extensions' => $allowedExtensions,
             ]);
@@ -283,7 +281,7 @@ if (!function_exists('vp_3d_job_validate_upload_file')) {
         $checked = wp_check_filetype_and_ext($tmpName, $name, vp_3d_job_allowed_mimes());
         $realExt = strtolower((string) ($checked['ext'] ?? ''));
         if ($realExt !== '' && !in_array($realExt, $allowedExtensions, true)) {
-            return new WP_Error('file_type_not_allowed', 'Формат файла не поддерживается.', [
+            return new WP_Error('file_type_not_allowed', 'Unsupported file format.', [
                 'status' => 415,
                 'allowed_extensions' => $allowedExtensions,
             ]);
@@ -336,7 +334,7 @@ if (!function_exists('vp_3d_job_make_attachment_link')) {
         if (function_exists('vp_files_normalize_expires_at')) {
             $expires_at = vp_files_normalize_expires_at($ttl_seconds, null);
         } else {
-            $expires_at = gmdate('Y-m-d H:i:s', time() + (int) $ttl_seconds);
+            $expires_at = gmdate('Y-m-d H:i:s', time() + (int)$ttl_seconds);
         }
 
         $meta = [
@@ -457,7 +455,7 @@ if (!function_exists('vp_3d_job_create')) {
             return new WP_REST_Response([
                 'ok' => false,
                 'error' => 'file_required',
-                'message' => 'Файл не передан.',
+                'message' => 'File is required.',
             ], 400);
         }
 
@@ -535,7 +533,7 @@ if (!function_exists('vp_3d_job_create')) {
             return new WP_REST_Response([
                 'ok' => false,
                 'error' => 'directus_env_missing',
-                'message' => 'Directus env missing',
+                'message' => 'Directus env missing.',
             ], 500);
         }
 
@@ -568,7 +566,7 @@ if (!function_exists('vp_3d_job_create')) {
             return new WP_REST_Response([
                 'ok' => false,
                 'error' => 'directus_request_failed',
-                'message' => 'Не удалось создать job в Directus.',
+                'message' => 'Failed to create job in Directus.',
             ], 500);
         }
 
@@ -580,7 +578,7 @@ if (!function_exists('vp_3d_job_create')) {
             return new WP_REST_Response([
                 'ok' => false,
                 'error' => 'directus_request_failed',
-                'message' => 'Directus отклонил создание job.',
+                'message' => 'Directus rejected job creation.',
                 'status' => $status,
                 'body' => $bodyRaw,
             ], 500);
@@ -591,7 +589,7 @@ if (!function_exists('vp_3d_job_create')) {
             return new WP_REST_Response([
                 'ok' => false,
                 'error' => 'job_create_failed',
-                'message' => 'Не удалось получить job_id.',
+                'message' => 'Failed to get job_id.',
             ], 500);
         }
 
@@ -599,7 +597,7 @@ if (!function_exists('vp_3d_job_create')) {
             return new WP_REST_Response([
                 'ok' => false,
                 'error' => 'queue_unavailable',
-                'message' => 'Очередь Redis недоступна.',
+                'message' => 'Redis queue is unavailable.',
                 'job_id' => $job_id,
             ], 500);
         }
@@ -613,7 +611,7 @@ if (!function_exists('vp_3d_job_create')) {
             return new WP_REST_Response([
                 'ok' => false,
                 'error' => 'queue_unavailable',
-                'message' => 'Не удалось поставить job в очередь.',
+                'message' => 'Failed to enqueue job.',
                 'job_id' => $job_id,
             ], 500);
         }
