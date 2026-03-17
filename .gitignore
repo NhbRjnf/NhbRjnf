@@ -70,3 +70,23 @@ runtime/
 runtime/logs/*.raw
 runtime/logs/*.full
 runtime/logs/*.gz
+
+# repo hygiene 2026-03-17
+\
+docker/volumes/wordpress/wp-content/debug.log
+\
+runtime/.vp-runtime-check.log
+\
+runtime/_t
+\
+runtime/vp-app.log
+\
+tmp/
+\
+directus-sync/directus-config/.tmp
+\
+directus-sync/directus-config/collections/*.bak.*
+\
+docker/volumes/wordpress/wp-content/mu-plugins/*.bak*
+\
+docker/volumes/wordpress/wp-content/uploads/
