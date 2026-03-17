@@ -8,6 +8,7 @@
   const AUTH_URL = CFG.authUrl || '/wp-json/vp/v1/3d/auth';
   const FILE_URL = CFG.fileUrl || '/wp-json/vp/v1/3d/file';
   const JOB_CREATE_URL = CFG.jobCreateUrl || '/wp-json/vp/v1/3d/job';
+  const LOCATION_BOOTSTRAP_URL = CFG.locationBootstrapUrl || '/wp-json/vp/v1/location/bootstrap';
   const MODEL_VIEWER_URL = String(PREFETCH.modelViewerUrl || '').trim();
 
   const $ = (id) => document.getElementById(id);
@@ -38,6 +39,7 @@
   let elLaunchPanel;
   let elLaunchButton;
   let elViewer = null;
+  let elLocationPanel = null;
 
   const params = new URLSearchParams(window.location.search);
   const code = String(params.get('code') || '').trim().toUpperCase();
@@ -64,6 +66,8 @@
     token_invalid: 'Токен недействителен или устарел. Введите пароль снова.',
     job_pending: 'Модель ещё обрабатывается.',
     job_model_missing: 'Для job не удалось получить ссылку на модель.',
+    location_not_found: 'Локация по этому коду не найдена.',
+    anchor_not_found: 'Для этого кода не найден indoor-якорь.',
   };
 
   function setStatus(text) {
@@ -181,6 +185,7 @@
     setPlaceholder(text, hasPreview());
     hideLaunchPanel();
     hideViewer();
+    hideLocationPanel();
   }
 
   function setUploadStatus(text, isError = false) {
@@ -321,7 +326,10 @@
   async function apiJson(url, method = 'GET', body) {
     const res = await fetch(url, {
       method,
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      headers: {
+        Accept: 'application/json',
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
+      },
       body: body ? JSON.stringify(body) : undefined,
       cache: 'no-store',
     });
@@ -365,6 +373,13 @@
     }
 
     modelViewerModulePromise = new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-vp-model-viewer="1"]');
+      if (existing) {
+        existing.addEventListener('load', resolve, { once: true });
+        existing.addEventListener('error', () => reject(new Error('viewer_not_registered')), { once: true });
+        return;
+      }
+
       const script = document.createElement('script');
       script.type = 'module';
       script.src = MODEL_VIEWER_URL;
@@ -433,6 +448,7 @@
 
     viewerBroken = false;
     hideLaunchPanel();
+    hideLocationPanel();
     setPlaceholder('Инициализация viewer…', false);
 
     await waitForModelViewer();
@@ -529,6 +545,26 @@
     if (elExpiry) elExpiry.textContent = 'примерно 1 час';
   }
 
+  function fillLocationMeta(payload) {
+    if (elMetaBlock) elMetaBlock.hidden = false;
+
+    const location = payload?.location || {};
+    const level = payload?.level || {};
+    const anchor = payload?.anchor || {};
+
+    if (elSceneTitle) elSceneTitle.textContent = location.title || 'Indoor navigation';
+    if (elKindBadge) {
+      elKindBadge.hidden = false;
+      elKindBadge.textContent = 'location';
+    }
+
+    if (elCode) elCode.textContent = code || anchor.code || '—';
+    if (elSceneId) elSceneId.textContent = level.code || level.title || '—';
+    if (elType) elType.textContent = 'location';
+    if (elAccess) elAccess.textContent = 'Indoor bootstrap';
+    if (elExpiry) elExpiry.textContent = '—';
+  }
+
   function isExpired(scene) {
     if (!scene?.expires_at) return false;
     const expiresAt = Date.parse(scene.expires_at);
@@ -552,6 +588,153 @@
     if (elAuthWrap) elAuthWrap.hidden = true;
   }
 
+  function ensureLocationPanel() {
+    if (elLocationPanel || !elViewerMount) return elLocationPanel;
+
+    elLocationPanel = document.createElement('div');
+    elLocationPanel.id = 'vp3d-location-panel';
+    elLocationPanel.className = 'vp-3d-location-panel';
+    elLocationPanel.hidden = true;
+    elLocationPanel.style.display = 'none';
+    elLocationPanel.style.width = '100%';
+    elLocationPanel.style.boxSizing = 'border-box';
+    elLocationPanel.style.padding = '20px';
+    elLocationPanel.style.borderRadius = '18px';
+    elLocationPanel.style.background = 'rgba(255,255,255,0.96)';
+    elLocationPanel.style.color = '#111827';
+    elLocationPanel.style.position = 'relative';
+    elLocationPanel.style.zIndex = '2';
+    elLocationPanel.style.overflow = 'auto';
+    elLocationPanel.style.maxHeight = '100%';
+
+    elViewerMount.appendChild(elLocationPanel);
+    return elLocationPanel;
+  }
+
+  function hideLocationPanel() {
+    if (!elLocationPanel) return;
+    elLocationPanel.hidden = true;
+    elLocationPanel.style.display = 'none';
+    elLocationPanel.innerHTML = '';
+  }
+
+  function renderLocationPanel(payload) {
+    const panel = ensureLocationPanel();
+    if (!panel) return;
+
+    const location = payload?.location || {};
+    const level = payload?.level || {};
+    const anchor = payload?.anchor || {};
+    const pois = Array.isArray(payload?.pois) ? payload.pois : [];
+
+    const poiItems = pois.length
+      ? pois.map((poi) => {
+          const title = escapeHtml(String(poi.title || 'POI'));
+          const kind = escapeHtml(String(poi.kind || 'point'));
+          const coord = formatPoiCoord(poi);
+          return `
+            <div class="vp-3d-field" style="margin-bottom:12px;">
+              <div class="vp-3d-label">${kind}</div>
+              <div class="vp-3d-value"><strong>${title}</strong>${coord ? ` · ${coord}` : ''}</div>
+            </div>
+          `;
+        }).join('')
+      : `<div class="vp-3d-field"><div class="vp-3d-value">На этом уровне пока нет доступных POI.</div></div>`;
+
+    panel.innerHTML = `
+      <div class="vp-3d-meta-head" style="margin-bottom:16px;">
+        <h3 class="vp-3d-meta-title" style="margin:0;">${escapeHtml(String(location.title || 'Локация'))}</h3>
+        <span class="vp-3d-badge">indoor</span>
+      </div>
+
+      <div class="vp-3d-grid" style="margin-bottom:16px;">
+        <div class="vp-3d-field">
+          <div class="vp-3d-label">Этаж</div>
+          <div class="vp-3d-value">${escapeHtml(String(level.title || level.code || '—'))}</div>
+        </div>
+        <div class="vp-3d-field">
+          <div class="vp-3d-label">Якорь</div>
+          <div class="vp-3d-value">${escapeHtml(String(anchor.title || 'Вы здесь'))}</div>
+        </div>
+        <div class="vp-3d-field">
+          <div class="vp-3d-label">Координаты</div>
+          <div class="vp-3d-value">${formatAnchorCoord(anchor) || '—'}</div>
+        </div>
+      </div>
+
+      <div class="vp-3d-field" style="margin-bottom:8px;">
+        <div class="vp-3d-label">Вы находитесь здесь</div>
+        <div class="vp-3d-value">${escapeHtml(String(anchor.title || 'Текущая точка'))}</div>
+      </div>
+
+      <div class="vp-3d-field">
+        <div class="vp-3d-label">Цели на этом уровне</div>
+        <div class="vp-3d-value" style="margin-top:8px;">${poiItems}</div>
+      </div>
+    `;
+
+    panel.hidden = false;
+    panel.style.display = 'block';
+  }
+
+  function formatAnchorCoord(anchor) {
+    const x = anchor?.x;
+    const y = anchor?.y;
+    if (typeof x === 'number' && typeof y === 'number') return `${x}, ${y}`;
+    if (x !== undefined && y !== undefined && x !== null && y !== null) return `${x}, ${y}`;
+    return '';
+  }
+
+  function formatPoiCoord(poi) {
+    const x = poi?.x;
+    const y = poi?.y;
+    if (typeof x === 'number' && typeof y === 'number') return `${x}, ${y}`;
+    if (x !== undefined && y !== undefined && x !== null && y !== null) return `${x}, ${y}`;
+    return '';
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
+  async function loadLocationBootstrap() {
+    const url = new URL(LOCATION_BOOTSTRAP_URL, window.location.origin);
+    url.searchParams.set('code', code);
+
+    const payload = await apiJson(url.toString());
+
+    if (!payload?.ok) {
+      throw new Error(payload?.error || 'location_not_found');
+    }
+
+    return payload;
+  }
+
+  async function initLocationMode() {
+    try {
+      setStatus('Загружаем indoor-данные…');
+      hideViewer();
+      hideLaunchPanel();
+      hidePreview();
+      if (elAuthWrap) elAuthWrap.hidden = true;
+
+      const payload = await loadLocationBootstrap();
+      fillLocationMeta(payload);
+      renderLocationPanel(payload);
+      hidePlaceholder();
+      setStatus('Indoor bootstrap загружен.');
+    } catch (err) {
+      console.error(err);
+      hideLocationPanel();
+      showError(resolveError(err));
+    }
+  }
+
   async function initCodeMode() {
     if (!code) {
       showError(friendlyErrors.code_required);
@@ -568,11 +751,19 @@
       const item = Array.isArray(lookup.data) && lookup.data.length ? lookup.data[0] : null;
       if (!item) throw new Error('lookup_empty');
 
+      const itemType = String(item?.type || '').trim().toLowerCase();
       currentScene = item.scene || null;
+
+      if (itemType === 'location' && !currentScene) {
+        await initLocationMode();
+        return;
+      }
+
       if (!currentScene) throw new Error('scene_not_linked');
       if (!currentScene.is_active) throw new Error('scene_disabled');
       if (isExpired(currentScene)) throw new Error('scene_expired');
 
+      hideLocationPanel();
       fillMeta(item, currentScene);
       showPreview(currentScene?.poster_url || '');
 
@@ -608,6 +799,7 @@
       return;
     }
 
+    hideLocationPanel();
     fillJobMeta(job);
     if (elAuthWrap) elAuthWrap.hidden = true;
 
@@ -674,6 +866,7 @@
 
     ensurePreviewEl();
     ensureLaunchPanel();
+    ensureLocationPanel();
 
     if (elUploadForm) {
       elUploadForm.addEventListener('submit', async (e) => {
