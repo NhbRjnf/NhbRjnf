@@ -33,11 +33,17 @@
   - добавлен кейс raw private URL vs signed `/dl/...`.
 - `VP-3D.md` переписан под текущее инженерное состояние scene/job flow.
 - `decision-log.md` дополнен решениями по safe lookup, instruction fallback, job-status bridge и graceful fallback.
+- Upload allowlist для `POST /wp-json/vp/v1/3d/job` сужен до реально подтверждённых форматов `.stl` и `.obj`.
+- Документация выровнена под фактическую поддержку форматов: `.glb` и `.gltf` больше не описываются как рабочие upload input для текущего runtime.
+
 
 ### Fixed
 - В документации больше не подразумевается, что `/3d` существует только в режиме `?code=...`.
 - В документации больше не подразумевается, что raw protected URL допустим как viewer source.
 - Зафиксирован факт, что `/lookup` и `/instruction` должны работать на safe fields и fallback-логике, а не ломаться на хрупких query-полях.
+- Убран разрыв между UI accept и реальной поддержкой converter pipeline.
+- Убран ложный сигнал, будто `.glb` и `.gltf` уже поддержаны как входные upload-форматы.
+
 
 ### Notes
 - `data-model.md` и `directus-schema.md` не переписывались под runtime bridge без нового snapshot.

@@ -41,6 +41,9 @@ curl -sS -i https://directus.xn--b1awacccnl0jqa.xn--p1ai/server/health
 curl -sS -i "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/lookup?code=VP-PH-EP2231-START"
 curl -sS -i "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/instruction?code=VP-PH-EP2231-START"
 curl -sS "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job-status?job_id=15" | jq .
+curl -sS -X POST \
+  -F "file=@/opt/vseponyatno/docker/volumes/wordpress/wp-content/uploads/2026/03/test-5-1.stl" \
+  "https://xn--b1awacccnl0jqa.xn--p1ai/wp-json/vp/v1/3d/job" | jq .
 
 Проверяем:
 
@@ -179,6 +182,14 @@ gltf-transform optimize
 
 meshopt
 
+
+Для текущего runtime smoke-проверки подтверждены:
+- `.stl` — supported
+- `.obj` — supported
+- `.glb` — rejected на входе upload endpoint
+- `.gltf` — rejected на входе upload endpoint
+
+
 Допустимо:
 
 предупреждение про отсутствие Draco, если VP_3D_USE_DRACO=0;
@@ -231,3 +242,7 @@ converter снова запускает optimize / meshopt;
 browser показывает setMeshoptDecoder must be called before loading compressed files;
 
 /3d превращается в пустой экран без fallback
+
+- upload endpoint принимает `.glb` или `.gltf`, хотя runtime их не поддерживает;
+- rate_limited снова показывает битую кодировку вместо человекочитаемого текста;
+- UI `/3d` обещает больше форматов, чем реально поддержано pipeline.

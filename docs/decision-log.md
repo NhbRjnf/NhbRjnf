@@ -62,3 +62,9 @@
 
 ## 2026-03-16 — Текущий viewer считаем временно стабилизированным, но стратегически планируем Three.js
 Причина: текущий `model-viewer` уже доведён до рабочего состояния для job-driven flow, но долгосрочно проекту нужен более гибкий renderer для indoor navigation, этажей, POI и крупных сцен.
+
+## 2026-03-16 — Upload allowlist сужаем до реально подтверждённых форматов `.stl` и `.obj`
+Причина: smoke test показал, что текущий converter runtime действительно поддерживает `.stl` и `.obj`, но не поддерживает `.glb` и `.gltf` как входные upload-форматы. Честный runtime contract важнее “широкого” accept в UI.
+
+## 2026-03-16 — Server-side message для hardening endpoint может быть ASCII/English
+Причина: в runtime был замечен риск битой кодировки в ответах API. Локализацию пользовательского текста оставляем на frontend, а серверный message допускается в ASCII/English для стабильности transport-слоя.

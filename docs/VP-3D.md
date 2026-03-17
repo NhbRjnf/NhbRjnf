@@ -206,6 +206,16 @@ VP_3D_USE_DRACO=0
 
 VP_3D_USE_MESHOPT=0
 
+Текущая подтверждённая поддержка входных upload-форматов для pipeline:
+- `.stl` — работает end-to-end
+- `.obj` — работает end-to-end
+- `.glb` — не поддержан текущим converter import path
+- `.gltf` — не поддержан текущим converter import path
+
+Поэтому публичный upload allowlist на текущем runtime ограничен:
+- `.stl`
+- `.obj`
+
 Почему:
 
 gltf-transform optimize приводил к meshopt-compressed output;
@@ -226,7 +236,7 @@ signed /dl/... links;
 
 обычный GLB без optimize / meshopt;
 
-рабочий подтверждённый пример: job_id=15.
+рабочие подтверждённые примеры: job_id=15, job_id=19, job_id=20.
 
 Это временно стабилизированный runtime, но не финальная стратегическая реализация indoor viewer.
 
@@ -279,6 +289,9 @@ poster работает;
 новый test job после отключения optimize реально грузится во viewer;
 
 при отсутствии WebGL остаётся graceful fallback.
+
+- upload endpoint принимает только реально поддержанные форматы;
+- `.glb` и `.gltf` не проходят как upload input, пока converter не получит отдельную ветку поддержки.
 
 13. Обязательные проверки
 curl -I https://xn--b1awacccnl0jqa.xn--p1ai/3d/

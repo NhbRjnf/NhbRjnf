@@ -121,9 +121,17 @@ POST /wp-json/vp/v1/3d/job
 
 endpoint существует и работает;
 
-его безопасность должна быть усилена отдельной задачей;
+для него уже включён базовый hardening runtime-уровня;
 
 этот endpoint не должен раскрывать внутренние Directus или private file URLs.
+
+Текущий подтверждённый upload allowlist:
+- `.stl`
+- `.obj`
+
+Текущий неподдержанный upload input для этого runtime:
+- `.glb`
+- `.gltf`
 
 Минимальный успешный ответ:
 
@@ -131,6 +139,29 @@ endpoint существует и работает;
   "ok": true,
   "job_id": 15
 }
+
+Текущая минимальная защита endpoint:
+
+- allowlist расширений;
+- лимит размера файла;
+- rate limit по IP;
+- ранняя server-side валидация до запуска тяжёлого pipeline.
+
+Типовые ошибки:
+
+{
+  "ok": false,
+  "error": "file_type_not_allowed",
+  "message": "Only .stl and .obj are allowed."
+}
+
+{
+  "ok": false,
+  "error": "rate_limited",
+  "message": "Too many upload attempts. Try again later.",
+  "retry_after": 600
+}
+
 GET /wp-json/vp/v1/3d/job-status?job_id=...
 
 Назначение:
