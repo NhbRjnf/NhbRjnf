@@ -40,7 +40,6 @@
   let elLaunchButton;
   let elViewer = null;
   let elLocationPanel = null;
-
   let elLocationCanvas = null;
   let currentLocationPayload = null;
 
@@ -70,7 +69,7 @@
     job_pending: 'Модель ещё обрабатывается.',
     job_model_missing: 'Для job не удалось получить ссылку на модель.',
     location_not_found: 'Локация по этому коду не найдена.',
-    anchor_not_found: 'Для этого кода не найден indoor-якорь',
+    anchor_not_found: 'Для этого кода не найден indoor-якорь.',
   };
 
   function setStatus(text) {
@@ -79,6 +78,21 @@
 
   function hasPreview() {
     return !!(elPreview && !elPreview.hidden && elPreview.getAttribute('src'));
+  }
+
+  function isDirectChild(parent, node) {
+    return !!(parent && node && node.parentNode === parent);
+  }
+
+  function insertIntoViewerWrap(node, beforeNode = null) {
+    if (!elViewerWrap || !node) return;
+
+    if (beforeNode && beforeNode !== elViewerWrap && isDirectChild(elViewerWrap, beforeNode)) {
+      elViewerWrap.insertBefore(node, beforeNode);
+      return;
+    }
+
+    elViewerWrap.appendChild(node);
   }
 
   function ensurePreviewEl() {
@@ -99,7 +113,9 @@
     elPreview.style.zIndex = '1';
     elPreview.style.pointerEvents = 'none';
 
-    elViewerWrap.insertBefore(elPreview, elViewerMount || elPlaceholder || null);
+    const beforeNode = isDirectChild(elViewerWrap, elPlaceholder) ? elPlaceholder : null;
+    insertIntoViewerWrap(elPreview, beforeNode);
+
     return elPreview;
   }
 
@@ -152,7 +168,7 @@
     });
 
     elLaunchPanel.appendChild(elLaunchButton);
-    elViewerWrap.appendChild(elLaunchPanel);
+    insertIntoViewerWrap(elLaunchPanel, null);
 
     return elLaunchPanel;
   }
@@ -424,7 +440,13 @@
     elViewer.setAttribute('touch-action', 'pan-y');
     elViewer.setAttribute('shadow-intensity', '1');
 
-    elViewerMount.appendChild(elViewer);
+    if (elViewerMount === elViewerWrap) {
+      const beforeNode = isDirectChild(elViewerWrap, elPlaceholder) ? elPlaceholder : null;
+      insertIntoViewerWrap(elViewer, beforeNode);
+    } else {
+      elViewerMount.appendChild(elViewer);
+    }
+
     return elViewer;
   }
 
@@ -582,7 +604,7 @@
   }
 
   function ensureLocationPanel() {
-    if (elLocationPanel || !elViewerMount) return elLocationPanel;
+    if (elLocationPanel || !elViewerWrap) return elLocationPanel;
 
     elLocationPanel = document.createElement('div');
     elLocationPanel.id = 'vp3d-location-panel';
@@ -600,7 +622,7 @@
     elLocationPanel.style.overflow = 'auto';
     elLocationPanel.style.maxHeight = '100%';
 
-    elViewerMount.appendChild(elLocationPanel);
+    insertIntoViewerWrap(elLocationPanel, null);
     return elLocationPanel;
   }
 
@@ -622,19 +644,17 @@
     const pois = Array.isArray(payload?.pois) ? payload.pois : [];
 
     const poiItems = pois.length
-      ? pois
-          .map((poi) => {
-            const title = escapeHtml(String(poi.title || 'POI'));
-            const kind = escapeHtml(String(poi.kind || 'point'));
-            const coord = formatPoiCoord(poi);
-            return `
-              <div class="vp-3d-field" style="margin-bottom:12px;">
-                <div class="vp-3d-label">${kind}</div>
-                <div class="vp-3d-value"><strong>${title}</strong>${coord ? ` · ${coord}` : ''}</div>
-              </div>
-            `;
-          })
-          .join('')
+      ? pois.map((poi) => {
+          const title = escapeHtml(String(poi.title || 'POI'));
+          const kind = escapeHtml(String(poi.kind || 'point'));
+          const coord = formatPoiCoord(poi);
+          return `
+            <div class="vp-3d-field" style="margin-bottom:12px;">
+              <div class="vp-3d-label">${kind}</div>
+              <div class="vp-3d-value"><strong>${title}</strong>${coord ? ` · ${coord}` : ''}</div>
+            </div>
+          `;
+        }).join('')
       : `<div class="vp-3d-field"><div class="vp-3d-value">На этом уровне пока нет доступных POI.</div></div>`;
 
     panel.innerHTML = `
@@ -711,6 +731,118 @@
     return payload;
   }
 
+  function ensureLocationCanvas() {
+    if (!elViewerWrap) return null;
+
+    if (!elLocationCanvas) {
+      elLocationCanvas = document.createElement('canvas');
+      elLocationCanvas.id = 'vp3d-location-canvas';
+      elLocationCanvas.style.position = 'absolute';
+      elLocationCanvas.style.inset = '0';
+      elLocationCanvas.style.width = '100%';
+      elLocationCanvas.style.height = '100%';
+      elLocationCanvas.style.pointerEvents = 'none';
+      elLocationCanvas.style.zIndex = '2';
+      elLocationCanvas.hidden = true;
+      insertIntoViewerWrap(elLocationCanvas, null);
+    }
+
+    return elLocationCanvas;
+  }
+
+  function hideLocationCanvas() {
+    if (elLocationCanvas) elLocationCanvas.hidden = true;
+  }
+
+  function renderLocationCanvas(payload) {
+    const canvas = ensureLocationCanvas();
+    if (!canvas) return;
+
+    canvas.hidden = false;
+
+    const width = Math.max(canvas.clientWidth || elViewerWrap.clientWidth || 320, 320);
+    const height = Math.max(canvas.clientHeight || elViewerWrap.clientHeight || 320, 320);
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const anchor = payload?.anchor || {};
+    const pois = Array.isArray(payload?.pois) ? payload.pois : [];
+
+    const anchorX = Number.isFinite(Number(anchor.x)) ? Number(anchor.x) : 0;
+    const anchorY = Number.isFinite(Number(anchor.y)) ? Number(anchor.y) : 0;
+
+    const points = pois.map((p) => ({
+      x: Number.isFinite(Number(p.x)) ? Number(p.x) - anchorX : NaN,
+      y: Number.isFinite(Number(p.y)) ? Number(p.y) - anchorY : NaN,
+      title: p.title || 'POI',
+    }));
+
+    let maxAbs = 0;
+    points.forEach((p) => {
+      if (Number.isFinite(p.x) && Number.isFinite(p.y)) {
+        maxAbs = Math.max(maxAbs, Math.abs(p.x), Math.abs(p.y));
+      }
+    });
+
+    const margin = 40;
+    const usableHalfW = Math.max((width - margin * 2) / 2, 1);
+    const usableHalfH = Math.max((height - margin * 2) / 2, 1);
+    const scale = maxAbs > 0 ? Math.min(usableHalfW / maxAbs, usableHalfH / maxAbs) : 1;
+
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.strokeStyle = '#d1d5db';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(centerX, margin / 2);
+    ctx.lineTo(centerX, height - margin / 2);
+    ctx.moveTo(margin / 2, centerY);
+    ctx.lineTo(width - margin / 2, centerY);
+    ctx.stroke();
+
+    ctx.fillStyle = '#2563eb';
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '12px sans-serif';
+    ctx.fillStyle = '#1d4ed8';
+    ctx.fillText(anchor?.title || 'Вы здесь', centerX + 10, centerY - 10);
+
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 2;
+    ctx.fillStyle = '#dc2626';
+
+    points.forEach((p) => {
+      if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) return;
+
+      const px = centerX + p.x * scale;
+      const py = centerY - p.y * scale;
+
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(px, py);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(px, py, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.font = '12px sans-serif';
+      ctx.fillText(String(p.title), px + 8, py - 8);
+    });
+  }
+
   async function initLocationMode() {
     try {
       setStatus('Загружаем indoor-данные…');
@@ -721,9 +853,11 @@
 
       const payload = await loadLocationBootstrap();
       currentLocationPayload = payload;
+
       fillLocationMeta(payload);
       renderLocationPanel(payload);
       renderLocationCanvas(payload);
+
       hidePlaceholder();
       setStatus('Indoor bootstrap загружен.');
     } catch (err) {
@@ -801,9 +935,7 @@
     fillJobMeta(job);
     if (elAuthWrap) elAuthWrap.hidden = true;
 
-    if (job.viewer_preview_url) {
-      showPreview(job.viewer_preview_url);
-    }
+    if (job.viewer_preview_url) showPreview(job.viewer_preview_url);
 
     if (job.status !== 'completed') {
       setStatus(`Job ${job.status || 'pending'}`);
@@ -832,6 +964,22 @@
     );
   }
 
+  function ensurePasswordFormAccessibility() {
+    if (!elAuthForm) return;
+    if (elAuthForm.querySelector('input[autocomplete="username"]')) return;
+
+    const username = document.createElement('input');
+    username.type = 'text';
+    username.name = 'username';
+    username.autocomplete = 'username';
+    username.hidden = true;
+    username.tabIndex = -1;
+    username.setAttribute('aria-hidden', 'true');
+    username.value = code ? `qr:${code}` : 'vp-user';
+
+    elAuthForm.prepend(username);
+  }
+
   function bindElements() {
     elStatus = $('vp3d-status');
     elMetaBlock = $('vp3d-meta');
@@ -848,9 +996,7 @@
     elHint = $('vp3d-hint');
     elViewerWrap = $('vp3d-viewer-wrap');
     elViewerMount = $('vp3d-viewer-mount');
-    if (!elViewerMount && elViewerWrap) {
-      elViewerMount = elViewerWrap;
-    }
+    if (!elViewerMount && elViewerWrap) elViewerMount = elViewerWrap;
     elPlaceholder = $('vp3d-viewer-placeholder');
 
     elUploadForm = $('vp3d-upload-form');
@@ -859,124 +1005,12 @@
     elUploadStatus = $('vp3d-upload-status');
   }
 
-  function ensureLocationCanvas() {
-    if (!elViewerWrap) return null;
-    if (!elLocationCanvas) {
-      elLocationCanvas = document.createElement('canvas');
-      elLocationCanvas.id = 'vp3d-location-canvas';
-      elLocationCanvas.style.position = 'absolute';
-      elLocationCanvas.style.inset = '0';
-      elLocationCanvas.style.width = '100%';
-      elLocationCanvas.style.height = '100%';
-      elLocationCanvas.style.pointerEvents = 'none';
-      elLocationCanvas.style.zIndex = '2';
-      elLocationCanvas.hidden = true;
-      elViewerWrap.appendChild(elLocationCanvas);
-    }
-    return elLocationCanvas;
-  }
-
-  function hideLocationCanvas() {
-    if (elLocationCanvas) elLocationCanvas.hidden = true;
-  }
-
-  function renderLocationCanvas(payload) {
-    const canvas = ensureLocationCanvas();
-    if (!canvas) return;
-
-    canvas.hidden = false;
-
-    const width = Math.max(canvas.clientWidth || 0, 320);
-    const height = Math.max(canvas.clientHeight || 0, 240);
-    canvas.width = width;
-    canvas.height = height;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    ctx.clearRect(0, 0, width, height);
-
-    const anchor = payload?.anchor || {};
-    const pois = Array.isArray(payload?.pois) ? payload.pois : [];
-
-    const anchorX = Number.isFinite(Number(anchor.x)) ? Number(anchor.x) : 0;
-    const anchorY = Number.isFinite(Number(anchor.y)) ? Number(anchor.y) : 0;
-
-    const points = pois.map((p) => {
-      const px = Number.isFinite(Number(p.x)) ? Number(p.x) - anchorX : NaN;
-      const py = Number.isFinite(Number(p.y)) ? Number(p.y) - anchorY : NaN;
-      return {
-        x: px,
-        y: py,
-        title: p.title || 'POI',
-      };
-    });
-
-    let maxAbs = 0;
-    points.forEach((p) => {
-      if (Number.isFinite(p.x) && Number.isFinite(p.y)) {
-        maxAbs = Math.max(maxAbs, Math.abs(p.x), Math.abs(p.y));
-      }
-    });
-
-    const margin = 40;
-    const usableHalfW = Math.max((width - margin * 2) / 2, 1);
-    const usableHalfH = Math.max((height - margin * 2) / 2, 1);
-    const scale = maxAbs > 0 ? Math.min(usableHalfW / maxAbs, usableHalfH / maxAbs) : 1;
-
-    const centerX = width / 2;
-    const centerY = height / 2;
-
-    ctx.fillStyle = 'rgba(255,255,255,0.92)';
-    ctx.fillRect(0, 0, width, height);
-
-    ctx.strokeStyle = '#d1d5db';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(centerX, margin / 2);
-    ctx.lineTo(centerX, height - margin / 2);
-    ctx.moveTo(margin / 2, centerY);
-    ctx.lineTo(width - margin / 2, centerY);
-    ctx.stroke();
-
-    ctx.fillStyle = '#2563eb';
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 7, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.font = '12px sans-serif';
-    ctx.fillStyle = '#1d4ed8';
-    ctx.fillText(anchor?.title || 'Вы здесь', centerX + 10, centerY - 10);
-
-    ctx.strokeStyle = '#ef4444';
-    ctx.lineWidth = 2;
-    ctx.fillStyle = '#dc2626';
-
-    points.forEach((p) => {
-      if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) return;
-
-      const px = centerX + p.x * scale;
-      const py = centerY - p.y * scale;
-
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.lineTo(px, py);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(px, py, 5, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.font = '12px sans-serif';
-      ctx.fillText(String(p.title), px + 8, py - 8);
-    });
-  }
-
   function bootstrap() {
     bindElements();
     bindViewerFailureHandlers();
+    ensurePasswordFormAccessibility();
 
-    if (!elStatus || !elViewerWrap || !elViewerMount || !elPlaceholder) return;
+    if (!elStatus || !elViewerWrap || !elPlaceholder) return;
 
     ensurePreviewEl();
     ensureLaunchPanel();
