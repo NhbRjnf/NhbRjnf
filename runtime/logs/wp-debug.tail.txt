@@ -1,32 +1,33 @@
-[10-Mar-2026 10:33:25 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:25 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:25 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:26 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:26 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:26 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:26 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:27 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:28 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:28 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:29 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:29 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:30 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:30 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:30 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:30 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:31 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:32 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:32 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:32 UTC] PHP Parse error:  Unmatched '}' in /var/www/html/wp-content/mu-plugins/vp-proxy-directus.php on line 681
-[10-Mar-2026 10:33:47 UTC] Automatic updates starting...
-[10-Mar-2026 10:33:48 UTC] Automatic updates complete.
-[10-Mar-2026 12:31:53 UTC] Automatic updates starting...
-[10-Mar-2026 12:31:53 UTC] Automatic updates complete.
-[11-Mar-2026 00:50:40 UTC] Automatic updates starting...
-[11-Mar-2026 00:50:41 UTC] Automatic updates complete.
-[11-Mar-2026 00:50:41 UTC] PHP Notice:  maintenance_mode(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
-[11-Mar-2026 00:50:41 UTC] PHP Warning:  chmod(): Operation not permitted in /var/www/html/wp-admin/includes/class-wp-filesystem-direct.php on line 173
+[12-Mar-2026 00:33:14 UTC] Automatic updates starting...
+[12-Mar-2026 00:33:16 UTC] Automatic updates complete.
+[12-Mar-2026 00:33:16 UTC] PHP Notice:  maintenance_mode(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[12-Mar-2026 00:33:17 UTC] PHP Warning:  chmod(): Operation not permitted in /var/www/html/wp-admin/includes/class-wp-filesystem-direct.php on line 173
+[12-Mar-2026 12:31:46 UTC] Automatic updates starting...
+[12-Mar-2026 12:31:47 UTC] Automatic updates complete.
+[13-Mar-2026 00:47:12 UTC] Automatic updates starting...
+[13-Mar-2026 00:47:13 UTC] Automatic updates complete.
+[13-Mar-2026 12:42:44 UTC] Automatic updates starting...
+[13-Mar-2026 12:42:45 UTC] Automatic updates complete.
+[14-Mar-2026 00:38:22 UTC] Automatic updates starting...
+[14-Mar-2026 00:38:23 UTC] Automatic updates complete.
+[14-Mar-2026 12:44:43 UTC] Automatic updates starting...
+[14-Mar-2026 12:44:44 UTC] Automatic updates complete.
+[15-Mar-2026 00:41:37 UTC] Automatic updates starting...
+[15-Mar-2026 00:41:38 UTC] Automatic updates complete.
+[15-Mar-2026 12:31:50 UTC] Automatic updates starting...
+[15-Mar-2026 12:31:51 UTC] Automatic updates complete.
+[16-Mar-2026 00:38:23 UTC] Automatic updates starting...
+[16-Mar-2026 00:38:24 UTC] Automatic updates complete.
+[16-Mar-2026 12:43:40 UTC] Automatic updates starting...
+[16-Mar-2026 12:43:41 UTC] Automatic updates complete.
+[17-Mar-2026 00:43:45 UTC] Automatic updates starting...
+[17-Mar-2026 00:43:46 UTC] Automatic updates complete.
+[17-Mar-2026 12:34:28 UTC] Automatic updates starting...
+[17-Mar-2026 12:34:29 UTC] Automatic updates complete.
+[18-Mar-2026 01:53:38 UTC] Automatic updates starting...
+[18-Mar-2026 01:53:39 UTC] Automatic updates complete.
+[18-Mar-2026 11:43:12 UTC] PHP Notice:  _wp_delete_all_temp_backups(): Нет доступа к файловой системе. in /var/www/html/wp-includes/functions.php on line 6131
+[18-Mar-2026 13:10:35 UTC] Automatic updates starting...
+[18-Mar-2026 13:10:36 UTC] Automatic updates complete.
+[19-Mar-2026 00:34:22 UTC] Automatic updates starting...
+[19-Mar-2026 00:34:23 UTC] Automatic updates complete.

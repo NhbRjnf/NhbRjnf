@@ -1,5 +1,5 @@
 # cmd: bash -lc cd '/opt/vseponyatno/docker' && docker compose config
-# time: 2026-03-11T10:27:00+00:00
+# time: 2026-03-19T11:12:41+00:00
 
 name: docker
 services:
@@ -29,7 +29,7 @@ services:
       POSTGRES_USER: vse_user
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       TZ: Europe/Riga
-      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "1"
+      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "0"
       VP_3D_LOG_LEVEL: INFO
       VP_3D_MAX_INPUT_MB: "200"
       VP_3D_MAX_TRIS: "1500000"
@@ -100,7 +100,7 @@ services:
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       
       TZ: Europe/Riga
-      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "1"
+      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "0"
       VP_3D_LOG_LEVEL: INFO
       VP_3D_MAX_INPUT_MB: "200"
       VP_3D_MAX_TRIS: "1500000"
@@ -133,7 +133,7 @@ services:
       WP_DB_NAME: wp_vseponyatno
       WP_DB_PASSWORD: '!!!LdfRjnf'
       WP_DB_USER: wp_user
-    image: directus/directus:11.15.4
+    image: directus/directus:11.16.1
     networks:
       vseponyatno_net: null
     ports:
@@ -172,7 +172,7 @@ services:
       POSTGRES_USER: vse_user
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       TZ: Europe/Riga
-      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "1"
+      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "0"
       VP_3D_LOG_LEVEL: INFO
       VP_3D_MAX_INPUT_MB: "200"
       VP_3D_MAX_TRIS: "1500000"
@@ -230,7 +230,7 @@ services:
       POSTGRES_USER: vse_user
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       TZ: Europe/Riga
-      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "1"
+      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "0"
       VP_3D_LOG_LEVEL: INFO
       VP_3D_MAX_INPUT_MB: "200"
       VP_3D_MAX_TRIS: "1500000"
@@ -310,7 +310,7 @@ services:
       POSTGRES_USER: vse_user
       PUBLIC_URL: https://directus.xn--b1awacccnl0jqa.xn--p1ai
       TZ: Europe/Riga
-      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "1"
+      VP_3D_GLTF_TRANSFORM_OPTIMIZE: "0"
       VP_3D_LOG_LEVEL: INFO
       VP_3D_MAX_INPUT_MB: "200"
       VP_3D_MAX_TRIS: "1500000"

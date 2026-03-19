@@ -1,5 +1,5 @@
 version: 1
-directus: 11.15.4
+directus: 11.16.1
 vendor: postgres
 collections:
   - collection: Existing_Table
@@ -362,6 +362,176 @@ collections:
       versioning: false
     schema:
       name: vp_invites
+  - collection: vp_location_anchors
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: vp_location_anchors
+      color: null
+      display_template: '{{code}} — {{title}}'
+      group: null
+      hidden: false
+      icon: qr_code_scanner
+      item_duplication_fields: null
+      note: QR-якоря текущего положения indoor-навигации
+      preview_url: null
+      singleton: false
+      sort: 180
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: vp_location_anchors
+  - collection: vp_location_edges
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: vp_location_edges
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: route
+      item_duplication_fields: null
+      note: Связи между узлами графа indoor-навигации
+      preview_url: null
+      singleton: false
+      sort: 160
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: vp_location_edges
+  - collection: vp_location_levels
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: vp_location_levels
+      color: null
+      display_template: '{{location_id.title}} — {{title}}'
+      group: null
+      hidden: false
+      icon: layers
+      item_duplication_fields: null
+      note: Этажи / уровни объекта indoor-навигации
+      preview_url: null
+      singleton: false
+      sort: 130
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: vp_location_levels
+  - collection: vp_location_nodes
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: vp_location_nodes
+      color: null
+      display_template: '{{title}}'
+      group: null
+      hidden: false
+      icon: share_location
+      item_duplication_fields: null
+      note: Узлы графа маршрутизации indoor-навигации
+      preview_url: null
+      singleton: false
+      sort: 150
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: vp_location_nodes
+  - collection: vp_location_pois
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: vp_location_pois
+      color: null
+      display_template: '{{title}}'
+      group: null
+      hidden: false
+      icon: place
+      item_duplication_fields: null
+      note: Точки интереса и цели маршрута indoor-навигации
+      preview_url: null
+      singleton: false
+      sort: 170
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: vp_location_pois
+  - collection: vp_location_zones
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: vp_location_zones
+      color: null
+      display_template: '{{title}}'
+      group: null
+      hidden: false
+      icon: grid_view
+      item_duplication_fields: null
+      note: Зоны внутри объекта indoor-навигации
+      preview_url: null
+      singleton: false
+      sort: 140
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: vp_location_zones
+  - collection: vp_locations
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: vp_locations
+      color: null
+      display_template: '{{title}}'
+      group: null
+      hidden: false
+      icon: apartment
+      item_duplication_fields: null
+      note: >-
+        Объекты indoor-навигации: ТЦ, аэропорт, вокзал, гипермаркет, клиника,
+        здание
+      preview_url: null
+      singleton: false
+      sort: 120
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: vp_locations
   - collection: vp_memberships
     meta:
       accountability: all
@@ -6022,6 +6192,4858 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: vp_location_anchors
+    field: id
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: vp_location_anchors
+      data_type: integer
+      default_value: nextval('vp_location_anchors_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_anchors
+    field: location_id
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: location_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 10
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: location_id
+      table: vp_location_anchors
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+  - collection: vp_location_anchors
+    field: level_id
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: level_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 20
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: level_id
+      table: vp_location_anchors
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_levels
+      foreign_key_column: id
+  - collection: vp_location_anchors
+    field: zone_id
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: zone_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 30
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: zone_id
+      table: vp_location_anchors
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_zones
+      foreign_key_column: id
+  - collection: vp_location_anchors
+    field: node_id
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: node_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 40
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: node_id
+      table: vp_location_anchors
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_nodes
+      foreign_key_column: id
+  - collection: vp_location_anchors
+    field: qr_code_id
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: qr_code_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{code}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 50
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: qr_code_id
+      table: vp_location_anchors
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: qr_codes
+      foreign_key_column: id
+  - collection: vp_location_anchors
+    field: tenant_id
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: tenant_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{name}} ({{slug}})'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 60
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: tenant_id
+      table: vp_location_anchors
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+  - collection: vp_location_anchors
+    field: title
+    type: string
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: Название якоря
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 70
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: vp_location_anchors
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_anchors
+    field: code
+    type: string
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: code
+      group: null
+      hidden: false
+      interface: input
+      note: Внутренний код якоря
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 80
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: code
+      table: vp_location_anchors
+      data_type: character varying
+      default_value: null
+      max_length: 128
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_indexed: true
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_anchors
+    field: kind
+    type: string
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: kind
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: Тип якоря
+      options:
+        choices:
+          - text: You are here
+            value: you-are-here
+          - text: Вход
+            value: entrance
+          - text: Полка
+            value: shelf
+          - text: Gate
+            value: gate
+          - text: Колонна
+            value: pillar
+          - text: Контроль/чекпоинт
+            value: checkpoint
+          - text: Сервис
+            value: service
+      readonly: false
+      required: true
+      searchable: true
+      sort: 90
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: kind
+      table: vp_location_anchors
+      data_type: character varying
+      default_value: you-are-here
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_anchors
+    field: x
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: x
+      group: null
+      hidden: false
+      interface: input
+      note: Координата X
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 100
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: x
+      table: vp_location_anchors
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_anchors
+    field: 'y'
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: 'y'
+      group: null
+      hidden: false
+      interface: input
+      note: Координата Y
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 110
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: 'y'
+      table: vp_location_anchors
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_anchors
+    field: heading_deg
+    type: integer
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: heading_deg
+      group: null
+      hidden: false
+      interface: input
+      note: Направление взгляда в градусах
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 120
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: heading_deg
+      table: vp_location_anchors
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_anchors
+    field: is_active
+    type: boolean
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: is_active
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 130
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_active
+      table: vp_location_anchors
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_anchors
+    field: meta_json
+    type: json
+    meta:
+      collection: vp_location_anchors
+      conditions: null
+      display: null
+      display_options: null
+      field: meta_json
+      group: null
+      hidden: false
+      interface: input-code
+      note: Дополнительные настройки якоря
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 140
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: meta_json
+      table: vp_location_anchors
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: id
+    type: integer
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: vp_location_edges
+      data_type: integer
+      default_value: nextval('vp_location_edges_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: location_id
+    type: integer
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: location_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 10
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: location_id
+      table: vp_location_edges
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+  - collection: vp_location_edges
+    field: tenant_id
+    type: integer
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: tenant_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{name}} ({{slug}})'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 20
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: tenant_id
+      table: vp_location_edges
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+  - collection: vp_location_edges
+    field: from_node_id
+    type: integer
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: from_node_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 30
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: from_node_id
+      table: vp_location_edges
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_nodes
+      foreign_key_column: id
+  - collection: vp_location_edges
+    field: to_node_id
+    type: integer
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: to_node_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 40
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: to_node_id
+      table: vp_location_edges
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_nodes
+      foreign_key_column: id
+  - collection: vp_location_edges
+    field: kind
+    type: string
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: kind
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: Тип перехода
+      options:
+        choices:
+          - text: Пешком
+            value: walk
+          - text: Лестница
+            value: stairs
+          - text: Лифт
+            value: elevator
+          - text: Эскалатор
+            value: escalator
+          - text: Пандус
+            value: ramp
+          - text: Сервисный
+            value: service
+      readonly: false
+      required: true
+      searchable: true
+      sort: 50
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: kind
+      table: vp_location_edges
+      data_type: character varying
+      default_value: walk
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: distance_m
+    type: integer
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: distance_m
+      group: null
+      hidden: false
+      interface: input
+      note: Длина ребра в метрах
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 60
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: distance_m
+      table: vp_location_edges
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: duration_s
+    type: integer
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: duration_s
+      group: null
+      hidden: false
+      interface: input
+      note: Оценка длительности в секундах
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 70
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: duration_s
+      table: vp_location_edges
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: is_bidirectional
+    type: boolean
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: is_bidirectional
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 80
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_bidirectional
+      table: vp_location_edges
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: is_active
+    type: boolean
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: is_active
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 90
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_active
+      table: vp_location_edges
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: is_accessible
+    type: boolean
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: is_accessible
+      group: null
+      hidden: false
+      interface: boolean
+      note: Подходит для безбарьерного маршрута
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 100
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_accessible
+      table: vp_location_edges
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: level_change
+    type: integer
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: level_change
+      group: null
+      hidden: false
+      interface: input
+      note: 'Смена уровня: -1, 0, +1'
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 110
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: level_change
+      table: vp_location_edges
+      data_type: integer
+      default_value: 0
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: restrictions_json
+    type: json
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: restrictions_json
+      group: null
+      hidden: false
+      interface: input-code
+      note: Ограничения / служебные условия
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 120
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: restrictions_json
+      table: vp_location_edges
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_edges
+    field: meta_json
+    type: json
+    meta:
+      collection: vp_location_edges
+      conditions: null
+      display: null
+      display_options: null
+      field: meta_json
+      group: null
+      hidden: false
+      interface: input-code
+      note: Дополнительные настройки ребра
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 130
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: meta_json
+      table: vp_location_edges
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: id
+    type: integer
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: vp_location_levels
+      data_type: integer
+      default_value: nextval('vp_location_levels_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: location_id
+    type: integer
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: location_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: Объект навигации
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 10
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: location_id
+      table: vp_location_levels
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+  - collection: vp_location_levels
+    field: tenant_id
+    type: integer
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: tenant_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: Тенант-владелец записи
+      options:
+        template: '{{name}} ({{slug}})'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 20
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: tenant_id
+      table: vp_location_levels
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+  - collection: vp_location_levels
+    field: code
+    type: string
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: code
+      group: null
+      hidden: false
+      interface: input
+      note: 'Например: B1, L1, L2, P1'
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 30
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: code
+      table: vp_location_levels
+      data_type: character varying
+      default_value: null
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: title
+    type: string
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: Человекочитаемое название этажа
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 40
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: title
+      table: vp_location_levels
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: sort
+    type: integer
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: false
+      interface: input
+      note: Порядок отображения
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 50
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: sort
+      table: vp_location_levels
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: is_active
+    type: boolean
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: is_active
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 60
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_active
+      table: vp_location_levels
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: z_index
+    type: integer
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: z_index
+      group: null
+      hidden: false
+      interface: input
+      note: Технический порядок слоя
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 70
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: z_index
+      table: vp_location_levels
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: floor_plan_image
+    type: uuid
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: floor_plan_image
+      group: null
+      hidden: false
+      interface: file-image
+      note: Растровый план этажа
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 80
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: floor_plan_image
+      table: vp_location_levels
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: vp_location_levels
+    field: floor_plan_svg
+    type: uuid
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: floor_plan_svg
+      group: null
+      hidden: false
+      interface: file
+      note: SVG-план этажа
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 90
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: floor_plan_svg
+      table: vp_location_levels
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: vp_location_levels
+    field: floor_plan_geojson
+    type: json
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: floor_plan_geojson
+      group: null
+      hidden: false
+      interface: input-code
+      note: GeoJSON / layout-представление этажа
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 100
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: floor_plan_geojson
+      table: vp_location_levels
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: meta_json
+    type: json
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: null
+      display_options: null
+      field: meta_json
+      group: null
+      hidden: false
+      interface: input-code
+      note: Дополнительные настройки этажа
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 110
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: meta_json
+      table: vp_location_levels
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: created_at
+    type: timestamp
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: datetime
+      display_options: null
+      field: created_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: Создано
+      options:
+        relative: true
+      readonly: true
+      required: false
+      searchable: true
+      sort: 120
+      special:
+        - date-created
+        - cast-timestamp
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: created_at
+      table: vp_location_levels
+      data_type: timestamp with time zone
+      default_value: CURRENT_TIMESTAMP
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_levels
+    field: updated_at
+    type: timestamp
+    meta:
+      collection: vp_location_levels
+      conditions: null
+      display: datetime
+      display_options: null
+      field: updated_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: Обновлено
+      options:
+        relative: true
+      readonly: true
+      required: false
+      searchable: true
+      sort: 130
+      special:
+        - date-updated
+        - cast-timestamp
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: updated_at
+      table: vp_location_levels
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: id
+    type: integer
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: vp_location_nodes
+      data_type: integer
+      default_value: nextval('vp_location_nodes_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: location_id
+    type: integer
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: location_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 10
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: location_id
+      table: vp_location_nodes
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+  - collection: vp_location_nodes
+    field: level_id
+    type: integer
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: level_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 20
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: level_id
+      table: vp_location_nodes
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_levels
+      foreign_key_column: id
+  - collection: vp_location_nodes
+    field: zone_id
+    type: integer
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: zone_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 30
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: zone_id
+      table: vp_location_nodes
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_zones
+      foreign_key_column: id
+  - collection: vp_location_nodes
+    field: tenant_id
+    type: integer
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: tenant_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{name}} ({{slug}})'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 40
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: tenant_id
+      table: vp_location_nodes
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+  - collection: vp_location_nodes
+    field: title
+    type: string
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: Название узла
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 50
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: vp_location_nodes
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: kind
+    type: string
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: kind
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: Тип узла
+      options:
+        choices:
+          - text: Anchor
+            value: anchor
+          - text: Коридор
+            value: corridor
+          - text: Поворот
+            value: turn
+          - text: Лифт
+            value: elevator
+          - text: Эскалатор
+            value: escalator
+          - text: Лестница
+            value: stairs
+          - text: Вход
+            value: entry
+          - text: Выход
+            value: exit
+          - text: POI-узел
+            value: poi-node
+          - text: Пересечение
+            value: crossing
+      readonly: false
+      required: true
+      searchable: true
+      sort: 60
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: kind
+      table: vp_location_nodes
+      data_type: character varying
+      default_value: corridor
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: x
+    type: integer
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: x
+      group: null
+      hidden: false
+      interface: input
+      note: Координата X на плане
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 70
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: x
+      table: vp_location_nodes
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: 'y'
+    type: integer
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: 'y'
+      group: null
+      hidden: false
+      interface: input
+      note: Координата Y на плане
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 80
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: 'y'
+      table: vp_location_nodes
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: z
+    type: integer
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: z
+      group: null
+      hidden: false
+      interface: input
+      note: Высота / дополнительная координата
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 90
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: z
+      table: vp_location_nodes
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: is_active
+    type: boolean
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: is_active
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 100
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_active
+      table: vp_location_nodes
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: is_public
+    type: boolean
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: is_public
+      group: null
+      hidden: false
+      interface: boolean
+      note: Видим ли узел в публичном routing
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 110
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_public
+      table: vp_location_nodes
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: accessibility_tags
+    type: json
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: accessibility_tags
+      group: null
+      hidden: false
+      interface: input-code
+      note: Теги доступности и ограничений
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 120
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: accessibility_tags
+      table: vp_location_nodes
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_nodes
+    field: meta_json
+    type: json
+    meta:
+      collection: vp_location_nodes
+      conditions: null
+      display: null
+      display_options: null
+      field: meta_json
+      group: null
+      hidden: false
+      interface: input-code
+      note: Дополнительные настройки узла
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 130
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: meta_json
+      table: vp_location_nodes
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: id
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: vp_location_pois
+      data_type: integer
+      default_value: nextval('vp_location_pois_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: location_id
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: location_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 10
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: location_id
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+  - collection: vp_location_pois
+    field: level_id
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: level_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 20
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: level_id
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_levels
+      foreign_key_column: id
+  - collection: vp_location_pois
+    field: zone_id
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: zone_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 30
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: zone_id
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_zones
+      foreign_key_column: id
+  - collection: vp_location_pois
+    field: node_id
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: node_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 40
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: node_id
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_nodes
+      foreign_key_column: id
+  - collection: vp_location_pois
+    field: tenant_id
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: tenant_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{name}} ({{slug}})'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 50
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: tenant_id
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+  - collection: vp_location_pois
+    field: title
+    type: string
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: Название POI
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 60
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: vp_location_pois
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: slug
+    type: string
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: slug
+      group: null
+      hidden: false
+      interface: input
+      note: Slug POI
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 70
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: slug
+      table: vp_location_pois
+      data_type: character varying
+      default_value: null
+      max_length: 128
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: kind
+    type: string
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: kind
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: Тип POI
+      options:
+        choices:
+          - text: Магазин
+            value: shop
+          - text: Касса
+            value: cashier
+          - text: Туалет
+            value: wc
+          - text: Лифт
+            value: elevator
+          - text: Эскалатор
+            value: escalator
+          - text: Лестница
+            value: stairs
+          - text: Вход
+            value: entrance
+          - text: Выход
+            value: exit
+          - text: Инфо
+            value: info
+          - text: Gate
+            value: gate
+          - text: Багаж
+            value: baggage
+          - text: Аптека
+            value: pharmacy
+          - text: Кафе
+            value: cafe
+          - text: Платформа
+            value: platform
+          - text: Другое
+            value: other
+      readonly: false
+      required: true
+      searchable: true
+      sort: 80
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: kind
+      table: vp_location_pois
+      data_type: character varying
+      default_value: other
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: brand
+    type: string
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: brand
+      group: null
+      hidden: false
+      interface: input
+      note: Бренд / оператор
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 90
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: brand
+      table: vp_location_pois
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: is_active
+    type: boolean
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: is_active
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 100
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_active
+      table: vp_location_pois
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: is_public
+    type: boolean
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: is_public
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 110
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_public
+      table: vp_location_pois
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: x
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: x
+      group: null
+      hidden: false
+      interface: input
+      note: Координата X
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 120
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: x
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: 'y'
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: 'y'
+      group: null
+      hidden: false
+      interface: input
+      note: Координата Y
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 130
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: 'y'
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: description
+    type: text
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: description
+      group: null
+      hidden: false
+      interface: textarea
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 140
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: description
+      table: vp_location_pois
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: card_id
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: card_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: Карточка POI
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 150
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: card_id
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_cards
+      foreign_key_column: id
+  - collection: vp_location_pois
+    field: scene_id
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: scene_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: Связанная 3D-сцена
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 160
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: scene_id
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_3d_scenes
+      foreign_key_column: id
+  - collection: vp_location_pois
+    field: instruction_id
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: instruction_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: Связанная инструкция
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 170
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: instruction_id
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: instruction_sets
+      foreign_key_column: id
+  - collection: vp_location_pois
+    field: icon
+    type: string
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: icon
+      group: null
+      hidden: false
+      interface: input
+      note: Иконка POI
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 180
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: icon
+      table: vp_location_pois
+      data_type: character varying
+      default_value: null
+      max_length: 64
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: sort
+    type: integer
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: false
+      interface: input
+      note: Порядок отображения
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 190
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: sort
+      table: vp_location_pois
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: keywords
+    type: json
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: keywords
+      group: null
+      hidden: false
+      interface: input-code
+      note: Ключевые слова / алиасы поиска
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 200
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: keywords
+      table: vp_location_pois
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: opening_hours
+    type: string
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: opening_hours
+      group: null
+      hidden: false
+      interface: input
+      note: Часы работы
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 210
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: opening_hours
+      table: vp_location_pois
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: phone
+    type: string
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: phone
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 220
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: phone
+      table: vp_location_pois
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: url
+    type: string
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: url
+      group: null
+      hidden: false
+      interface: input
+      note: Внешняя ссылка / сайт
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 230
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: url
+      table: vp_location_pois
+      data_type: character varying
+      default_value: null
+      max_length: 512
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_pois
+    field: meta_json
+    type: json
+    meta:
+      collection: vp_location_pois
+      conditions: null
+      display: null
+      display_options: null
+      field: meta_json
+      group: null
+      hidden: false
+      interface: input-code
+      note: Дополнительные настройки POI
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 240
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: meta_json
+      table: vp_location_pois
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: id
+    type: integer
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: vp_location_zones
+      data_type: integer
+      default_value: nextval('vp_location_zones_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: location_id
+    type: integer
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: location_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 10
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: location_id
+      table: vp_location_zones
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+  - collection: vp_location_zones
+    field: level_id
+    type: integer
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: level_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: true
+      searchable: true
+      sort: 20
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: level_id
+      table: vp_location_zones
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_levels
+      foreign_key_column: id
+  - collection: vp_location_zones
+    field: tenant_id
+    type: integer
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: tenant_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{name}} ({{slug}})'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 30
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: tenant_id
+      table: vp_location_zones
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+  - collection: vp_location_zones
+    field: parent_zone_id
+    type: integer
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: parent_zone_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: Родительская зона (если есть)
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 40
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: parent_zone_id
+      table: vp_location_zones
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_location_zones
+      foreign_key_column: id
+  - collection: vp_location_zones
+    field: title
+    type: string
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: Название зоны
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 50
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: vp_location_zones
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: slug
+    type: string
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: slug
+      group: null
+      hidden: false
+      interface: input
+      note: Slug зоны
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 60
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: slug
+      table: vp_location_zones
+      data_type: character varying
+      default_value: null
+      max_length: 128
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: kind
+    type: string
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: kind
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: Тип зоны
+      options:
+        choices:
+          - text: Фудкорт
+            value: foodcourt
+          - text: Ритейл-зона
+            value: retail-zone
+          - text: Сервисная зона
+            value: service-zone
+          - text: Gate-зона
+            value: gate-zone
+          - text: Коридор
+            value: corridor
+          - text: Паркинг
+            value: parking
+          - text: Платформа
+            value: platform
+          - text: Другое
+            value: other
+      readonly: false
+      required: true
+      searchable: true
+      sort: 70
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: kind
+      table: vp_location_zones
+      data_type: character varying
+      default_value: other
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: description
+    type: text
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: description
+      group: null
+      hidden: false
+      interface: textarea
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 80
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: description
+      table: vp_location_zones
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: polygon_json
+    type: json
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: polygon_json
+      group: null
+      hidden: false
+      interface: input-code
+      note: Контур зоны / geometry
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 90
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: polygon_json
+      table: vp_location_zones
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: center_x
+    type: integer
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: center_x
+      group: null
+      hidden: false
+      interface: input
+      note: Центр зоны X
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 100
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: center_x
+      table: vp_location_zones
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: center_y
+    type: integer
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: center_y
+      group: null
+      hidden: false
+      interface: input
+      note: Центр зоны Y
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 110
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: center_y
+      table: vp_location_zones
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: is_active
+    type: boolean
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: is_active
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 120
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_active
+      table: vp_location_zones
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: sort
+    type: integer
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: false
+      interface: input
+      note: Порядок отображения
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 130
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: sort
+      table: vp_location_zones
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_location_zones
+    field: meta_json
+    type: json
+    meta:
+      collection: vp_location_zones
+      conditions: null
+      display: null
+      display_options: null
+      field: meta_json
+      group: null
+      hidden: false
+      interface: input-code
+      note: Дополнительные настройки зоны
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 140
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: meta_json
+      table: vp_location_zones
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: id
+    type: integer
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: vp_locations
+      data_type: integer
+      default_value: nextval('vp_locations_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: title
+    type: string
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: Название объекта навигации
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 10
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: vp_locations
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: slug
+    type: string
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: slug
+      group: null
+      hidden: false
+      interface: input
+      note: Стабильный slug для интеграций и поиска
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 20
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: slug
+      table: vp_locations
+      data_type: character varying
+      default_value: null
+      max_length: 128
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_indexed: true
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: kind
+    type: string
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: kind
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: Тип объекта
+      options:
+        choices:
+          - text: Торговый центр
+            value: mall
+          - text: Гипермаркет
+            value: hypermarket
+          - text: Аэропорт
+            value: airport
+          - text: Вокзал
+            value: station
+          - text: Клиника
+            value: clinic
+          - text: Здание
+            value: building
+          - text: Другое
+            value: other
+      readonly: false
+      required: true
+      searchable: true
+      sort: 30
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: kind
+      table: vp_locations
+      data_type: character varying
+      default_value: mall
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: description
+    type: text
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: description
+      group: null
+      hidden: false
+      interface: textarea
+      note: Описание объекта
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 40
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: description
+      table: vp_locations
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: is_active
+    type: boolean
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: is_active
+      group: null
+      hidden: false
+      interface: boolean
+      note: Показывать объект в runtime
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 50
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: is_active
+      table: vp_locations
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: address
+    type: string
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: address
+      group: null
+      hidden: false
+      interface: input
+      note: Адрес объекта
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 60
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: address
+      table: vp_locations
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: city
+    type: string
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: city
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 70
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: city
+      table: vp_locations
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: country
+    type: string
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: country
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 80
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: country
+      table: vp_locations
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: timezone
+    type: string
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: timezone
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 90
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: timezone
+      table: vp_locations
+      data_type: character varying
+      default_value: Europe/Riga
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: default_language
+    type: string
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: default_language
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 100
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: default_language
+      table: vp_locations
+      data_type: character varying
+      default_value: ru-RU
+      max_length: 8
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: cover_image
+    type: uuid
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: cover_image
+      group: null
+      hidden: false
+      interface: file-image
+      note: Обложка объекта
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 110
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: cover_image
+      table: vp_locations
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: vp_locations
+    field: logo
+    type: uuid
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: logo
+      group: null
+      hidden: false
+      interface: file-image
+      note: Логотип объекта
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 120
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: logo
+      table: vp_locations
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: vp_locations
+    field: tenant_id
+    type: integer
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: tenant_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: Тенант-владелец записи
+      options:
+        template: '{{name}} ({{slug}})'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 130
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: tenant_id
+      table: vp_locations
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+  - collection: vp_locations
+    field: scene_id
+    type: integer
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: scene_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: Опциональная общая 3D-сцена объекта
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 140
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: scene_id
+      table: vp_locations
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: vp_3d_scenes
+      foreign_key_column: id
+  - collection: vp_locations
+    field: meta_json
+    type: json
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: meta_json
+      group: null
+      hidden: false
+      interface: input-code
+      note: Дополнительные настройки объекта
+      options:
+        language: json
+      readonly: false
+      required: false
+      searchable: true
+      sort: 150
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: meta_json
+      table: vp_locations
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: sort
+    type: integer
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: false
+      interface: input
+      note: Ручной порядок
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 160
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: sort
+      table: vp_locations
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: created_at
+    type: timestamp
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: datetime
+      display_options: null
+      field: created_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: Создано
+      options:
+        relative: true
+      readonly: true
+      required: false
+      searchable: true
+      sort: 170
+      special:
+        - date-created
+        - cast-timestamp
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: created_at
+      table: vp_locations
+      data_type: timestamp with time zone
+      default_value: CURRENT_TIMESTAMP
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: vp_locations
+    field: updated_at
+    type: timestamp
+    meta:
+      collection: vp_locations
+      conditions: null
+      display: datetime
+      display_options: null
+      field: updated_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: Обновлено
+      options:
+        relative: true
+      readonly: true
+      required: false
+      searchable: true
+      sort: 180
+      special:
+        - date-updated
+        - cast-timestamp
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: updated_at
+      table: vp_locations
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: vp_memberships
     field: id
     type: integer
@@ -10785,6 +15807,720 @@ relations:
       foreign_key_table: directus_users
       foreign_key_column: id
       constraint_name: vp_invites_created_by_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_anchors
+    field: location_id
+    related_collection: vp_locations
+    meta:
+      junction_field: null
+      many_collection: vp_location_anchors
+      many_field: location_id
+      one_allowed_collections: null
+      one_collection: vp_locations
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_anchors
+      column: location_id
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+      constraint_name: vp_location_anchors_location_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_anchors
+    field: level_id
+    related_collection: vp_location_levels
+    meta:
+      junction_field: null
+      many_collection: vp_location_anchors
+      many_field: level_id
+      one_allowed_collections: null
+      one_collection: vp_location_levels
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_anchors
+      column: level_id
+      foreign_key_table: vp_location_levels
+      foreign_key_column: id
+      constraint_name: vp_location_anchors_level_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_anchors
+    field: zone_id
+    related_collection: vp_location_zones
+    meta:
+      junction_field: null
+      many_collection: vp_location_anchors
+      many_field: zone_id
+      one_allowed_collections: null
+      one_collection: vp_location_zones
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_anchors
+      column: zone_id
+      foreign_key_table: vp_location_zones
+      foreign_key_column: id
+      constraint_name: vp_location_anchors_zone_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_anchors
+    field: node_id
+    related_collection: vp_location_nodes
+    meta:
+      junction_field: null
+      many_collection: vp_location_anchors
+      many_field: node_id
+      one_allowed_collections: null
+      one_collection: vp_location_nodes
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_anchors
+      column: node_id
+      foreign_key_table: vp_location_nodes
+      foreign_key_column: id
+      constraint_name: vp_location_anchors_node_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_anchors
+    field: qr_code_id
+    related_collection: qr_codes
+    meta:
+      junction_field: null
+      many_collection: vp_location_anchors
+      many_field: qr_code_id
+      one_allowed_collections: null
+      one_collection: qr_codes
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_anchors
+      column: qr_code_id
+      foreign_key_table: qr_codes
+      foreign_key_column: id
+      constraint_name: vp_location_anchors_qr_code_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_anchors
+    field: tenant_id
+    related_collection: vp_tenants
+    meta:
+      junction_field: null
+      many_collection: vp_location_anchors
+      many_field: tenant_id
+      one_allowed_collections: null
+      one_collection: vp_tenants
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_anchors
+      column: tenant_id
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+      constraint_name: vp_location_anchors_tenant_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_edges
+    field: location_id
+    related_collection: vp_locations
+    meta:
+      junction_field: null
+      many_collection: vp_location_edges
+      many_field: location_id
+      one_allowed_collections: null
+      one_collection: vp_locations
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_edges
+      column: location_id
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+      constraint_name: vp_location_edges_location_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_edges
+    field: tenant_id
+    related_collection: vp_tenants
+    meta:
+      junction_field: null
+      many_collection: vp_location_edges
+      many_field: tenant_id
+      one_allowed_collections: null
+      one_collection: vp_tenants
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_edges
+      column: tenant_id
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+      constraint_name: vp_location_edges_tenant_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_edges
+    field: from_node_id
+    related_collection: vp_location_nodes
+    meta:
+      junction_field: null
+      many_collection: vp_location_edges
+      many_field: from_node_id
+      one_allowed_collections: null
+      one_collection: vp_location_nodes
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_edges
+      column: from_node_id
+      foreign_key_table: vp_location_nodes
+      foreign_key_column: id
+      constraint_name: vp_location_edges_from_node_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_edges
+    field: to_node_id
+    related_collection: vp_location_nodes
+    meta:
+      junction_field: null
+      many_collection: vp_location_edges
+      many_field: to_node_id
+      one_allowed_collections: null
+      one_collection: vp_location_nodes
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_edges
+      column: to_node_id
+      foreign_key_table: vp_location_nodes
+      foreign_key_column: id
+      constraint_name: vp_location_edges_to_node_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_levels
+    field: location_id
+    related_collection: vp_locations
+    meta:
+      junction_field: null
+      many_collection: vp_location_levels
+      many_field: location_id
+      one_allowed_collections: null
+      one_collection: vp_locations
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_levels
+      column: location_id
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+      constraint_name: vp_location_levels_location_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_levels
+    field: tenant_id
+    related_collection: vp_tenants
+    meta:
+      junction_field: null
+      many_collection: vp_location_levels
+      many_field: tenant_id
+      one_allowed_collections: null
+      one_collection: vp_tenants
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_levels
+      column: tenant_id
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+      constraint_name: vp_location_levels_tenant_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_levels
+    field: floor_plan_image
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: vp_location_levels
+      many_field: floor_plan_image
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_levels
+      column: floor_plan_image
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: vp_location_levels_floor_plan_image_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_levels
+    field: floor_plan_svg
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: vp_location_levels
+      many_field: floor_plan_svg
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_levels
+      column: floor_plan_svg
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: vp_location_levels_floor_plan_svg_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_nodes
+    field: location_id
+    related_collection: vp_locations
+    meta:
+      junction_field: null
+      many_collection: vp_location_nodes
+      many_field: location_id
+      one_allowed_collections: null
+      one_collection: vp_locations
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_nodes
+      column: location_id
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+      constraint_name: vp_location_nodes_location_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_nodes
+    field: level_id
+    related_collection: vp_location_levels
+    meta:
+      junction_field: null
+      many_collection: vp_location_nodes
+      many_field: level_id
+      one_allowed_collections: null
+      one_collection: vp_location_levels
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_nodes
+      column: level_id
+      foreign_key_table: vp_location_levels
+      foreign_key_column: id
+      constraint_name: vp_location_nodes_level_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_nodes
+    field: zone_id
+    related_collection: vp_location_zones
+    meta:
+      junction_field: null
+      many_collection: vp_location_nodes
+      many_field: zone_id
+      one_allowed_collections: null
+      one_collection: vp_location_zones
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_nodes
+      column: zone_id
+      foreign_key_table: vp_location_zones
+      foreign_key_column: id
+      constraint_name: vp_location_nodes_zone_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_nodes
+    field: tenant_id
+    related_collection: vp_tenants
+    meta:
+      junction_field: null
+      many_collection: vp_location_nodes
+      many_field: tenant_id
+      one_allowed_collections: null
+      one_collection: vp_tenants
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_nodes
+      column: tenant_id
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+      constraint_name: vp_location_nodes_tenant_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_pois
+    field: location_id
+    related_collection: vp_locations
+    meta:
+      junction_field: null
+      many_collection: vp_location_pois
+      many_field: location_id
+      one_allowed_collections: null
+      one_collection: vp_locations
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_pois
+      column: location_id
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+      constraint_name: vp_location_pois_location_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_pois
+    field: level_id
+    related_collection: vp_location_levels
+    meta:
+      junction_field: null
+      many_collection: vp_location_pois
+      many_field: level_id
+      one_allowed_collections: null
+      one_collection: vp_location_levels
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_pois
+      column: level_id
+      foreign_key_table: vp_location_levels
+      foreign_key_column: id
+      constraint_name: vp_location_pois_level_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_pois
+    field: zone_id
+    related_collection: vp_location_zones
+    meta:
+      junction_field: null
+      many_collection: vp_location_pois
+      many_field: zone_id
+      one_allowed_collections: null
+      one_collection: vp_location_zones
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_pois
+      column: zone_id
+      foreign_key_table: vp_location_zones
+      foreign_key_column: id
+      constraint_name: vp_location_pois_zone_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_pois
+    field: node_id
+    related_collection: vp_location_nodes
+    meta:
+      junction_field: null
+      many_collection: vp_location_pois
+      many_field: node_id
+      one_allowed_collections: null
+      one_collection: vp_location_nodes
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_pois
+      column: node_id
+      foreign_key_table: vp_location_nodes
+      foreign_key_column: id
+      constraint_name: vp_location_pois_node_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_pois
+    field: tenant_id
+    related_collection: vp_tenants
+    meta:
+      junction_field: null
+      many_collection: vp_location_pois
+      many_field: tenant_id
+      one_allowed_collections: null
+      one_collection: vp_tenants
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_pois
+      column: tenant_id
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+      constraint_name: vp_location_pois_tenant_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_pois
+    field: card_id
+    related_collection: vp_cards
+    meta:
+      junction_field: null
+      many_collection: vp_location_pois
+      many_field: card_id
+      one_allowed_collections: null
+      one_collection: vp_cards
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_pois
+      column: card_id
+      foreign_key_table: vp_cards
+      foreign_key_column: id
+      constraint_name: vp_location_pois_card_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_pois
+    field: scene_id
+    related_collection: vp_3d_scenes
+    meta:
+      junction_field: null
+      many_collection: vp_location_pois
+      many_field: scene_id
+      one_allowed_collections: null
+      one_collection: vp_3d_scenes
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_pois
+      column: scene_id
+      foreign_key_table: vp_3d_scenes
+      foreign_key_column: id
+      constraint_name: vp_location_pois_scene_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_pois
+    field: instruction_id
+    related_collection: instruction_sets
+    meta:
+      junction_field: null
+      many_collection: vp_location_pois
+      many_field: instruction_id
+      one_allowed_collections: null
+      one_collection: instruction_sets
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_pois
+      column: instruction_id
+      foreign_key_table: instruction_sets
+      foreign_key_column: id
+      constraint_name: vp_location_pois_instruction_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_zones
+    field: location_id
+    related_collection: vp_locations
+    meta:
+      junction_field: null
+      many_collection: vp_location_zones
+      many_field: location_id
+      one_allowed_collections: null
+      one_collection: vp_locations
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_zones
+      column: location_id
+      foreign_key_table: vp_locations
+      foreign_key_column: id
+      constraint_name: vp_location_zones_location_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_zones
+    field: level_id
+    related_collection: vp_location_levels
+    meta:
+      junction_field: null
+      many_collection: vp_location_zones
+      many_field: level_id
+      one_allowed_collections: null
+      one_collection: vp_location_levels
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_zones
+      column: level_id
+      foreign_key_table: vp_location_levels
+      foreign_key_column: id
+      constraint_name: vp_location_zones_level_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: vp_location_zones
+    field: tenant_id
+    related_collection: vp_tenants
+    meta:
+      junction_field: null
+      many_collection: vp_location_zones
+      many_field: tenant_id
+      one_allowed_collections: null
+      one_collection: vp_tenants
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_zones
+      column: tenant_id
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+      constraint_name: vp_location_zones_tenant_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_location_zones
+    field: parent_zone_id
+    related_collection: vp_location_zones
+    meta:
+      junction_field: null
+      many_collection: vp_location_zones
+      many_field: parent_zone_id
+      one_allowed_collections: null
+      one_collection: vp_location_zones
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_location_zones
+      column: parent_zone_id
+      foreign_key_table: vp_location_zones
+      foreign_key_column: id
+      constraint_name: vp_location_zones_parent_zone_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_locations
+    field: cover_image
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: vp_locations
+      many_field: cover_image
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_locations
+      column: cover_image
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: vp_locations_cover_image_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_locations
+    field: logo
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: vp_locations
+      many_field: logo
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_locations
+      column: logo
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: vp_locations_logo_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_locations
+    field: tenant_id
+    related_collection: vp_tenants
+    meta:
+      junction_field: null
+      many_collection: vp_locations
+      many_field: tenant_id
+      one_allowed_collections: null
+      one_collection: vp_tenants
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_locations
+      column: tenant_id
+      foreign_key_table: vp_tenants
+      foreign_key_column: id
+      constraint_name: vp_locations_tenant_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: vp_locations
+    field: scene_id
+    related_collection: vp_3d_scenes
+    meta:
+      junction_field: null
+      many_collection: vp_locations
+      many_field: scene_id
+      one_allowed_collections: null
+      one_collection: vp_3d_scenes
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: vp_locations
+      column: scene_id
+      foreign_key_table: vp_3d_scenes
+      foreign_key_column: id
+      constraint_name: vp_locations_scene_id_foreign
       on_update: NO ACTION
       on_delete: SET NULL
   - collection: vp_memberships
