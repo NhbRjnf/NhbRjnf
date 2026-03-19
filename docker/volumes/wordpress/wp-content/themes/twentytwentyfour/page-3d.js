@@ -1,4 +1,3 @@
-cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfour/page-3d.js <<'JS'
 (() => {
   'use strict';
 
@@ -25,7 +24,6 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
     currentRoute: null,
     currentInteractiveSrc: '',
     currentPosterUrl: '',
-    viewerReady: false,
   };
 
   const ROUTE_STATE_KEY_PREFIX = 'vp3d:route:';
@@ -62,12 +60,8 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
     routePanel: null,
     toolbar: null,
     searchInput: null,
-    filterSelect: null,
-    accessibleCheckbox: null,
     clearButton: null,
     mapCanvas: null,
-
-    fab: null,
   };
 
   const friendlyErrors = {
@@ -118,8 +112,6 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
     ui.viewerWrap = $('vp3d-viewer-wrap');
     ui.viewer = $('vp3d-viewer');
     ui.placeholder = $('vp3d-viewer-placeholder');
-
-    ui.fab = document.querySelector('[data-vp-fab]');
   }
 
   function setStatus(text) {
@@ -218,6 +210,7 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
     img.hidden = true;
     img.decoding = 'async';
     img.loading = 'eager';
+
     Object.assign(img.style, {
       position: 'absolute',
       inset: '0',
@@ -269,6 +262,7 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
     const panel = document.createElement('div');
     panel.id = 'vp3d-launch-panel';
     panel.hidden = true;
+
     Object.assign(panel.style, {
       position: 'absolute',
       left: '16px',
@@ -409,7 +403,6 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
     const location = payload.location || {};
     const level = payload.level || {};
     const anchor = payload.anchor || {};
-
     const nodes = Array.isArray(payload.nodes) ? payload.nodes : [];
     const edges = Array.isArray(payload.edges) ? payload.edges : [];
     const pois = Array.isArray(payload.pois) ? payload.pois : [];
@@ -591,7 +584,12 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
 
       const distance = Number.isFinite(edge.distanceM)
         ? edge.distanceM
-        : (Number.isFinite(from.x) && Number.isFinite(from.y) && Number.isFinite(to.x) && Number.isFinite(to.y))
+        : (
+            Number.isFinite(from.x) &&
+            Number.isFinite(from.y) &&
+            Number.isFinite(to.x) &&
+            Number.isFinite(to.y)
+          )
           ? euclidean(from.x, from.y, to.x, to.y)
           : 1;
 
@@ -680,6 +678,7 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
 
     let distanceM = 0;
     let durationS = 0;
+
     edgeItems.forEach((item) => {
       distanceM += item.distance || 0;
       durationS += item.duration || 0;
@@ -822,7 +821,6 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
 
     row.appendChild(search);
     row.appendChild(clear);
-
     wrap.appendChild(row);
 
     if (ui.poiList && ui.poiList.parentNode) {
@@ -966,6 +964,7 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
 
     const canvas = document.createElement('canvas');
     canvas.id = 'vp3d-location-canvas';
+
     Object.assign(canvas.style, {
       position: 'absolute',
       inset: '0',
@@ -992,7 +991,7 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
 
   function renderLocationMap(filteredPois) {
     const canvas = ensureMapCanvas();
-    if (!canvas || !state.location) return;
+    if (!canvas || !state.location || !ui.viewerWrap) return;
 
     const width = Math.max(ui.viewerWrap.clientWidth || 320, 320);
     const height = Math.max(ui.viewerWrap.clientHeight || 320, 320);
@@ -1009,15 +1008,21 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
     const route = state.currentRoute;
     const points = [];
 
-    if (Number.isFinite(anchor.x) && Number.isFinite(anchor.y)) points.push({ x: anchor.x, y: anchor.y });
+    if (Number.isFinite(anchor.x) && Number.isFinite(anchor.y)) {
+      points.push({ x: anchor.x, y: anchor.y });
+    }
 
     filteredPois.forEach((poi) => {
-      if (Number.isFinite(poi.x) && Number.isFinite(poi.y)) points.push({ x: poi.x, y: poi.y });
+      if (Number.isFinite(poi.x) && Number.isFinite(poi.y)) {
+        points.push({ x: poi.x, y: poi.y });
+      }
     });
 
     if (route?.points?.length) {
       route.points.forEach((point) => {
-        if (Number.isFinite(point.x) && Number.isFinite(point.y)) points.push({ x: point.x, y: point.y });
+        if (Number.isFinite(point.x) && Number.isFinite(point.y)) {
+          points.push({ x: point.x, y: point.y });
+        }
       });
     }
 
@@ -1061,8 +1066,8 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
 
     filteredPois.forEach((poi, index) => {
       if (!Number.isFinite(poi.x) || !Number.isFinite(poi.y)) return;
-      const selected = state.selectedPoiId === poi.id;
 
+      const selected = state.selectedPoiId === poi.id;
       const x = px(poi.x);
       const y = py(poi.y);
 
@@ -1137,7 +1142,7 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
 
         const url = `${FILE_URL}?code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
 
-        ui.authWrap.hidden = true;
+        if (ui.authWrap) ui.authWrap.hidden = true;
 
         offerInteractive(
           url,
@@ -1146,8 +1151,9 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
         );
       } catch (err) {
         console.error(err);
-        setStatus(resolveError(err));
-        setPlaceholder(resolveError(err));
+        const message = resolveError(err);
+        setStatus(message);
+        setPlaceholder(message);
       }
     });
   }
@@ -1280,7 +1286,9 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
     url.searchParams.set('code', code);
 
     const payload = await apiJson(url.toString());
-    if (!payload.ok) throw new Error(payload.error || 'request_failed');
+    if (!payload.ok) {
+      throw new Error(payload.error || 'request_failed');
+    }
 
     state.location = normalizeLocationPayload(payload);
 
@@ -1416,10 +1424,9 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
 
       if (jobId > 0) {
         await initJobMode();
-        return;
+      } else {
+        await initCodeMode();
       }
-
-      await initCodeMode();
     } catch (err) {
       console.error(err);
       const message = resolveError(err);
@@ -1442,4 +1449,3 @@ cat > /opt/vseponyatno/docker/volumes/wordpress/wp-content/themes/twentytwentyfo
     bootstrap();
   }
 })();
-JS

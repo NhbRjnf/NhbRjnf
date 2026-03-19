@@ -65,6 +65,15 @@ get_header();
 
     <div id="vp3d-auth" class="vp-3d-auth" hidden>
       <form id="vp3d-auth-form" class="vp-3d-auth-form" autocomplete="on">
+        <input
+          type="text"
+          name="username"
+          autocomplete="username"
+          value="<?php echo isset($_GET['code']) ? esc_attr('qr:' . strtoupper((string) $_GET['code'])) : 'vp-user'; ?>"
+          hidden
+          tabindex="-1"
+          aria-hidden="true"
+        />
         <label class="vp-3d-label" for="vp3d-password">Пароль</label>
         <input
           id="vp3d-password"
