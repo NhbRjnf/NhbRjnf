@@ -9,6 +9,7 @@
   const FILE_URL = CFG.fileUrl || '/wp-json/vp/v1/3d/file';
   const JOB_STATUS_URL = CFG.jobStatusUrl || '/wp-json/vp/v1/3d/job-status';
   const LOCATION_BOOTSTRAP_URL = CFG.locationBootstrapUrl || '/wp-json/vp/v1/location/viewer-bootstrap';
+  const THREE_RUNTIME_URL = String(CFG.threeRuntimeUrl || '').trim();
 
   const params = new URLSearchParams(window.location.search);
   const code = String(params.get('code') || '').trim().toUpperCase();
@@ -24,6 +25,9 @@
     currentRoute: null,
     currentInteractiveSrc: '',
     currentPosterUrl: '',
+    threeRuntime: null,
+    threeRuntimeReady: false,
+    threeRuntimeFailed: false,
   };
 
   const ROUTE_STATE_KEY_PREFIX = 'vp3d:route:';
@@ -988,6 +992,115 @@
   function hideLocationMap() {
     if (ui.mapCanvas) ui.mapCanvas.style.display = 'none';
   }
+  
+  function buildThreeLocationPayload() {
+    if (!state.location) return null;
+
+    return {
+      location: state.location.location,
+      level: state.location.level,
+      anchor: state.location.anchor,
+      nodes: state.location.nodes,
+      edges: state.location.edges,
+      pois: state.location.pois,
+      selectedPoiId: state.selectedPoiId,
+      route: state.currentRoute,
+    };
+  }
+
+  async function tryInitThreeRuntime() {
+    if (state.threeRuntimeReady || state.threeRuntimeFailed) return;
+    if (!THREE_RUNTIME_URL || !ui.viewerWrap) {
+      state.threeRuntimeFailed = true;
+      return;
+    }
+
+    try {
+      const mod = await import(THREE_RUNTIME_URL);
+      if (!mod || typeof mod.createVpThreeRuntime !== 'function') {
+        throw new Error('three_runtime_invalid');
+      }
+
+      const runtime = mod.createVpThreeRuntime({
+        container: ui.viewerWrap,
+        onPoiSelect: (poiId) => {
+          if (!poiId) return;
+          state.selectedPoiId = String(poiId);
+          state.currentRoute = computeRoute();
+          syncTargetParam();
+          persistRouteState();
+          renderLocationUI();
+          setStatus('POI выбран в 3D-режиме.');
+        },
+      });
+
+      const payload = buildThreeLocationPayload();
+      const mounted = runtime.mount(payload);
+      if (!mounted) {
+        throw new Error('three_runtime_mount_failed');
+      }
+
+      state.threeRuntime = runtime;
+      state.threeRuntimeReady = true;
+      state.threeRuntimeFailed = false;
+      if (state.threeRuntime && typeof state.threeRuntime.resize === 'function') {
+        state.threeRuntime.resize();
+      }
+      hideLocationMap();
+    } catch (err) {
+      console.warn('VP three runtime init failed', err);
+      state.threeRuntimeFailed = true;
+      state.threeRuntimeReady = false;
+      state.threeRuntime = null;
+    }
+  }
+
+  function updateThreeRuntime() {
+    if (!state.threeRuntimeReady || !state.threeRuntime) return false;
+    try {
+      const payload = buildThreeLocationPayload();
+      const updated = state.threeRuntime.update(payload);
+      if (!updated) return false;
+      hideLocationMap();
+      return true;
+    } catch (err) {
+      console.warn('VP three runtime update failed', err);
+      state.threeRuntimeFailed = true;
+      state.threeRuntimeReady = false;
+      state.threeRuntime = null;
+      return false;
+    }
+  }
+
+  function resetThreeRuntimeCamera() {
+    if (!state.threeRuntimeReady || !state.threeRuntime || typeof state.threeRuntime.resetCamera !== 'function') {
+      return false;
+    }
+
+    try {
+      return !!state.threeRuntime.resetCamera();
+    } catch (err) {
+      console.warn('VP three runtime camera reset failed', err);
+      return false;
+    }
+  }
+
+  function destroyThreeRuntime() {
+    if (!state.threeRuntime) return;
+
+    try {
+      if (typeof state.threeRuntime.destroy === 'function') {
+        state.threeRuntime.destroy();
+      }
+    } catch (err) {
+      console.warn('VP three runtime destroy failed', err);
+    }
+
+    state.threeRuntime = null;
+    state.threeRuntimeReady = false;
+  }
+
+  
 
   function renderLocationMap(filteredPois) {
     const canvas = ensureMapCanvas();
@@ -1114,7 +1227,11 @@
     const filteredPois = getFilteredPois();
     renderPoiList(filteredPois);
     renderRoutePanel();
-    renderLocationMap(filteredPois);
+    
+    if (!updateThreeRuntime()) {
+      renderLocationMap(filteredPois);
+    }
+
   }
 
   function bindAuthForm() {
@@ -1214,12 +1331,13 @@
 
       if (action === 'resetView') {
         if (state.mode === 'location') {
+          const cameraReset = resetThreeRuntimeCamera();
           state.selectedPoiId = null;
           state.currentRoute = null;
           syncTargetParam();
           persistRouteState();
           renderLocationUI();
-          setStatus('Маршрут сброшен.');
+          setStatus(cameraReset ? 'Камера и маршрут сброшены.' : 'Маршрут сброшен.');
           return;
         }
 
@@ -1232,6 +1350,7 @@
   }
 
   async function initSceneMode(item) {
+    destroyThreeRuntime();
     state.mode = 'scene';
     state.scene = item.scene || null;
 
@@ -1312,7 +1431,8 @@
     hideLaunchPanel();
     hidePlaceholder();
     hidePreview();
-
+    
+    await tryInitThreeRuntime();
     renderLocationUI();
     persistRouteState();
     syncTargetParam();
@@ -1321,6 +1441,7 @@
   }
 
   async function initJobMode() {
+    destroyThreeRuntime();
     state.mode = 'job';
 
     let job = PREFETCH.job || null;
@@ -1438,8 +1559,15 @@
 
     window.addEventListener('resize', () => {
       if (state.mode === 'location' && state.location) {
+        if (state.threeRuntimeReady && state.threeRuntime && typeof state.threeRuntime.resize === 'function') {
+          state.threeRuntime.resize();
+        }
         renderLocationUI();
       }
+    });
+
+    window.addEventListener('beforeunload', () => {
+      destroyThreeRuntime();
     });
   }
 
