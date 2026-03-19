@@ -140,6 +140,10 @@ get_header();
   </div>
 
   <script>
+    window.VP_3D = Object.assign({}, window.VP_3D || {}, {
+      locationBootstrapUrl: <?php echo wp_json_encode(home_url('/wp-json/vp/v1/location/viewer-bootstrap'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
+    });
+
     window.VP_3D_PREFETCH = <?php echo wp_json_encode([
       'job_id' => $vp3d_job_id > 0 ? $vp3d_job_id : null,
       'job' => $vp3d_prefetched_job,
