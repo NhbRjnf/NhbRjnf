@@ -78,3 +78,23 @@
 
 ## 2026-03-17 — `location` больше нельзя документировать как просто частный случай 3D scene
 Причина: runtime routing по-прежнему может вести `location` на `/3d`, но на уровне данных сценарий location теперь может опираться на anchors / levels / nodes / edges / POI, а не только на `scene_id`.
+
+
+
+## 2026-03-23 — Переводим storage 3D-сцен с Directus files на WordPress Media Library
+Причина: текущий runtime уже хранит и обслуживает 3D upload flow через WordPress, а загрузка `.glb/.gltf` в Directus как основной путь создаёт лишнюю сложность и нестабильность. Для библиотечного режима сцен удобнее использовать WordPress Media как основной файловый слой, сохранив Directus как data/admin layer.
+
+## 2026-03-23 — Внешний контракт `/3d` не зависит от физического места хранения модели
+Причина: пользовательские маршруты `/scan`, `/instruction`, `/3d?code=...`, `/3d?job_id=...` нельзя ломать при смене storage-слоя. Browser должен продолжать работать через WordPress endpoints, а не через raw storage URL.
+
+## 2026-03-23 — Для `vp_3d_scenes` планируем добавить `model_file_wp_id` и `poster_file_wp_id`
+Причина: сцена должна уметь ссылаться на WordPress Media Library по attachment ID, не теряя backward compatibility со старыми полями `model_file` и `poster_file`.
+
+## 2026-03-23 — Legacy Directus file fields в `vp_3d_scenes` сохраняем как fallback на период миграции
+Причина: существующие сцены и QR-коды должны продолжать работать без одномоментного переноса всех файлов. WordPress proxy должен сначала поддерживать dual-read режим: WordPress Media first, Directus fallback.
+
+## 2026-03-23 — `lookup` не превращаем в контракт raw uploads URL
+Причина: даже если WordPress внутри использует `wp_get_attachment_url()`, наружу безопаснее и стабильнее сохранять proxy URL `/wp-json/vp/v1/3d/file` и `/wp-json/vp/v1/3d/poster`. Это сохраняет инвариант Browser → WordPress и уменьшает связанность фронта с внутренним storage layout.
+
+## 2026-03-23 — Schema-docs по новым WordPress file fields считаем планом до следующего snapshot
+Причина: текущий snapshot `Data_Model_Directus_snapshot_ADD_LOCATION__17_03_26.json` ещё не содержит `model_file_wp_id` и `poster_file_wp_id`. До фактической миграции и нового snapshot эти поля должны документироваться как планируемое расширение, а не как уже существующая схема.

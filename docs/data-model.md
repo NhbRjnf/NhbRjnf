@@ -277,6 +277,7 @@ QR-якоря текущего положения пользователя.
 ### `vp_3d_scenes`
 Универсальная 3D сцена.
 
+### Текущее фактическое состояние по snapshot `Data_Model_Directus_snapshot_ADD_LOCATION__17_03_26.json`
 Поля:
 - `id` — integer
 - `title`
@@ -294,6 +295,30 @@ QR-якоря текущего положения пользователя.
 - `updated_at`
 - `tenant_id` → `vp_tenants.id`
 - `case_scan_id` → `vp_case_scans.id`
+
+Важно:
+- по текущему snapshot `model_file` остаётся Directus file reference;
+- текущий schema-doc не должен делать вид, будто WordPress-поля уже существуют, пока не выполнена миграция и не снят новый snapshot.
+
+### Планируемое расширение схемы для WordPress storage
+После следующей миграции Directus-схемы и нового snapshot планируется добавить:
+
+- `model_file_wp_id` — integer, `wp_posts.ID` вложения WordPress Media Library с `.glb/.gltf`
+- `poster_file_wp_id` — integer, `wp_posts.ID` вложения WordPress Media Library с poster/preview
+
+Планируемые правила:
+- `model_file` и `poster_file` сохраняются для обратной совместимости;
+- новые сцены по умолчанию используют `model_file_wp_id` / `poster_file_wp_id`;
+- старые сцены продолжают работать через `model_file` / `poster_file`, пока не будут мигрированы;
+- после фактической миграции `model_file` должен стать необязательным на уровне схемы.
+
+Runtime-принцип:
+- браузер не должен зависеть от того, где реально лежит файл;
+- внешний контракт остаётся WordPress-first:
+  - `/3d?code=...`
+  - `/wp-json/vp/v1/lookup?code=...`
+  - `/wp-json/vp/v1/3d/file?code=...`
+  - `/wp-json/vp/v1/3d/poster?code=...`
 
 ### `vp_3d_jobs`
 Очередь конвертации 3D.

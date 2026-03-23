@@ -61,10 +61,46 @@
 
 ## 4. 3D endpoints через WordPress proxy
 
-### `POST /wp-json/vp/v1/3d/auth`
+### Общий принцип
+Внешний контракт 3D должен оставаться стабильным независимо от того, где физически лежит модель:
+- в `directus_files`;
+- или в WordPress Media Library.
+
+Браузер не должен знать внутреннюю схему хранения сцены.
+
+### `GET /wp-json/vp/v1/lookup?code=<QR_CODE>` для 3D scene
+Если `qr_codes.scene_id` заполнен, lookup должен вернуть нормализованные данные сцены.
+
+Минимально ожидаемый shape:
+
+```json
+{
+  "ok": true,
+  "code": "VP-EXAMPLE-001",
+  "type": "3d",
+  "scene": {
+    "id": 123,
+    "title": "Название сцены",
+    "kind": "navigation|dental|generic",
+    "requires_password": false,
+    "password_hint": null,
+    "expires_at": null,
+    "is_active": true,
+    "poster_url": "https://.../wp-json/vp/v1/3d/poster?code=VP-EXAMPLE-001",
+    "model_url": "https://.../wp-json/vp/v1/3d/file?code=VP-EXAMPLE-001"
+  }
+}
+
+Важно:
+
+lookup не должен отдавать raw Directus URL;
+lookup не должен отдавать raw wp-content/uploads/... URL как новый публичный контракт;
+lookup отдаёт WordPress-safe proxy URL;
+внутри WordPress endpoint уже сам решает, брать ли файл из Directus fields или из WordPress Media по model_file_wp_id / poster_file_wp_id.
+POST /wp-json/vp/v1/3d/auth
 
 Body:
-```json
+
 {
   "code": "QR_CODE",
   "password": "..."
@@ -73,11 +109,8 @@ Body:
 Назначение:
 
 проверить is_active;
-
 проверить expires_at;
-
 проверить пароль по password_hash;
-
 выдать short-lived token для защищённой сцены.
 
 Успешный ответ:
@@ -91,47 +124,37 @@ GET /wp-json/vp/v1/3d/file?code=...&token=...
 
 Назначение:
 
-стримить model_file server-to-server из Directus;
+отдать модель для viewer через WordPress-controlled delivery;
+для публичной сцены — без токена;
+для protected сцены — с короткоживущим токеном;
+не раскрывать browser-слою внутренний storage path.
 
-для защищённой сцены требовать короткоживущий токен;
+Источник модели внутри WordPress:
 
-не выдавать прямой Directus URL в браузер.
-
+если у сцены заполнен model_file_wp_id, WordPress берёт файл из Media Library;
+если нет, используется legacy fallback через model_file (directus_files);
+внешний URL при этом не меняется.
 GET /wp-json/vp/v1/3d/poster?code=...
 
 Назначение:
 
-отдать placeholder / poster для /3d;
+отдать poster / preview для /3d;
+работать и для публичной, и для protected сцены;
+скрывать внутренний storage path.
 
-использоваться как до авторизации, так и для публичной сцены.
+Источник постера внутри WordPress:
 
+если у сцены заполнен poster_file_wp_id, WordPress берёт файл из Media Library;
+если нет, используется legacy fallback через poster_file (directus_files);
+внешний URL при этом не меняется.
 POST /wp-json/vp/v1/3d/job
 
 Назначение:
 
 принять пользовательский upload для 3D pipeline;
-
 создать запись job;
-
 поставить job_id в Redis очередь;
-
 вернуть идентификатор job.
-
-Текущее состояние:
-
-endpoint существует и работает;
-
-для него уже включён базовый hardening runtime-уровня;
-
-этот endpoint не должен раскрывать внутренние Directus или private file URLs.
-
-Текущий подтверждённый upload allowlist:
-- `.stl`
-- `.obj`
-
-Текущий неподдержанный upload input для этого runtime:
-- `.glb`
-- `.gltf`
 
 Минимальный успешный ответ:
 
@@ -139,44 +162,13 @@ endpoint существует и работает;
   "ok": true,
   "job_id": 15
 }
-
-Текущая минимальная защита endpoint:
-
-- allowlist расширений;
-- лимит размера файла;
-- rate limit по IP;
-- ранняя server-side валидация до запуска тяжёлого pipeline.
-
-Типовые ошибки:
-
-{
-  "ok": false,
-  "error": "file_type_not_allowed",
-  "message": "Only .stl and .obj are allowed."
-}
-
-{
-  "ok": false,
-  "error": "rate_limited",
-  "message": "Too many upload attempts. Try again later.",
-  "retry_after": 600
-}
-
 GET /wp-json/vp/v1/3d/job-status?job_id=...
 
 Назначение:
 
 вернуть нормализованный runtime-статус job для страницы /3d?job_id=...;
-
 скрыть внутренние пути хранения и raw protected URLs;
-
 отдать только viewer-safe ссылки.
-
-Текущее состояние:
-
-route публичный;
-
-используется и как REST bridge, и как server-side prefetch источник для page-3d.php.
 
 Минимально ожидаемый ответ:
 
@@ -191,22 +183,11 @@ route публичный;
   }
 }
 
-Допустимы также:
-
-error
-
-message
-
-дополнительные safe runtime-поля для UI
-
 Важно:
 
 viewer_glb_url и viewer_preview_url — это WordPress-safe viewer URLs;
-
 raw private URLs не являются частью публичного контракта;
-
 403 на raw protected URL вне bridge — ожидаемое поведение.
-
 5. Входные режимы страницы /3d
 
 Страница /3d поддерживает два режима.
@@ -219,16 +200,21 @@ raw private URLs не являются частью публичного кон�
 
 Источник данных:
 
-lookup
-
-при необходимости /3d/auth, /3d/file, /3d/poster
+GET /wp-json/vp/v1/lookup?code=...
+при необходимости POST /wp-json/vp/v1/3d/auth
+GET /wp-json/vp/v1/3d/file?code=...
+GET /wp-json/vp/v1/3d/poster?code=...
 
 Используется для:
 
-QR-driven navigation / scene flow
+QR-driven navigation / scene flow;
+public/protected scene flow;
+библиотечного режима, когда разные сцены добавляются данными, а не переписыванием page-3d.php.
 
-public/protected scene flow
+Важно:
 
+/3d?code=... остаётся главным пользовательским входом для QR-сцен;
+смена физического storage слоя не должна менять этот маршрут.
 5.2 Job-driven viewer flow
 
 Маршрут:
@@ -242,8 +228,11 @@ GET /wp-json/vp/v1/3d/job-status?job_id=...
 Используется для:
 
 просмотра результата конвертации после 3D upload pipeline;
-
 выдачи signed viewer URLs через WordPress bridge.
+
+Важно:
+
+/3d?job_id=... живёт рядом с code-driven flow, а не вместо него.
 
 6. Onboarding moderation contract
 
